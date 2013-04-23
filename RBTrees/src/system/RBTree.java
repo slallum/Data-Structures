@@ -14,6 +14,14 @@ public class RBTree {
 	/** Starts the tree */
 	private RBNode root;
 
+	public RBTree(RBNode root) {
+		this.root = root;
+	}
+	
+	public RBTree() {
+		
+	}
+	
 	/**
 	 * public boolean empty()
 	 * 
@@ -123,7 +131,7 @@ public class RBTree {
 	 * precondition: none postcondition: none
 	 */
 	public int size() {
-		return 0; // to be replaced by student code
+		return this.root.size();
 	}
 
 	/**
@@ -307,6 +315,22 @@ public class RBTree {
 			default:
 				return left + this.key + right;
 			}
+		}
+		
+		/**
+		 * Calls recursively and sums sizes of children's nodes
+		 * 
+		 * @return	The amount of nodes under current node inclusive
+		 */
+		public int size() {
+			int sum = 1;
+			if (this.right != null) {
+				sum += this.right.size();
+			}
+			if (this.left != null) {
+				sum += this.left.size();
+			}
+			return sum;
 		}
 
 	}
