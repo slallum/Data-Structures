@@ -67,7 +67,14 @@ public class RBTree {
 	 * 
 	 */
 	public int min() {
-		return -1; // to be replaced by student code
+		if (empty()) {
+			return -1;
+		}
+		RBNode current = this.root;
+		while (current.left != null) {
+			current = current.left;
+		}
+		return current.key;
 	}
 
 	/**
@@ -76,7 +83,14 @@ public class RBTree {
 	 * Returns the largest key in the tree, or -1 if the tree is empty
 	 */
 	public int max() {
-		return -1; // to be replaced by student code
+		if (empty()) {
+			return -1;
+		}
+		RBNode current = this.root;
+		while (current.right != null) {
+			current = current.right;
+		}
+		return current.key;
 	}
 
 	/**
