@@ -106,12 +106,9 @@ public class RBTNode {
 	 * 
 	 * @throws InvalidOperationException If no parent to replace
 	 */
-	public boolean moveUp() throws InvalidOperationException {
-		if (this.parent == null) {
-			throw new InvalidOperationException();
-		}
-		if (this.parent.getParent() == null) {
-			return false;
+	private void moveUp() {
+		if ((this.parent == null) || (this.parent.getParent() == null)) {
+			return;
 		}
 		
 		if (this.parent == this.parent.getParent().getLeft()) {
@@ -119,6 +116,16 @@ public class RBTNode {
 		} else {
 			this.parent.getParent().setRight(this);
 		}
-		return true;
 	}
+	
+	public void rotateRight() {
+		RBTNode y = this.left;
+		if (y == null) {
+			return;
+		}
+		y.moveUp();
+		this.setLeft(y.getRight());
+		y.setRight(this);
+	}
+	
 }
