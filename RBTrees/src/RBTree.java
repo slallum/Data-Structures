@@ -85,7 +85,7 @@ public class RBTree {
    * the array contains integers in ascending order.
    * 
    */
-  public void arrayToTree(int[] a)
+  public void arrayToTree(int[] array)
   {
 	 return; //	 to be replaced by student code
   }
