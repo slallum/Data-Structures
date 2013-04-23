@@ -118,6 +118,11 @@ public class RBTNode {
 		}
 	}
 	
+	/**
+	 * Takes current Node's left son, moves it up,
+	 * it's right son to be it's parent's left son
+	 * and the parent to be it's right son
+	 */
 	public void rotateRight() {
 		RBTNode y = this.left;
 		if (y == null) {
@@ -126,6 +131,22 @@ public class RBTNode {
 		y.moveUp();
 		this.setLeft(y.getRight());
 		y.setRight(this);
+	}
+	
+	/**
+	 * Takes current Node's right son, moves it up,
+	 * it's left son to be it's parent's right son
+	 * and the parent to be it's left son
+	 */
+	public void rotateLeft() {
+		
+		RBTNode right = this.right;
+		if (right == null) {
+			return;
+		}
+		right.moveUp();
+		this.setRight(right.getLeft());
+		right.setLeft(this);
 	}
 	
 }
