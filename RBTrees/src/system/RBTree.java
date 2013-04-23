@@ -14,6 +14,14 @@ public class RBTree {
 	/** Starts the tree */
 	private RBNode root;
 
+	public RBTree(RBNode root) {
+		this.root = root;
+	}
+	
+	public RBTree() {
+		
+	}
+	
 	/**
 	 * public boolean empty()
 	 * 
