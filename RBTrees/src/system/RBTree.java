@@ -17,11 +17,11 @@ public class RBTree {
 	public RBTree(RBNode root) {
 		this.root = root;
 	}
-	
+
 	public RBTree() {
-		
+
 	}
-	
+
 	/**
 	 * public boolean empty()
 	 * 
@@ -42,7 +42,34 @@ public class RBTree {
 	 * terms of absolute difference)
 	 */
 	public int search(int i) {
-		return 0; // to be replaced by student code
+		int minVal = min();
+		int maxVal = max();
+		RBNode current = this.root;
+		while (current != null) {
+			// Found it!
+			if (current.getKey() == i) {
+				return i;
+			}
+			if (current.getKey() > i) {
+				// Need to go left in tree
+				if (current.getKey() < maxVal) {
+					maxVal = current.getKey();
+				}
+				current = current.getLeft();
+			} else {
+				// Need to go right in tree
+				if (current.getKey() < minVal) {
+					minVal = current.getKey();
+				}
+				current = current.getRight();
+			}
+		}
+		// Return value closest to i
+		if (i - minVal > maxVal - i) {
+			return maxVal;
+		}
+		// If same distance, return smaller value
+		return minVal;
 	}
 
 	/**
@@ -297,9 +324,9 @@ public class RBTree {
 
 		/**
 		 * 
-		 * @param type	"pre" for pre-order values
-		 * 				"post" for post-order values
-		 *            	"in" or "" for in-order values
+		 * @param type
+		 *            "pre" for pre-order values "post" for post-order values
+		 *            "in" or "" for in-order values
 		 * @return String of all node's keys in "type" order
 		 */
 		public String order(String type) {
@@ -316,11 +343,11 @@ public class RBTree {
 				return left + this.key + right;
 			}
 		}
-		
+
 		/**
 		 * Calls recursively and sums sizes of children's nodes
 		 * 
-		 * @return	The amount of nodes under current node inclusive
+		 * @return The amount of nodes under current node inclusive
 		 */
 		public int size() {
 			int sum = 1;
@@ -333,6 +360,40 @@ public class RBTree {
 			return sum;
 		}
 
+		/**
+		 * @param key Value to look for in keys
+		 * @return The node containing the value or the position to insert it
+		 */
+		public RBNode getPosition(int key) {
+			if (this.key == key) {
+				return this;
+			}
+			RBNode next;
+			if (this.key > key) {
+				next = this.left;
+			} else {
+				next = this.right;
+			}
+			if (next == null) {
+				return this;
+			}
+			return next.getPosition(key);
+		}
+		
+		/**
+		 * @return Node with smallest key which is larger than current
+		 */
+		public RBNode successor() {
+			RBNode current;
+			if (this.right != null) {
+				current = this.right.getLeft();
+				while (current != null) {
+					current = current.getLeft();
+				}
+				return current;
+			}
+			return parent;
+		}
 	}
 
 	/**
