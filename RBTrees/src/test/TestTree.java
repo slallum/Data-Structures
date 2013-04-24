@@ -1,8 +1,11 @@
 package test;
 
+import org.junit.Test;
+
 public class TestTree {
 	
-	public void testRotate() throws Exception {
+	@Test
+	public void testSearch() throws Exception {
 		
 	}
 }

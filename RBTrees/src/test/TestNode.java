@@ -63,7 +63,7 @@ public class TestNode {
 	}
 	
 	@Test
-	public void testRotateLeft() {
+	public void testRotate() {
 		
 		root.setLeft(rotatedRight);
 		root.setRight(null);
@@ -92,6 +92,23 @@ public class TestNode {
 		assertEquals("Rotate right - pre", rotatedRightPre[1], root.order("pre"));
 		assertEquals("Rotate right - post", rotatedRightPost[1], root.order("post"));
 		
+	}
+	
+	@Test
+	public void testGetPosition() {
+		// After previous test, rotated right is supposed to be a reference to node number 2
+		assertEquals(rotatedRight, root.getPosition(2));
+		
+		// After building it, rotated left should be have the key 4
+		root.setLeft(rotatedLeft);
+		root.setRight(null);
+		assertEquals(rotatedLeft, root.getPosition(4));
+		
+		// Checking rest of left tree
+		assertEquals(rotatedLeft.getLeft(), root.getPosition(2));
+		assertEquals(rotatedLeft.getLeft().getLeft(), root.getPosition(1));
+		assertEquals(rotatedLeft.getLeft().getRight(), root.getPosition(3));
+		assertEquals(rotatedLeft.getRight(), root.getPosition(5));
 	}
 
 	private RBNode createNode(int key) {
