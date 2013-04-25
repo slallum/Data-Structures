@@ -385,6 +385,7 @@ public class RBTree {
 		 */
 		public RBNode successor() {
 			RBNode current;
+			// this node has a right child
 			if (this.right != null) {
 				current = this.right.getLeft();
 				while (current != null) {
@@ -392,10 +393,20 @@ public class RBTree {
 				}
 				return current;
 			}
-			if (parent.getLeft() == this) {				
-				return parent;
+			// this node is a left child of its father
+			if ((this.parent != null) && (this.parent.getLeft() == this)) {				
+				return this.parent;
 			}
-			return null;
+			
+			current = this;
+			// go up until you are a left child or you can't go up anymore
+			while ((current.getParent() != null) && (current.getParent().getRight() == current)) {
+				current = current.getParent();
+			}
+			
+			// this will return null of current is the maximum node (the most righ node)
+			// or it will return the first right ancestor 
+			return current.getParent();
 		}
 	}
 
