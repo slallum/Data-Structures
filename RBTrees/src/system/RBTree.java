@@ -392,7 +392,10 @@ public class RBTree {
 				}
 				return current;
 			}
-			return parent;
+			if (parent.getLeft() == this) {				
+				return parent;
+			}
+			return null;
 		}
 	}
 
