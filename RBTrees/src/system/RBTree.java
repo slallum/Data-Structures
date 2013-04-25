@@ -393,19 +393,16 @@ public class RBTree {
 				}
 				return current;
 			}
-			// this node is a left child of its father
-			if ((this.parent != null) && (this.parent.getLeft() == this)) {				
-				return this.parent;
-			}
 			
 			current = this;
-			// go up until you are a left child or you can't go up anymore
+			// get the first right ancestor:
+			// go up until you are a left child or you can't go up anymore (which will mean that this node is the max node).
 			while ((current.getParent() != null) && (current.getParent().getRight() == current)) {
 				current = current.getParent();
 			}
 			
 			// this will return null of current is the maximum node (the most righ node)
-			// or it will return the first right ancestor 
+			// or it will return the first right ancestor
 			return current.getParent();
 		}
 	}
