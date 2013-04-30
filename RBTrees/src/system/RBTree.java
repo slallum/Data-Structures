@@ -1,5 +1,7 @@
 package system;
 
+import java.util.Stack;
+
 /**
  * 
  * RBTree
@@ -84,12 +86,12 @@ public class RBTree {
 			this.root = new RBNode(null, null, null, i, true);
 			return 0;
 		}
-		
+
 		RBNode position = this.root.getPosition(i);
 		if (position.key == i) {
 			return 0;
 		}
-		
+
 		RBNode newNode = new RBNode(position, null, null, i, false);
 		if (position.key > i) {
 			position.setLeft(newNode);
@@ -99,7 +101,6 @@ public class RBTree {
 		return fixInsert(newNode);
 	}
 
-	
 	/**
 	 * @param newNode
 	 * @return the number of rotations done for the fix
@@ -114,8 +115,7 @@ public class RBTree {
 				uncle.setBlack();
 				nodeToCheck.getParent().setBlack();
 				nodeToCheck = nodeToCheck.getParent().getParent();
-			}
-			else {
+			} else {
 				// case 2
 				if ((isRightUncle) && (nodeToCheck.isRightSon())) {
 					nodeToCheck = nodeToCheck.getParent();
@@ -134,20 +134,19 @@ public class RBTree {
 	}
 
 	/**
-	 * @param nodeToFix	
+	 * @param nodeToFix
 	 * @param isRightUncle
 	 */
 	private void fixCase3(RBNode nodeToFix, boolean isRightUncle) {
 		nodeToFix.getParent().setBlack();
 		nodeToFix.getParent().getParent().setRed();
-		if (isRightUncle) {					
+		if (isRightUncle) {
 			nodeToFix.getParent().getParent().rotateRight();
 		} else {
 			nodeToFix.getParent().getParent().rotateLeft();
 		}
 	}
 
-	
 	/**
 	 * public void delete(int i)
 	 * 
@@ -224,7 +223,7 @@ public class RBTree {
 	 */
 	public int size() {
 		return this.root.size();
-	}
+	}	
 
 	/**
 	 * public class RBNode
@@ -342,7 +341,7 @@ public class RBTree {
 		public void setBlack() {
 			this.isBlack = true;
 		}
-		
+
 		/**
 		 * Make the node red
 		 */
@@ -451,7 +450,7 @@ public class RBTree {
 			} else {
 				next = this.right;
 			}
-			
+
 			if (next == null) {
 				return this;
 			}
@@ -488,14 +487,16 @@ public class RBTree {
 		}
 
 		/**
-		 * @return	Whether current node is a right son of given node
+		 * @return Whether current node is a right son of given node
 		 */
 		private boolean isRightSon() {
 			return this == this.getParent().getRight();
 		}
 	}
-	
 
+	public RBNode getRoot() {
+		return this.root;
+	}
 
 	/**
 	 * @original author Shai Vardi Modified for semester 2013 b
