@@ -147,6 +147,9 @@ public class RBTree {
 		} else {
 			nodeToFix.getParent().getParent().rotateLeft();
 		}
+		if (this.root.getParent() != null) {
+			this.root = this.root.getParent();
+		}
 	}
 
 	/**
@@ -366,6 +369,9 @@ public class RBTree {
 		 */
 		private void moveUp() {
 			if ((this.parent == null) || (this.parent.getParent() == null)) {
+				if ((this.parent.getParent() == null)) {
+					this.parent = null;
+				}
 				return;
 			}
 

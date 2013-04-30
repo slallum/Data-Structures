@@ -3,7 +3,7 @@ package test;
 import java.util.Stack;
 
 import org.junit.Test;
-
+import static junit.framework.Assert.*;
 import system.RBTree;
 import system.RBTree.RBNode;
 
@@ -16,19 +16,22 @@ public class TestTree {
 		tree.insert(6);
 		tree.insert(1);
 		tree.insert(3);
-//		tree.insert(3);
-//		tree.insert(1);
+		tree.insert(3);
+		tree.insert(1);
 		tree.insert(9);
 		tree.insert(8);
 		tree.insert(5);
 		tree.insert(4);
-//		displayTree(tree.getRoot());
 		tree.insert(7);
 		tree.insert(10);
-		displayTree(tree.getRoot());
+		tree.insert(13);
+		String output = displayTree(tree.getRoot());
+		System.out.println(output);
+		assertEquals(expectedInsertedTree, output);
 	}
 
-	public void displayTree(RBNode root) {
+	public String displayTree(RBNode root) {
+		StringBuilder buildOutput = new StringBuilder();
 		Stack<RBNode> globalStack = new Stack<RBNode>();
 		globalStack.push(root);
 		int emptyLeaf = 32;
@@ -39,32 +42,39 @@ public class TestTree {
 			Stack<RBNode> localStack = new Stack<RBNode>();
 			isRowEmpty = true;
 			for (int j = 0; j < emptyLeaf; j++)
-				System.out.print(' ');
+				buildOutput.append(' ');
 			while (globalStack.isEmpty() == false) {
 				RBNode temp = globalStack.pop();
 				if (temp != null) {
-					System.out.print(temp.getKey() + "-");
+					buildOutput.append(temp.getKey() + "-");
 					if (temp.isBlack()) {
-						System.out.print("B");
+						buildOutput.append("B");
 					} else {
-						System.out.print("R");
+						buildOutput.append("R");
 					}
 					localStack.push(temp.getLeft());
 					localStack.push(temp.getRight());
 					if (temp.getLeft() != null || temp.getRight() != null)
 						isRowEmpty = false;
 				} else {
-					System.out.print("--");
+					buildOutput.append("--");
 					localStack.push(null);
 					localStack.push(null);
 				}
 				for (int j = 0; j < emptyLeaf * 2 - 2; j++)
-					System.out.print(' ');
+					buildOutput.append(' ');
 			}
-			System.out.println();
+			buildOutput.append("\n");
 			emptyLeaf /= 2;
 			while (localStack.isEmpty() == false)
 				globalStack.push(localStack.pop());
 		}
+		return buildOutput.toString();
 	}
+
+	private String expectedInsertedTree = "                                6-B                                                              \n"
+			+ "                2-R                              8-R                              \n"
+			+ "        1-B              4-B              7-B              10-B              \n"
+			+ "    --      --      3-R      5-R      --      --      9-R      13-R      \n";
+
 }
