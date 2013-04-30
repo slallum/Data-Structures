@@ -107,7 +107,7 @@ public class RBTree {
 	 */
 	private int fixInsert(RBNode nodeToCheck) {
 		int rotationsCount = 0;
-		while (!nodeToCheck.getParent().isBlack()) {
+		while ((nodeToCheck.getParent() != null) && !nodeToCheck.getParent().isBlack()) {
 			RBNode uncle = nodeToCheck.getUncle();
 			boolean isRightUncle = !nodeToCheck.getParent().isRightSon();
 			// case 1
@@ -115,6 +115,7 @@ public class RBTree {
 				uncle.setBlack();
 				nodeToCheck.getParent().setBlack();
 				nodeToCheck = nodeToCheck.getParent().getParent();
+				nodeToCheck.setRed();
 			} else {
 				// case 2
 				if ((isRightUncle) && (nodeToCheck.isRightSon())) {
@@ -130,6 +131,7 @@ public class RBTree {
 				rotationsCount++;
 			}
 		}
+		this.root.setBlack();
 		return rotationsCount;
 	}
 
@@ -258,7 +260,13 @@ public class RBTree {
 		}
 
 		public RBNode getUncle() {
-			// TODO Auto-generated method stub
+			if (this.getParent().getParent() != null) {	
+				if (this.getParent().getParent().getLeft() == this.getParent()) {
+					return this.getParent().getParent().getRight();
+				} else if (this.getParent().getParent().getRight() == this.getParent()) {
+					return this.getParent().getParent().getLeft();
+				}
+			}
 			return null;
 		}
 
