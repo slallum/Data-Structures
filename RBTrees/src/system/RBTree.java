@@ -80,9 +80,74 @@ public class RBTree {
 	 * if i was already in the tree or no reotations were needed
 	 */
 	public int insert(int i) {
-		return 0; // to be replaced by student code
+		if (this.empty()) {
+			this.root = new RBNode(null, null, null, i, true);
+			return 0;
+		}
+		
+		RBNode position = this.root.getPosition(i);
+		if (position.key == i) {
+			return 0;
+		}
+		
+		RBNode newNode = new RBNode(position, null, null, i, false);
+		if (position.key > i) {
+			position.setLeft(newNode);
+		} else {
+			position.setRight(newNode);
+		}
+		return fixInsert(newNode);
 	}
 
+	
+	/**
+	 * @param newNode
+	 * @return the number of rotations done for the fix
+	 */
+	private int fixInsert(RBNode nodeToCheck) {
+		int rotationsCount = 0;
+		while (!nodeToCheck.getParent().isBlack()) {
+			RBNode uncle = nodeToCheck.getUncle();
+			boolean isRightUncle = !nodeToCheck.getParent().isRightSon();
+			// case 1
+			if ((uncle != null) && (!uncle.isBlack())) {
+				uncle.setBlack();
+				nodeToCheck.getParent().setBlack();
+				nodeToCheck = nodeToCheck.getParent().getParent();
+			}
+			else {
+				// case 2
+				if ((isRightUncle) && (nodeToCheck.isRightSon())) {
+					nodeToCheck = nodeToCheck.getParent();
+					nodeToCheck.rotateLeft();
+					rotationsCount++;
+				} else if ((!isRightUncle) && (!nodeToCheck.isRightSon())) {
+					nodeToCheck = nodeToCheck.getParent();
+					nodeToCheck.rotateRight();
+					rotationsCount++;
+				}
+				fixCase3(nodeToCheck, isRightUncle);
+				rotationsCount++;
+			}
+		}
+		return rotationsCount;
+	}
+
+	/**
+	 * @param nodeToFix	
+	 * @param isRightUncle
+	 */
+	private void fixCase3(RBNode nodeToFix, boolean isRightUncle) {
+		nodeToFix.getParent().setBlack();
+		nodeToFix.getParent().getParent().setRed();
+		if (isRightUncle) {					
+			nodeToFix.getParent().getParent().rotateRight();
+		} else {
+			nodeToFix.getParent().getParent().rotateLeft();
+		}
+	}
+
+	
 	/**
 	 * public void delete(int i)
 	 * 
@@ -193,6 +258,11 @@ public class RBTree {
 			this.isBlack = isBlack;
 		}
 
+		public RBNode getUncle() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 		/**
 		 * @return the parent
 		 */
@@ -267,11 +337,17 @@ public class RBTree {
 		}
 
 		/**
-		 * @param isBlack
-		 *            the isBlack to set
+		 * Make the node black
 		 */
-		public void setBlack(boolean isBlack) {
-			this.isBlack = isBlack;
+		public void setBlack() {
+			this.isBlack = true;
+		}
+		
+		/**
+		 * Make the node red
+		 */
+		public void setRed() {
+			this.isBlack = false;
 		}
 
 		/**
@@ -361,7 +437,8 @@ public class RBTree {
 		}
 
 		/**
-		 * @param key Value to look for in keys
+		 * @param key
+		 *            Value to look for in keys
 		 * @return The node containing the value or the position to insert it
 		 */
 		public RBNode getPosition(int key) {
@@ -374,12 +451,13 @@ public class RBTree {
 			} else {
 				next = this.right;
 			}
+			
 			if (next == null) {
 				return this;
 			}
 			return next.getPosition(key);
 		}
-		
+
 		/**
 		 * @return Node with smallest key which is larger than current
 		 */
@@ -393,19 +471,31 @@ public class RBTree {
 				}
 				return current;
 			}
-			
+
 			current = this;
 			// get the first right ancestor:
-			// go up until you are a left child or you can't go up anymore (which will mean that this node is the max node).
-			while ((current.getParent() != null) && (current.getParent().getRight() == current)) {
+			// go up until you are a left child or you can't go up anymore
+			// (which will mean that this node is the max node).
+			while ((current.getParent() != null)
+					&& (current.getParent().getRight() == current)) {
 				current = current.getParent();
 			}
-			
-			// this will return null of current is the maximum node (the most righ node)
+
+			// this will return null of current is the maximum node (the most
+			// righ node)
 			// or it will return the first right ancestor
 			return current.getParent();
 		}
+
+		/**
+		 * @return	Whether current node is a right son of given node
+		 */
+		private boolean isRightSon() {
+			return this == this.getParent().getRight();
+		}
 	}
+	
+
 
 	/**
 	 * @original author Shai Vardi Modified for semester 2013 b
