@@ -223,7 +223,7 @@ public class RBTree {
 	 */
 	public int size() {
 		return this.root.size();
-	}	
+	}
 
 	/**
 	 * public class RBNode
@@ -436,8 +436,7 @@ public class RBTree {
 		}
 
 		/**
-		 * @param key
-		 *            Value to look for in keys
+		 * @param key Value to look for in keys
 		 * @return The node containing the value or the position to insert it
 		 */
 		public RBNode getPosition(int key) {
@@ -479,12 +478,13 @@ public class RBTree {
 					&& (current.getParent().getRight() == current)) {
 				current = current.getParent();
 			}
+			
+			// this will return null of current is the maximum node (the most right node)
 
-			// this will return null of current is the maximum node (the most
-			// righ node)
 			// or it will return the first right ancestor
 			return current.getParent();
 		}
+
 
 		/**
 		 * @return Whether current node is a right son of given node
