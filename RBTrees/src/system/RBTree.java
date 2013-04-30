@@ -401,10 +401,11 @@ public class RBTree {
 				current = current.getParent();
 			}
 			
-			// this will return null of current is the maximum node (the most righ node)
+			// this will return null of current is the maximum node (the most right node)
 			// or it will return the first right ancestor
 			return current.getParent();
 		}
+		
 	}
 
 	/**
