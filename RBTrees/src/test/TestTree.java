@@ -10,7 +10,7 @@ import system.RBTree.RBNode;
 public class TestTree {
 
 	@Test
-	public void testSearch() throws Exception {
+	public void testInsert() throws Exception {
 		RBTree tree = new RBTree();
 		tree.insert(2);
 		tree.insert(6);
@@ -21,8 +21,11 @@ public class TestTree {
 		tree.insert(9);
 		tree.insert(8);
 		tree.insert(5);
+		//case 2 -> case 3
 		tree.insert(4);
+		//case 3
 		tree.insert(7);
+		// rotate the ROOT (case 3)
 		tree.insert(10);
 		tree.insert(13);
 		String output = displayTree(tree.getRoot());
