@@ -1,9 +1,11 @@
 package test;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.Stack;
 
 import org.junit.Test;
-import static junit.framework.Assert.*;
+
 import system.RBTree;
 import system.RBTree.RBNode;
 
@@ -21,16 +23,42 @@ public class TestTree {
 		tree.insert(9);
 		tree.insert(8);
 		tree.insert(5);
-		//case 2 -> case 3
+		// case 2 -> case 3
 		tree.insert(4);
-		//case 3
+		// case 3
 		tree.insert(7);
 		// rotate the ROOT (case 3)
 		tree.insert(10);
 		tree.insert(13);
 		String output = displayTree(tree.getRoot());
-		System.out.println(output);
-		assertEquals(expectedInsertedTree, output);
+		assertEquals("Comparing inserted tree with pre-created string",
+				expectedInsertedTree, output);
+	}
+
+	@Test
+	public void testArrayToTree() {
+		int[] sortedArray = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 };
+		RBTree treeFromArray = new RBTree();
+		treeFromArray.arrayToTree(sortedArray);
+
+		RBTree treeFromInsert = new RBTree();
+		treeFromInsert.insert(1);
+		treeFromInsert.insert(2);
+		treeFromInsert.insert(3);
+		treeFromInsert.insert(4);
+		treeFromInsert.insert(5);
+		treeFromInsert.insert(6);
+		treeFromInsert.insert(7);
+		treeFromInsert.insert(8);
+		treeFromInsert.insert(9);
+		treeFromInsert.insert(10);
+		treeFromInsert.insert(13);
+		System.out.println(displayTree(treeFromArray.getRoot()));
+		System.out.println(displayTree(treeFromInsert.getRoot()));
+		assertEquals(
+				"Comparing tree created from sorted array with tree inserted one by one:",
+				displayTree(treeFromArray.getRoot()),
+				displayTree(treeFromInsert.getRoot()));
 	}
 
 	public String displayTree(RBNode root) {
