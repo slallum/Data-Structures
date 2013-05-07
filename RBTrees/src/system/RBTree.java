@@ -375,10 +375,10 @@ public class RBTree {
 				return;
 			}
 
-			if (this.parent == this.parent.getParent().getLeft()) {
-				this.parent.getParent().setLeft(this);
-			} else {
+			if (this.parent.isRightSon()) {
 				this.parent.getParent().setRight(this);
+			} else {
+				this.parent.getParent().setLeft(this);
 			}
 		}
 
