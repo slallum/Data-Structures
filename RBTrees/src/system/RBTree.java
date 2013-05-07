@@ -1,6 +1,5 @@
 package system;
 
-import java.util.Stack;
 
 /**
  * 
@@ -13,6 +12,8 @@ import java.util.Stack;
 
 public class RBTree {
 
+	private static final int DUMMY_VALUE = -1;
+	
 	/** Starts the tree */
 	private RBNode root;
 
@@ -101,6 +102,142 @@ public class RBTree {
 		return fixInsert(newNode);
 	}
 
+	
+
+	/**
+	 * public void delete(int i)
+	 * 
+	 * deletes the integer i from the binary tree, if it is there; the tree must
+	 * remain valid (keep its invariants). the function returns the number of
+	 * rotations, or 0 if i was not in the tree or no rotations were needed
+	 */
+	public int delete(int i) {
+		RBNode position = this.root.getPosition(i);
+		if (position.getKey() != i) {
+			return 0;
+		}
+		boolean isBlack = position.isBlack();
+		RBNode nodeToFix;
+		if ((position.getRight() == null) && (position.getLeft() == null)) {
+			nodeToFix = new RBNode(null, null, null, DUMMY_VALUE, true);
+			this.transplant(position, nodeToFix);
+		} else if (position.getRight() == null) {
+			this.transplant(position, position.getLeft());
+			nodeToFix = position.getLeft();
+		} else if (position.getLeft() == null) {
+			this.transplant(position, position.getRight());
+			nodeToFix = position.getRight();
+		} else {
+			RBNode nextPosition = replaceWithSuccessor(position);
+			nodeToFix = nextPosition.getRight();
+			isBlack = nextPosition.isBlack();
+			this.transplant(position, nextPosition);
+		}
+		int rotations = isBlack ? fixDelete(nodeToFix) : 0;
+		// If we added a dummy node for means of fixing
+		if (isDummyNode(nodeToFix)) {
+			nodeToFix.removeBelow();
+		}
+		return rotations;
+	}
+	
+	/**
+	 * public int min()
+	 * 
+	 * Returns the smallest key in the tree, or -1 if the tree is empty is
+	 * empty, returns -1;
+	 * 
+	 */
+	public int min() {
+		if (empty()) {
+			return DUMMY_VALUE;
+		}
+		RBNode current = this.root;
+		while (current.left != null) {
+			current = current.left;
+		}
+		return current.key;
+	}
+
+	/**
+	 * public int max()
+	 * 
+	 * Returns the largest key in the tree, or -1 if the tree is empty
+	 */
+	public int max() {
+		if (empty()) {
+			return DUMMY_VALUE;
+		}
+		RBNode current = this.root;
+		while (current.right != null) {
+			current = current.right;
+		}
+		return current.key;
+	}
+
+	/**
+	 * public void arrayToTree(int[] )
+	 * 
+	 * inserts the array of integers to the tree. if the tree contained elements
+	 * before, they should be discarded the array contains integers in ascending
+	 * order.
+	 * 
+	 */
+	public void arrayToTree(int[] array) {
+		this.root = new RBNode(null, null, null, array[0], true);
+		RBNode current = this.root;
+		for (int i = 1; i < array.length; i++) {
+			RBNode newNode = new RBNode(current, null, null, array[i], false);
+			// Adding to the right because we assume array is in ASC order
+			current.setRight(newNode);
+			fixInsert(newNode);
+			current = newNode;
+		}
+	}
+
+	/**
+	 * @return All keys of tree, in order
+	 */
+	public String treeToStr() {
+		return this.root.order("in");
+	}
+
+	/**
+	 * public int size()
+	 * 
+	 * Returns the number of nodes in the tree.
+	 * 
+	 * precondition: none postcondition: none
+	 */
+	public int size() {
+		return this.root.size();
+	}
+	
+	//*** Private Methods ***//
+	
+	/**
+	 * @param oldNode	The node to replace
+	 * @param newNode	The node to place instead
+	 */
+	private void transplant(RBNode oldNode, RBNode newNode) {
+		newNode.setParent(oldNode.getParent());
+		newNode.setLeft(oldNode.getLeft());
+		newNode.setRight(oldNode.getRight());
+		newNode.setKey(oldNode.getKey());
+		if (oldNode.isBlack()) {
+			newNode.setBlack();
+		} else {
+			newNode.setRed();
+		}
+		if (oldNode.getParent() == null) {
+			this.root = newNode;
+		} else if (oldNode.isRightSon()) {
+			oldNode.getParent().setRight(newNode);
+		} else {
+			oldNode.getParent().setLeft(newNode);
+		}
+	}
+	
 	/**
 	 * @param newNode
 	 * @return the number of rotations done for the fix
@@ -151,83 +288,38 @@ public class RBTree {
 			this.root = this.root.getParent();
 		}
 	}
-
+	
 	/**
-	 * public void delete(int i)
-	 * 
-	 * deletes the integer i from the binary tree, if it is there; the tree must
-	 * remain valid (keep its invariants). the function returns the number of
-	 * rotations, or 0 if i was not in the tree or no rotations were needed
+	 * @param position	The node to replace
+	 * @return			The node that was put in instead, should be it's successor
 	 */
-	public int delete(int i) {
-		return 0; // to be replaced by student code
-	}
-
-	/**
-	 * public int min()
-	 * 
-	 * Returns the smallest key in the tree, or -1 if the tree is empty is
-	 * empty, returns -1;
-	 * 
-	 */
-	public int min() {
-		if (empty()) {
-			return -1;
+	private RBNode replaceWithSuccessor(RBNode position) {
+		RBNode nextPosition = position.successor();
+		if (nextPosition.getParent() == position) {
+			position.setRight(nextPosition.getRight());
+		} else {
+			nextPosition.getParent().setLeft(nextPosition.getRight());
 		}
-		RBNode current = this.root;
-		while (current.left != null) {
-			current = current.left;
-		}
-		return current.key;
+		return nextPosition;
 	}
-
+	
 	/**
-	 * public int max()
-	 * 
-	 * Returns the largest key in the tree, or -1 if the tree is empty
+	 * @param nodeToFix
+	 * @return
 	 */
-	public int max() {
-		if (empty()) {
-			return -1;
+	private int fixDelete(RBNode nodeToFix) {
+		while ((nodeToFix != this.root) && nodeToFix.isBlack()) {
+			
 		}
-		RBNode current = this.root;
-		while (current.right != null) {
-			current = current.right;
-		}
-		return current.key;
+		return 0;
 	}
-
+	
 	/**
-	 * public void arrayToTree(int[] )
-	 * 
-	 * inserts the array of integers to the tree. if the tree contained elements
-	 * before, they should be discarded the array contains integers in ascending
-	 * order.
-	 * 
+	 * @param nodeToCheck	Check if was dummy
+	 * @return			Is a dummy node we created ourselves
 	 */
-	public void arrayToTree(int[] array) {
-		this.root = new RBNode(null, null, null, array[0], true);
-		for (int i = 1; i < array.length; i++) {
-			this.insert(array[i]);
-		}
-	}
-
-	/**
-	 * @return All keys of tree, in order
-	 */
-	public String treeToStr() {
-		return this.root.order("in");
-	}
-
-	/**
-	 * public int size()
-	 * 
-	 * Returns the number of nodes in the tree.
-	 * 
-	 * precondition: none postcondition: none
-	 */
-	public int size() {
-		return this.root.size();
+	private boolean isDummyNode(RBNode nodeToCheck) {
+		return nodeToCheck.getKey() == DUMMY_VALUE;
 	}
 
 	/**
@@ -262,6 +354,22 @@ public class RBTree {
 			this.isBlack = isBlack;
 		}
 
+		/**
+		 * Takes the right sided son, according to position of current node
+		 * 
+		 * @return	The son of the same parent
+		 */
+		public RBNode getSibling() {
+			if (this.isRightSon()) {
+				return this.getParent().getLeft();
+			} else {
+				return this.getParent().getRight();
+			}
+		}
+
+		/**
+		 * @return	If parent has a sibling, return it
+		 */
 		public RBNode getUncle() {
 			if (this.getParent().getParent() != null) {	
 				if (this.getParent().getParent().getLeft() == this.getParent()) {
@@ -499,13 +607,24 @@ public class RBTree {
 			return current.getParent();
 		}
 
-
+		/**
+		 * Remove everything under this node inclusive
+		 */
+		public void removeBelow() {
+			if (this.isRightSon()) {
+				this.getParent().setRight(null);
+			} else {
+				this.getParent().setLeft(null);
+			}
+		}
+		
 		/**
 		 * @return Whether current node is a right son of given node
 		 */
-		private boolean isRightSon() {
+		public boolean isRightSon() {
 			return this == this.getParent().getRight();
 		}
+		
 	}
 
 	public RBNode getRoot() {
