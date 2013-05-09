@@ -1,6 +1,5 @@
 package system;
 
-
 /**
  * 
  * RBTree
@@ -13,14 +12,20 @@ package system;
 public class RBTree {
 
 	private static final int DUMMY_VALUE = -1;
-	
+
 	/** Starts the tree */
 	private RBNode root;
 
+	/**
+	 * @param root
+	 */
 	public RBTree(RBNode root) {
 		this.root = root;
 	}
 
+	/**
+	 * 
+	 */
 	public RBTree() {
 
 	}
@@ -102,8 +107,6 @@ public class RBTree {
 		return fixInsert(newNode);
 	}
 
-	
-
 	/**
 	 * public void delete(int i)
 	 * 
@@ -128,10 +131,8 @@ public class RBTree {
 			this.transplant(position, position.getRight());
 			nodeToFix = position.getRight();
 		} else {
-			RBNode nextPosition = replaceWithSuccessor(position);
-			nodeToFix = nextPosition.getRight();
-			isBlack = nextPosition.isBlack();
-			this.transplant(position, nextPosition);
+			nodeToFix = removeSuccessor(position);
+			isBlack = nodeToFix.isBlack();
 		}
 		int rotations = isBlack ? fixDelete(nodeToFix) : 0;
 		// If we added a dummy node for means of fixing
@@ -140,7 +141,7 @@ public class RBTree {
 		}
 		return rotations;
 	}
-	
+
 	/**
 	 * public int min()
 	 * 
@@ -212,18 +213,19 @@ public class RBTree {
 	public int size() {
 		return this.root.size();
 	}
-	
-	//*** Private Methods ***//
-	
+
+	// *** Private Methods ***//
+
 	/**
-	 * @param oldNode	The node to replace
-	 * @param newNode	The node to place instead
+	 * @param oldNode
+	 *            The node to replace
+	 * @param newNode
+	 *            The node to place instead
 	 */
 	private void transplant(RBNode oldNode, RBNode newNode) {
 		newNode.setParent(oldNode.getParent());
 		newNode.setLeft(oldNode.getLeft());
 		newNode.setRight(oldNode.getRight());
-		newNode.setKey(oldNode.getKey());
 		if (oldNode.isBlack()) {
 			newNode.setBlack();
 		} else {
@@ -237,14 +239,15 @@ public class RBTree {
 			oldNode.getParent().setLeft(newNode);
 		}
 	}
-	
+
 	/**
 	 * @param newNode
 	 * @return the number of rotations done for the fix
 	 */
 	private int fixInsert(RBNode nodeToCheck) {
 		int rotationsCount = 0;
-		while ((nodeToCheck.getParent() != null) && !nodeToCheck.getParent().isBlack()) {
+		while ((nodeToCheck.getParent() != null)
+				&& !nodeToCheck.getParent().isBlack()) {
 			RBNode uncle = nodeToCheck.getUncle();
 			boolean isRightUncle = !nodeToCheck.getParent().isRightSon();
 			// case 1
@@ -284,39 +287,97 @@ public class RBTree {
 		} else {
 			nodeToFix.getParent().getParent().rotateLeft();
 		}
-		if (this.root.getParent() != null) {
+		fixRoot();
+	}
+
+	/**
+	 * If root has changed, i.e. current root has a parent,
+	 * go up until no parents - that should be the root
+	 */
+	private void fixRoot() {
+		while (this.root.getParent() != null) {
 			this.root = this.root.getParent();
 		}
 	}
-	
+
 	/**
-	 * @param position	The node to replace
-	 * @return			The node that was put in instead, should be it's successor
+	 * @param position
+	 *            The node to replace
+	 * @return The node that was put in instead, should be it's successor
 	 */
-	private RBNode replaceWithSuccessor(RBNode position) {
+	private RBNode removeSuccessor(RBNode position) {
 		RBNode nextPosition = position.successor();
-		if (nextPosition.getParent() == position) {
-			position.setRight(nextPosition.getRight());
-		} else {
-			nextPosition.getParent().setLeft(nextPosition.getRight());
+		// Need to fix where removed
+		RBNode nodeToFix = nextPosition.getRight();
+		// No node to fix - need to put a dummy instead
+		if (nodeToFix == null) {
+			nodeToFix = new RBNode(null, null, null, DUMMY_VALUE, true);					
+			this.transplant(nextPosition, nodeToFix);
 		}
-		return nextPosition;
+		// Successor is immediate right son
+		if (nextPosition.getParent() == position) {
+			position.setRight(nodeToFix);
+		} else {
+			// Successor is most left of right son
+			nextPosition.getParent().setLeft(nodeToFix);
+		}
+		this.transplant(position, nextPosition);
+		return nodeToFix;
 	}
-	
+
 	/**
 	 * @param nodeToFix
 	 * @return
 	 */
 	private int fixDelete(RBNode nodeToFix) {
+		int rotations = 0;
 		while ((nodeToFix != this.root) && nodeToFix.isBlack()) {
-			
+			RBNode sibling = nodeToFix.getSibling();
+			if (!nodeToFix.isRightSon()) {
+				if ((sibling != null) && !sibling.isBlack()) {
+					sibling.setBlack();
+					nodeToFix.getParent().setRed();
+					nodeToFix.getParent().rotateLeft();
+					rotations++;
+					sibling = nodeToFix.getParent().getRight();
+				} 
+				if ((sibling.getLeft() == null && sibling.getRight() == null)
+						|| (sibling.getLeft().isBlack() && sibling.getRight()
+								.isBlack())) {
+					sibling.setRed();
+					nodeToFix = nodeToFix.getParent();
+				} else if ((sibling.getRight() != null) && sibling.getRight().isBlack()) {
+					sibling.getLeft().setBlack();
+					sibling.setRed();
+					sibling.rotateRight();
+					rotations++;
+					sibling = nodeToFix.getParent().getRight();
+				} else {
+					if (nodeToFix.getParent().isBlack()) {
+						sibling.setBlack();
+					} else {
+						sibling.setRed();
+					}
+					if (nodeToFix.getParent() != null) {
+						nodeToFix.getParent().setBlack();
+					}
+					if (sibling.getRight() != null) {
+						sibling.getRight().setBlack();
+					}
+					nodeToFix.rotateLeft();
+					rotations++;
+				}
+			}
+			fixRoot();
 		}
-		return 0;
+		nodeToFix.setBlack();
+		return rotations;
 	}
-	
+
 	/**
-	 * @param nodeToCheck	Check if was dummy
-	 * @return			Is a dummy node we created ourselves
+	 * @param nodeToCheck
+	 *            Check if was dummy
+	 * @return Is a dummy node we created ourselves
 	 */
 	private boolean isDummyNode(RBNode nodeToCheck) {
 		return nodeToCheck.getKey() == DUMMY_VALUE;
@@ -357,7 +418,7 @@ public class RBTree {
 		/**
 		 * Takes the right sided son, according to position of current node
 		 * 
-		 * @return	The son of the same parent
+		 * @return The son of the same parent
 		 */
 		public RBNode getSibling() {
 			if (this.isRightSon()) {
@@ -368,13 +429,14 @@ public class RBTree {
 		}
 
 		/**
-		 * @return	If parent has a sibling, return it
+		 * @return If parent has a sibling, return it
 		 */
 		public RBNode getUncle() {
-			if (this.getParent().getParent() != null) {	
+			if (this.getParent().getParent() != null) {
 				if (this.getParent().getParent().getLeft() == this.getParent()) {
 					return this.getParent().getParent().getRight();
-				} else if (this.getParent().getParent().getRight() == this.getParent()) {
+				} else if (this.getParent().getParent().getRight() == this
+						.getParent()) {
 					return this.getParent().getParent().getLeft();
 				}
 			}
@@ -558,7 +620,8 @@ public class RBTree {
 		}
 
 		/**
-		 * @param key Value to look for in keys
+		 * @param key
+		 *            Value to look for in keys
 		 * @return The node containing the value or the position to insert it
 		 */
 		public RBNode getPosition(int key) {
@@ -585,8 +648,8 @@ public class RBTree {
 			RBNode current;
 			// this node has a right child
 			if (this.right != null) {
-				current = this.right.getLeft();
-				while (current != null) {
+				current = this.right;
+				while (current.getLeft() != null) {
 					current = current.getLeft();
 				}
 				return current;
@@ -600,8 +663,9 @@ public class RBTree {
 					&& (current.getParent().getRight() == current)) {
 				current = current.getParent();
 			}
-			
-			// this will return null of current is the maximum node (the most right node)
+
+			// this will return null of current is the maximum node (the most
+			// right node)
 
 			// or it will return the first right ancestor
 			return current.getParent();
@@ -617,14 +681,14 @@ public class RBTree {
 				this.getParent().setLeft(null);
 			}
 		}
-		
+
 		/**
 		 * @return Whether current node is a right son of given node
 		 */
 		public boolean isRightSon() {
 			return this == this.getParent().getRight();
 		}
-		
+
 	}
 
 	public RBNode getRoot() {

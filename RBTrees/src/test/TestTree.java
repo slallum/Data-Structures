@@ -11,6 +11,8 @@ import system.RBTree.RBNode;
 
 public class TestTree {
 
+	private RBTree tree = new RBTree();
+	
 	@Test
 	public void testInsert() throws Exception {
 		RBTree tree = new RBTree();
@@ -53,13 +55,53 @@ public class TestTree {
 		treeFromInsert.insert(9);
 		treeFromInsert.insert(10);
 		treeFromInsert.insert(13);
-		System.out.println(displayTree(treeFromArray.getRoot()));
-		System.out.println(displayTree(treeFromInsert.getRoot()));
+//		System.out.println(displayTree(treeFromArray.getRoot()));
+//		System.out.println(displayTree(treeFromInsert.getRoot()));
 		assertEquals(
 				"Comparing tree created from sorted array with tree inserted one by one:",
 				displayTree(treeFromArray.getRoot()),
 				displayTree(treeFromInsert.getRoot()));
 	}
+	
+	@Test
+	public void testDelete() {
+		
+		// CASE 1
+		RBNode root = createNode(5);
+		RBNode nodeToDelete = createNode(3);
+		RBNode nodeToRemain = createNode(8);
+		RBNode nodeToRemainL = createNode(6);
+		RBNode nodeToRemainR = createNode(10);
+		nodeToRemain.setLeft(nodeToRemainL);
+		nodeToRemain.setRight(nodeToRemainR);
+		nodeToRemain.setRed();
+		root.setLeft(nodeToDelete);
+		root.setRight(nodeToRemain);
+		RBTree testDelete = new RBTree(root);
+		testDelete.delete(3);
+		assertEquals("Delete Case 1 Tree", displayTree(testDelete.getRoot()), expectedDeleteCase1Tree);
+		
+		// CASE 2
+		root = createNode(5);
+		nodeToDelete = createNode(3);
+		RBNode nodeToDeleteL = createNode(1);
+		RBNode nodeToDeleteR = createNode(4);
+		nodeToDelete.setLeft(nodeToDeleteL);
+		nodeToDelete.setRight(nodeToDeleteR);
+		nodeToRemain = createNode(8);
+		nodeToRemainL = createNode(6);
+		nodeToRemainR = createNode(10);
+		nodeToRemain.setLeft(nodeToRemainL);
+		nodeToRemain.setRight(nodeToRemainR);
+		nodeToRemain.setRed();
+		root.setLeft(nodeToDelete);
+		root.setRight(nodeToRemain);
+		testDelete = new RBTree(root);
+		System.out.println(displayTree(testDelete.getRoot()));
+		testDelete.delete(3);
+		System.out.println(displayTree(testDelete.getRoot()));
+	}
+
 
 	public String displayTree(RBNode root) {
 		StringBuilder buildOutput = new StringBuilder();
@@ -102,10 +144,16 @@ public class TestTree {
 		}
 		return buildOutput.toString();
 	}
+	
+	private RBNode createNode(int key) {
+		return tree.new RBNode(null, null, null, key, true);
+	}
 
 	private String expectedInsertedTree = "                                6-B                                                              \n"
 			+ "                2-R                              8-R                              \n"
 			+ "        1-B              4-B              7-B              10-B              \n"
 			+ "    --      --      3-R      5-R      --      --      9-R      13-R      \n";
-
+	private String expectedDeleteCase1Tree = "                                8-B                                                              \n"
+			+"                5-B                              10-B                              \n"
+			+"        --              6-R              --              --              \n";
 }
