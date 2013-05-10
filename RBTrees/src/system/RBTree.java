@@ -1,5 +1,7 @@
 package system;
 
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
 /**
  * 
  * RBTree
@@ -337,9 +339,14 @@ public class RBTree {
 				if (isDeleteCase1(sibling)) {
 					sibling = fixDeleteCase1Left(nodeToFix, sibling);
 					rotations++;
+					this.fixRoot();
 				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
+					// dummySibling can only happen in case2
+					if (isDummyNode(sibling)) {
+						sibling.removeBelow();
+					}
 				} else {
 					if (isDeleteCase3Left(sibling)) {
 						sibling = fixDeleteCase3Left(nodeToFix, sibling);
@@ -355,9 +362,14 @@ public class RBTree {
 				if (isDeleteCase1(sibling)) {
 					sibling = fixDeleteCase1Right(nodeToFix, sibling);
 					rotations++;
+					this.fixRoot();
 				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
+					// dummySibling can only happen in case2
+					if (isDummyNode(sibling)) {
+						sibling.removeBelow();
+					}
 				} else {
 					if (isDeleteCase3Right(sibling)) {
 						sibling = fixDeleteCase3Right(nodeToFix, sibling);
@@ -368,12 +380,12 @@ public class RBTree {
 					rotations++;
 				}
 			}
-			fixRoot();
+			this.fixRoot();
 		}
 		nodeToFix.setBlack();
 		return rotations;
 	}
-	
+
 	/**
 	 * Sibling is red
 	 * 
@@ -396,6 +408,10 @@ public class RBTree {
 		nodeToFix.getParent().setRed();
 		nodeToFix.getParent().rotateRight();
 		sibling = nodeToFix.getParent().getLeft();
+		if (sibling == null) {
+			sibling = new RBNode(null, null, null, DUMMY_VALUE, true);
+			nodeToFix.getParent().setLeft(sibling);
+		}
 		return sibling;
 	}
 
@@ -411,6 +427,10 @@ public class RBTree {
 		nodeToFix.getParent().setRed();
 		nodeToFix.getParent().rotateLeft();
 		sibling = nodeToFix.getParent().getRight();
+		if (sibling == null) { 
+			sibling = new RBNode(null, null, null, DUMMY_VALUE, true);
+			nodeToFix.getParent().setRight(sibling);
+		}
 		return sibling;
 	}
 
@@ -422,13 +442,24 @@ public class RBTree {
 	 * @return Whether setting fits with case 2 of delete
 	 */
 	private boolean isDeleteCase2(RBNode sibling) {
-		return (sibling.getLeft() == null && sibling.getRight() == null)
-				|| (sibling.getLeft().isBlack() && sibling.getRight().isBlack());
+		if (sibling.getLeft() == null && sibling.getRight() == null) {
+			return true;
+		}
+		if (sibling.getLeft() == null) {
+			return sibling.getRight().isBlack();
+		}
+		if (sibling.getLeft().isBlack()) {
+			if (sibling.getRight() == null) {
+				return true;
+			}
+			return sibling.getRight().isBlack();
+		}
+		return false;
 	}
-	
+
 	/**
-	 * Making the sibling red is enough for now
-	 * but moving up as 'extra blackness' went up
+	 * Making the sibling red is enough for now but moving up as 'extra
+	 * blackness' went up
 	 * 
 	 * @param nodeToFix
 	 * @param sibling
@@ -438,9 +469,9 @@ public class RBTree {
 		sibling.setRed();
 		return nodeToFix.getParent();
 	}
-	
+
 	/**
-	 * Siblings 
+	 * Siblings
 	 * 
 	 * @param sibling
 	 * @return Whether setting fits case 3 of delete, when removing a left child
@@ -456,7 +487,7 @@ public class RBTree {
 	private boolean isDeleteCase3Left(RBNode sibling) {
 		return (sibling.getRight() != null) && sibling.getRight().isBlack();
 	}
-	
+
 	/**
 	 * Siblings children are red and black, from right to left
 	 * 
@@ -471,7 +502,7 @@ public class RBTree {
 		sibling = nodeToFix.getParent().getRight();
 		return sibling;
 	}
-	
+
 	/**
 	 * Siblings children are red and black, from left to right
 	 * 
@@ -503,7 +534,7 @@ public class RBTree {
 		nodeToFix = this.root;
 		return nodeToFix;
 	}
-	
+
 	private RBNode fixDeleteCase4Right(RBNode nodeToFix, RBNode sibling) {
 		if (sibling.getLeft() != null) {
 			sibling.getLeft().setBlack();
@@ -524,7 +555,6 @@ public class RBTree {
 			nodeToFix.getParent().setBlack();
 		}
 	}
-
 
 	/**
 	 * @param nodeToCheck

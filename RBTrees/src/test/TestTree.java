@@ -67,6 +67,7 @@ public class TestTree {
 				"Comparing tree created from sorted array with tree inserted one by one:",
 				displayTree(treeFromArray.getRoot()),
 				displayTree(treeFromInsert.getRoot()));
+		assertEquals(isValidTree(treeFromInsert), true);
 	}
 
 	@Test
@@ -85,6 +86,7 @@ public class TestTree {
 		testDelete.delete(3);
 		assertEquals("Delete Case 1 Left Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase1LeftTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -105,6 +107,7 @@ public class TestTree {
 		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 1 Right Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase1RightTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -128,6 +131,7 @@ public class TestTree {
 		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 2 Right (Both) Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase2LeftTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -152,6 +156,7 @@ public class TestTree {
 		assertEquals("Delete Case 2 Left (Both) Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase2RightTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -180,6 +185,7 @@ public class TestTree {
 		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 3 Left (goes to case 4) Tree",
 				displayTree(testDelete.getRoot()), excpectedDeleteCaseLeft3Tree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -209,6 +215,7 @@ public class TestTree {
 		assertEquals("Delete Case 3 Right (goes to case 4) Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase3RightTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -276,6 +283,7 @@ public class TestTree {
 		assertEquals("Delete Case 4 Right Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase4RightTree);
+		assertEquals(isValidTree(testDelete), true);
 	}
 
 	@Test
@@ -310,6 +318,58 @@ public class TestTree {
 		assertEquals("Delete Case 4 Left Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteRootFromCase4Tree);
+
+		assertEquals(isValidTree(testDelete), true);
+	}
+
+	private boolean isValidTree(RBTree tree) {
+		List<Integer> depths = new ArrayList<>();
+		depths.add(0);
+		buildDepths(tree.getRoot(), depths, 0);
+//		System.out.println(Arrays.toString(depths.toArray()));
+		int i = 1;
+		while (i < depths.size()) {
+			if (depths.get(i) != depths.get(i - 1)) {
+				return false;
+			}
+			i++;
+		}
+		return checkRed(tree.getRoot(), false);
+
+	}
+
+	/**
+	 * Build an array of black sizes of all possible roots to leafs in tree
+	 * 
+	 * @param currentNode
+	 * @param depths
+	 * @param currentInd
+	 */
+	private void buildDepths(RBNode currentNode, List<Integer> depths,
+			int currentInd) {
+
+		if (currentNode == null) {
+			return;
+		}
+		if (currentNode.isBlack()) {
+			depths.set(currentInd, depths.get(currentInd) + 1);
+		}
+		depths.add(depths.get(currentInd));
+		int newInd = depths.size() - 1;
+		buildDepths(currentNode.getRight(), depths, currentInd);
+		buildDepths(currentNode.getLeft(), depths, newInd);
+	}
+
+	private boolean checkRed(RBNode currentNode, boolean lastRed) {
+		if (currentNode == null) {
+			return true;
+		}
+		if (lastRed && !currentNode.isBlack()) {
+			return false;
+		}
+		lastRed = !currentNode.isBlack();
+		return checkRed(currentNode.getLeft(), lastRed)
+				&& checkRed(currentNode.getRight(), lastRed);
 	}
 	
 	@Test
