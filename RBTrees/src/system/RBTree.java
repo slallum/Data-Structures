@@ -329,6 +329,12 @@ public class RBTree {
 		return nodeToFix;
 	}
 
+	/**
+	 * Make nextPosition have same color of position
+	 * 
+	 * @param position
+	 * @param nextPosition
+	 */
 	private void setSameColor(RBNode position, RBNode nextPosition) {
 		if (position.isBlack) {
 			nextPosition.setBlack();
@@ -338,6 +344,9 @@ public class RBTree {
 	}
 
 	/**
+	 * Need to fix the extra blackness in the tree of nodeToFix, 
+	 * by the removal of it's parent
+	 * 
 	 * @param nodeToFix
 	 * @return
 	 */
@@ -362,7 +371,7 @@ public class RBTree {
 						sibling = fixDeleteCase3Left(nodeToFix, sibling);
 						rotations++;
 					}
-					// Anyway fixing case 4
+					// Case 3 fix causes case 4
 					fixDeleteCase4(nodeToFix, sibling);
 					nodeToFix = fixDeleteCase4Left(nodeToFix, sibling);
 					rotations++;

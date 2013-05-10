@@ -125,11 +125,11 @@ public class TestNode {
 	 *            or "" for in-order values
 	 * @return String of all node's keys in "type" order
 	 */
-	public String order(RBNode node, String type) {
-		String right = (node.getRight() != null) ? order(node.getRight(), type)
+	public static String order(RBNode node, String type) {
+		String right = (node.getRight() != null) ? "," + order(node.getRight(), type)
 				.toString() : "";
 		String left = (node.getLeft() != null) ? order(node.getLeft(), type)
-				.toString() : "";
+				.toString() + "," : "";
 		switch (type) {
 		case "pre":
 			return node.getKey() + left + right;

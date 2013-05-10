@@ -346,56 +346,7 @@ public class TestTree {
 		assertEquals(isValidTree(tree), true);
 	}
 
-	private boolean isValidTree(RBTree tree) {
-		List<Integer> depths = new ArrayList<>();
-		depths.add(0);
-		buildDepths(tree.getRoot(), depths, 0);
-		// System.out.println(Arrays.toString(depths.toArray()));
-		int i = 1;
-		while (i < depths.size()) {
-			if (depths.get(i) != depths.get(i - 1)) {
-				return false;
-			}
-			i++;
-		}
-		return checkRed(tree.getRoot(), false);
-
-	}
-
-	/**
-	 * Build an array of black sizes of all possible roots to leafs in tree
-	 * 
-	 * @param currentNode
-	 * @param depths
-	 * @param currentInd
-	 */
-	private void buildDepths(RBNode currentNode, List<Integer> depths,
-			int currentInd) {
-
-		if (currentNode == null) {
-			return;
-		}
-		if (currentNode.isBlack()) {
-			depths.set(currentInd, depths.get(currentInd) + 1);
-		}
-		depths.add(depths.get(currentInd));
-		int newInd = depths.size() - 1;
-		buildDepths(currentNode.getRight(), depths, currentInd);
-		buildDepths(currentNode.getLeft(), depths, newInd);
-	}
-
-	private boolean checkRed(RBNode currentNode, boolean lastRed) {
-		if (currentNode == null) {
-			return true;
-		}
-		if (lastRed && !currentNode.isBlack()) {
-			return false;
-		}
-		lastRed = !currentNode.isBlack();
-		return checkRed(currentNode.getLeft(), lastRed)
-				&& checkRed(currentNode.getRight(), lastRed);
-	}
-
+	
 	@Test
 	public void TestInsertAndDeleteRandomNumbers() {
 		List<Integer> randomNumbers = getRandomNumbersList(1000);
@@ -430,6 +381,76 @@ public class TestTree {
 		}
 		List<Integer> numbersList = new ArrayList<Integer>(numbers);
 		return numbersList;
+	}
+
+	private boolean isValidTree(RBTree tree) {
+		if (tree.getRoot() == null) {
+			return true;
+		}
+		List<Integer> depths = new ArrayList<>();
+		depths.add(0);
+		buildDepths(tree.getRoot(), depths, 0);
+		// System.out.println(Arrays.toString(depths.toArray()));
+		int i = 1;
+		while (i < depths.size()) {
+			if (depths.get(i) != depths.get(i - 1)) {
+				return false;
+			}
+			i++;
+		}
+		int[] values = makeArray(TestNode.order(tree.getRoot(), "in"));
+		int ind = 1;
+		while ((ind < values.length) && (values[ind] >= values[ind-1])) {
+			ind++;
+		}
+		if (i < values.length) {
+			return false;
+		}
+		return checkRed(tree.getRoot(), false);
+
+	}
+
+	/**
+	 * Build an array of black sizes of all possible roots to leafs in tree
+	 * 
+	 * @param currentNode
+	 * @param depths
+	 * @param currentInd
+	 */
+	private void buildDepths(RBNode currentNode, List<Integer> depths,
+			int currentInd) {
+
+		if (currentNode == null) {
+			return;
+		}
+		if (currentNode.isBlack()) {
+			depths.set(currentInd, depths.get(currentInd) + 1);
+		}
+		depths.add(depths.get(currentInd));
+		int newInd = depths.size() - 1;
+		buildDepths(currentNode.getRight(), depths, currentInd);
+		buildDepths(currentNode.getLeft(), depths, newInd);
+	}
+	
+	private int[] makeArray(String values) {
+		String[] strValues = values.split(",");
+		int[] intValues = new int[strValues.length];
+		for(int i=0; i < strValues.length; i++) {
+			intValues[i] = Integer.parseInt(strValues[i]);
+		}
+		return intValues;
+	}
+
+	private boolean checkRed(RBNode currentNode, boolean lastRed) {
+		if (currentNode == null) {
+			return true;
+		}
+		if (lastRed && !currentNode.isBlack()) {
+			return false;
+		}
+		lastRed = !currentNode.isBlack();
+		return checkRed(currentNode.getLeft(), lastRed)
+				&& checkRed(currentNode.getRight(), lastRed);
 	}
 
 	public String displayTree(RBNode root) {
