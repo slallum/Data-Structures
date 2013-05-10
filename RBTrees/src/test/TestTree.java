@@ -324,7 +324,7 @@ public class TestTree {
 		tree.delete(5);
 		assertEquals(isValidTree(tree), true);
 	}
-
+	
 	@Test
 	public void TestCase3RightSpecific3() {
 		RBTree tree = new RBTree();
@@ -333,7 +333,7 @@ public class TestTree {
 		tree.delete(5);
 		assertEquals(isValidTree(tree), true);
 	}
-
+	
 	@Test
 	public void TestCase3RightSpecific4() {
 		RBTree tree = new RBTree();
@@ -404,11 +404,22 @@ public class TestTree {
 			tree.insert(n);
 			assertEquals(isValidTree(tree), true);
 		}
+		// System.out.println(displayTree(tree.getRoot()));
 		Collections.shuffle(randomNumbers);
+		String beforeTree;
+		String afterTree;
 		for (int n : randomNumbers) {
+			beforeTree = displayTree(tree.getRoot());
 			tree.delete(n);
-			assertEquals(isValidTree(tree), true);
+			afterTree = displayTree(tree.getRoot());
+			if (!isValidTree(tree)) {
+				System.out.println(beforeTree);
+				System.out.println(afterTree);
+				isValidTree(tree);
+				System.out.println("oh noes!");
+			}
 		}
+		System.out.println(displayTree(tree.getRoot()));
 	}
 
 	private List<Integer> getRandomNumbersList(int numbersCount) {
