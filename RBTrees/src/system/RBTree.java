@@ -335,50 +335,37 @@ public class RBTree {
 			RBNode sibling = nodeToFix.getSibling();
 			if (!nodeToFix.isRightSon()) {
 				if (isDeleteCase1(sibling)) {
-					sibling.setBlack();
-					nodeToFix.getParent().setRed();
-					nodeToFix.getParent().rotateLeft();
-					sibling = nodeToFix.getParent().getRight();
+					sibling = fixDeleteCase1Left(nodeToFix, sibling);
 					rotations++;
 				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
 				} else {
 					if (isDeleteCase3Left(sibling)) {
-						sibling.getLeft().setBlack();
-						sibling.setRed();
-						sibling.rotateRight();
+						sibling = fixDeleteCase3Left(nodeToFix, sibling);
 						rotations++;
-						sibling = nodeToFix.getParent().getRight();
 					}
 					// Anyway fixing case 4
-					if (nodeToFix.getParent().isBlack()) {
-						sibling.setBlack();
-					} else {
-						sibling.setRed();
-					}
-					if (nodeToFix.getParent() != null) {
-						nodeToFix.getParent().setBlack();
-					}
-					if (sibling.getRight() != null) {
-						sibling.getRight().setBlack();
-					}
-					nodeToFix.getParent().rotateLeft();
+					fixDeleteCase4(nodeToFix, sibling);
+					nodeToFix = fixDeleteCase4Left(nodeToFix, sibling);
 					rotations++;
-					fixRoot();
-					nodeToFix = this.root;
 				}
 			} else {
-				// Now dealing with left son
+				// Now dealing with right son
 				if (isDeleteCase1(sibling)) {
-					sibling.setBlack();
-					nodeToFix.getParent().setRed();
-					nodeToFix.getParent().rotateRight();
+					sibling = fixDeleteCase1Right(nodeToFix, sibling);
 					rotations++;
-					sibling = nodeToFix.getParent().getLeft();
 				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
+				} else {
+					if (isDeleteCase3Right(sibling)) {
+						sibling = fixDeleteCase3Right(nodeToFix, sibling);
+					}
+					// Anyway fixing case 4
+					fixDeleteCase4(nodeToFix, sibling);
+					nodeToFix = fixDeleteCase4Right(nodeToFix, sibling);
+					rotations++;
 				}
 			}
 			fixRoot();
@@ -386,8 +373,75 @@ public class RBTree {
 		nodeToFix.setBlack();
 		return rotations;
 	}
+	
+	/**
+	 * Sibling is red
+	 * 
+	 * @param sibling
+	 * @return Whether setting fits with case 2 of delete
+	 */
+	private boolean isDeleteCase1(RBNode sibling) {
+		return (sibling != null) && !sibling.isBlack();
+	}
 
 	/**
+	 * Sibling of right child is red - need to colour parent red and rotate left
+	 * 
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return
+	 */
+	private RBNode fixDeleteCase1Right(RBNode nodeToFix, RBNode sibling) {
+		sibling.setBlack();
+		nodeToFix.getParent().setRed();
+		nodeToFix.getParent().rotateRight();
+		sibling = nodeToFix.getParent().getLeft();
+		return sibling;
+	}
+
+	/**
+	 * Sibling of left child is red - need to colour parent red and rotate right
+	 * 
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return
+	 */
+	private RBNode fixDeleteCase1Left(RBNode nodeToFix, RBNode sibling) {
+		sibling.setBlack();
+		nodeToFix.getParent().setRed();
+		nodeToFix.getParent().rotateLeft();
+		sibling = nodeToFix.getParent().getRight();
+		return sibling;
+	}
+
+	/**
+	 * Both sons of sibling are black
+	 * 
+	 * @param sibling
+	 *            Sibling of node to fix
+	 * @return Whether setting fits with case 2 of delete
+	 */
+	private boolean isDeleteCase2(RBNode sibling) {
+		return (sibling.getLeft() == null && sibling.getRight() == null)
+				|| (sibling.getLeft().isBlack() && sibling.getRight().isBlack());
+	}
+	
+	/**
+	 * Making the sibling red is enough for now
+	 * but moving up as 'extra blackness' went up
+	 * 
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return The node after fix
+	 */
+	private RBNode fixDeleteCase2(RBNode nodeToFix, RBNode sibling) {
+		sibling.setRed();
+		return nodeToFix.getParent();
+	}
+	
+	/**
+	 * Siblings 
+	 * 
 	 * @param sibling
 	 * @return Whether setting fits case 3 of delete, when removing a left child
 	 */
@@ -402,34 +456,75 @@ public class RBTree {
 	private boolean isDeleteCase3Left(RBNode sibling) {
 		return (sibling.getRight() != null) && sibling.getRight().isBlack();
 	}
-
+	
 	/**
-	 * @param sibling
-	 * @return Whether setting fits with case 2 of delete
-	 */
-	private boolean isDeleteCase1(RBNode sibling) {
-		return (sibling != null) && !sibling.isBlack();
-	}
-
-	/**
+	 * Siblings children are red and black, from right to left
+	 * 
 	 * @param nodeToFix
 	 * @param sibling
-	 * @return The node after fix
+	 * @return
 	 */
-	private RBNode fixDeleteCase2(RBNode nodeToFix, RBNode sibling) {
+	private RBNode fixDeleteCase3Left(RBNode nodeToFix, RBNode sibling) {
+		sibling.getLeft().setBlack();
 		sibling.setRed();
-		return nodeToFix.getParent();
+		sibling.rotateRight();
+		sibling = nodeToFix.getParent().getRight();
+		return sibling;
+	}
+	
+	/**
+	 * Siblings children are red and black, from left to right
+	 * 
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return
+	 */
+	private RBNode fixDeleteCase3Right(RBNode nodeToFix, RBNode sibling) {
+		sibling.getLeft().setBlack();
+		sibling.setRed();
+		sibling.rotateLeft();
+		sibling = nodeToFix.getParent().getLeft();
+		return sibling;
 	}
 
 	/**
+	 * 
+	 * 
+	 * @param nodeToFix
 	 * @param sibling
-	 *            Sibling of node to fix
-	 * @return Whether setting fits with case 2 of delete
+	 * @return
 	 */
-	private boolean isDeleteCase2(RBNode sibling) {
-		return (sibling.getLeft() == null && sibling.getRight() == null)
-				|| (sibling.getLeft().isBlack() && sibling.getRight().isBlack());
+	private RBNode fixDeleteCase4Left(RBNode nodeToFix, RBNode sibling) {
+		if (sibling.getRight() != null) {
+			sibling.getRight().setBlack();
+		}
+		nodeToFix.getParent().rotateLeft();
+		fixRoot();
+		nodeToFix = this.root;
+		return nodeToFix;
 	}
+	
+	private RBNode fixDeleteCase4Right(RBNode nodeToFix, RBNode sibling) {
+		if (sibling.getLeft() != null) {
+			sibling.getLeft().setBlack();
+		}
+		nodeToFix.getParent().rotateRight();
+		fixRoot();
+		nodeToFix = this.root;
+		return nodeToFix;
+	}
+
+	private void fixDeleteCase4(RBNode nodeToFix, RBNode sibling) {
+		if (nodeToFix.getParent().isBlack()) {
+			sibling.setBlack();
+		} else {
+			sibling.setRed();
+		}
+		if (nodeToFix.getParent() != null) {
+			nodeToFix.getParent().setBlack();
+		}
+	}
+
 
 	/**
 	 * @param nodeToCheck
