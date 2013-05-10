@@ -17,6 +17,8 @@ public class RBTree {
 
 	/** Starts the tree */
 	private RBNode root;
+	
+	private boolean isBlack;
 
 	/**
 	 * @param root
@@ -121,25 +123,32 @@ public class RBTree {
 		if (position.getKey() != i) {
 			return 0;
 		}
-		boolean isBlack = position.isBlack();
+		isBlack = position.isBlack();
 		RBNode nodeToFix;
 		if ((position.getRight() == null) && (position.getLeft() == null)) {
 			nodeToFix = new RBNode(null, null, null, DUMMY_VALUE, true);
 			this.transplant(position, nodeToFix);
 		} else if (position.getRight() == null) {
-			this.transplant(position, position.getLeft());
 			nodeToFix = position.getLeft();
+			nodeToFix.moveUp();
+			
 		} else if (position.getLeft() == null) {
-			this.transplant(position, position.getRight());
 			nodeToFix = position.getRight();
+			nodeToFix.moveUp();
 		} else {
 			nodeToFix = removeSuccessor(position);
-			isBlack = nodeToFix.isBlack();
+		}
+		if (nodeToFix.getParent() == null) {
+			this.root = nodeToFix;
 		}
 		int rotations = isBlack ? fixDelete(nodeToFix) : 0;
 		// If we added a dummy node for means of fixing
 		if (isDummyNode(nodeToFix)) {
-			nodeToFix.removeBelow();
+			if (nodeToFix.getParent() == null) {
+				this.root = null;
+			} else {
+				nodeToFix.removeBelow();
+			}
 		}
 		return rotations;
 	}
@@ -228,11 +237,11 @@ public class RBTree {
 		newNode.setParent(oldNode.getParent());
 		newNode.setLeft(oldNode.getLeft());
 		newNode.setRight(oldNode.getRight());
-		if (oldNode.isBlack()) {
-			newNode.setBlack();
-		} else {
-			newNode.setRed();
-		}
+//		if (oldNode.isBlack()) {
+//			newNode.setBlack();
+//		} else {
+//			newNode.setRed();
+//		}
 		if (oldNode.getParent() == null) {
 			this.root = newNode;
 		} else if (oldNode.isRightSon()) {
@@ -309,6 +318,7 @@ public class RBTree {
 	 */
 	private RBNode removeSuccessor(RBNode position) {
 		RBNode nextPosition = position.successor();
+		isBlack = nextPosition.isBlack();
 		// Need to fix where removed
 		RBNode nodeToFix = nextPosition.getRight();
 		// No node to fix - need to put a dummy instead
@@ -324,7 +334,16 @@ public class RBTree {
 			nextPosition.getParent().setLeft(nodeToFix);
 		}
 		this.transplant(position, nextPosition);
+		setSameColor(position, nextPosition);
 		return nodeToFix;
+	}
+
+	private void setSameColor(RBNode position, RBNode nextPosition) {
+		if (position.isBlack) {
+			nextPosition.setBlack();
+		} else {
+			nextPosition.setRed();
+		}
 	}
 
 	/**
@@ -477,7 +496,7 @@ public class RBTree {
 	 * @return Whether setting fits case 3 of delete, when removing a left child
 	 */
 	private boolean isDeleteCase3Right(RBNode sibling) {
-		return (sibling.getLeft() != null) && sibling.getLeft().isBlack();
+		return (sibling.getLeft() == null) || sibling.getLeft().isBlack();
 	}
 
 	/**
@@ -485,7 +504,7 @@ public class RBTree {
 	 * @return Whether setting fits case 3 of delete, when removing a left child
 	 */
 	private boolean isDeleteCase3Left(RBNode sibling) {
-		return (sibling.getRight() != null) && sibling.getRight().isBlack();
+		return (sibling.getRight() == null) || sibling.getRight().isBlack();
 	}
 
 	/**
@@ -496,7 +515,9 @@ public class RBTree {
 	 * @return
 	 */
 	private RBNode fixDeleteCase3Left(RBNode nodeToFix, RBNode sibling) {
-		sibling.getLeft().setBlack();
+		if (sibling.getLeft() != null) {
+			sibling.getLeft().setBlack();
+		}
 		sibling.setRed();
 		sibling.rotateRight();
 		sibling = nodeToFix.getParent().getRight();
@@ -511,7 +532,9 @@ public class RBTree {
 	 * @return
 	 */
 	private RBNode fixDeleteCase3Right(RBNode nodeToFix, RBNode sibling) {
-		sibling.getLeft().setBlack();
+		if (sibling.getLeft() != null) {
+			sibling.getLeft().setBlack();
+		}
 		sibling.setRed();
 		sibling.rotateLeft();
 		sibling = nodeToFix.getParent().getLeft();

@@ -4,7 +4,6 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -61,8 +60,6 @@ public class TestTree {
 		treeFromInsert.insert(9);
 		treeFromInsert.insert(10);
 		treeFromInsert.insert(13);
-		// System.out.println(displayTree(treeFromArray.getRoot()));
-		// System.out.println(displayTree(treeFromInsert.getRoot()));
 		assertEquals(
 				"Comparing tree created from sorted array with tree inserted one by one:",
 				displayTree(treeFromArray.getRoot()),
@@ -102,9 +99,7 @@ public class TestTree {
 		root.setRight(nodeToDelete);
 		root.setLeft(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(6);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 1 Right Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase1RightTree);
 		assertEquals(isValidTree(testDelete), true);
@@ -126,9 +121,7 @@ public class TestTree {
 		root.setLeft(nodeToDelete);
 		root.setRight(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(3);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 2 Right (Both) Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase2LeftTree);
 		assertEquals(isValidTree(testDelete), true);
@@ -150,9 +143,7 @@ public class TestTree {
 		root.setLeft(nodeToDelete);
 		root.setRight(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(8);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 2 Left (Both) Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase2RightTree);
@@ -180,9 +171,7 @@ public class TestTree {
 		root.setLeft(nodeToDelete);
 		root.setRight(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(3);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 3 Left (goes to case 4) Tree",
 				displayTree(testDelete.getRoot()), excpectedDeleteCaseLeft3Tree);
 		assertEquals(isValidTree(testDelete), true);
@@ -209,9 +198,7 @@ public class TestTree {
 		root.setRight(nodeToDelete);
 		root.setLeft(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(12);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 3 Right (goes to case 4) Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase3RightTree);
@@ -244,9 +231,7 @@ public class TestTree {
 		root.setLeft(nodeToDelete);
 		root.setRight(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(3);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 4 Left Tree",
 				displayTree(testDelete.getRoot()), excpectedDeleteCase4LeftTree);
 	}
@@ -277,9 +262,7 @@ public class TestTree {
 		root.setRight(nodeToDelete);
 		root.setLeft(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(14);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 4 Right Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteCase4RightTree);
@@ -312,9 +295,7 @@ public class TestTree {
 		root.setLeft(nodeToDelete);
 		root.setRight(nodeToRemain);
 		RBTree testDelete = new RBTree(root);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		testDelete.delete(5);
-		// System.out.println(displayTree(testDelete.getRoot()));
 		assertEquals("Delete Case 4 Left Tree",
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteRootFromCase4Tree);
@@ -322,11 +303,54 @@ public class TestTree {
 		assertEquals(isValidTree(testDelete), true);
 	}
 
+	@Test
+	public void TestCase3RightSpecific() {
+		RBTree tree = new RBTree();
+		tree.insert(4);
+		tree.insert(1);
+		tree.insert(5);
+		tree.insert(3);
+		tree.delete(5);
+		assertEquals(isValidTree(tree), true);
+	}
+
+	@Test
+	public void TestCase3RightSpecific2() {
+		RBTree tree = new RBTree();
+		tree.insert(4);
+		tree.insert(1);
+		tree.insert(5);
+		tree.insert(6);
+		tree.delete(5);
+		assertEquals(isValidTree(tree), true);
+	}
+	
+	@Test
+	public void TestCase3RightSpecific3() {
+		RBTree tree = new RBTree();
+		tree.insert(4);
+		tree.insert(5);
+		tree.delete(5);
+		assertEquals(isValidTree(tree), true);
+	}
+	
+	@Test
+	public void TestCase3RightSpecific4() {
+		RBTree tree = new RBTree();
+		tree.insert(4);
+		tree.insert(1);
+		tree.insert(7);
+		tree.insert(5);
+		tree.insert(8);
+		tree.delete(4);
+		assertEquals(isValidTree(tree), true);
+	}
+
 	private boolean isValidTree(RBTree tree) {
 		List<Integer> depths = new ArrayList<>();
 		depths.add(0);
 		buildDepths(tree.getRoot(), depths, 0);
-//		System.out.println(Arrays.toString(depths.toArray()));
+		// System.out.println(Arrays.toString(depths.toArray()));
 		int i = 1;
 		while (i < depths.size()) {
 			if (depths.get(i) != depths.get(i - 1)) {
@@ -371,22 +395,33 @@ public class TestTree {
 		return checkRed(currentNode.getLeft(), lastRed)
 				&& checkRed(currentNode.getRight(), lastRed);
 	}
-	
+
 	@Test
 	public void TestInsertAndDeleteRandomNumbers() {
 		List<Integer> randomNumbers = getRandomNumbersList(1000);
 		RBTree tree = new RBTree();
 		for (int n : randomNumbers) {
 			tree.insert(n);
+			assertEquals(isValidTree(tree), true);
 		}
-		
+		// System.out.println(displayTree(tree.getRoot()));
 		Collections.shuffle(randomNumbers);
+		String beforeTree;
+		String afterTree;
 		for (int n : randomNumbers) {
+			beforeTree = displayTree(tree.getRoot());
 			tree.delete(n);
+			afterTree = displayTree(tree.getRoot());
+			if (!isValidTree(tree)) {
+				System.out.println(beforeTree);
+				System.out.println(afterTree);
+				isValidTree(tree);
+				System.out.println("oh noes!");
+			}
 		}
 		System.out.println(displayTree(tree.getRoot()));
 	}
-	
+
 	private List<Integer> getRandomNumbersList(int numbersCount) {
 		HashSet<Integer> numbers = new HashSet<Integer>();
 		Random rand = new Random();
@@ -438,7 +473,6 @@ public class TestTree {
 		}
 		return buildOutput.toString();
 	}
-	
 
 	private RBNode createNode(int key) {
 		return tree.new RBNode(null, null, null, key, true);
