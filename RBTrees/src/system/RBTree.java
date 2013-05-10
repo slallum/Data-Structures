@@ -291,8 +291,8 @@ public class RBTree {
 	}
 
 	/**
-	 * If root has changed, i.e. current root has a parent,
-	 * go up until no parents - that should be the root
+	 * If root has changed, i.e. current root has a parent, go up until no
+	 * parents - that should be the root
 	 */
 	private void fixRoot() {
 		while (this.root.getParent() != null) {
@@ -311,7 +311,7 @@ public class RBTree {
 		RBNode nodeToFix = nextPosition.getRight();
 		// No node to fix - need to put a dummy instead
 		if (nodeToFix == null) {
-			nodeToFix = new RBNode(null, null, null, DUMMY_VALUE, true);					
+			nodeToFix = new RBNode(null, null, null, DUMMY_VALUE, true);
 			this.transplant(nextPosition, nodeToFix);
 		}
 		// Successor is immediate right son
@@ -334,22 +334,24 @@ public class RBTree {
 		while ((nodeToFix != this.root) && nodeToFix.isBlack()) {
 			RBNode sibling = nodeToFix.getSibling();
 			if (!nodeToFix.isRightSon()) {
-				if ((sibling != null) && !sibling.isBlack()) {
+				if (isDeleteCase1(sibling)) {
 					sibling.setBlack();
 					nodeToFix.getParent().setRed();
 					nodeToFix.getParent().rotateLeft();
-					rotations++;
 					sibling = nodeToFix.getParent().getRight();
-				} 
+					rotations++;
+				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
-				} else if ((sibling.getRight() != null) && sibling.getRight().isBlack()) {
-					sibling.getLeft().setBlack();
-					sibling.setRed();
-					sibling.rotateRight();
-					rotations++;
-					sibling = nodeToFix.getParent().getRight();
 				} else {
+					if (isDeleteCase3Left(sibling)) {
+						sibling.getLeft().setBlack();
+						sibling.setRed();
+						sibling.rotateRight();
+						rotations++;
+						sibling = nodeToFix.getParent().getRight();
+					}
+					// Anyway fixing case 4
 					if (nodeToFix.getParent().isBlack()) {
 						sibling.setBlack();
 					} else {
@@ -361,15 +363,20 @@ public class RBTree {
 					if (sibling.getRight() != null) {
 						sibling.getRight().setBlack();
 					}
-					nodeToFix.rotateLeft();
+					nodeToFix.getParent().rotateLeft();
 					rotations++;
+					fixRoot();
+					nodeToFix = this.root;
 				}
 			} else {
 				// Now dealing with left son
-				
-				// First IF
-				
-				// Case 2
+				if (isDeleteCase1(sibling)) {
+					sibling.setBlack();
+					nodeToFix.getParent().setRed();
+					nodeToFix.getParent().rotateRight();
+					rotations++;
+					sibling = nodeToFix.getParent().getLeft();
+				}
 				if (isDeleteCase2(sibling)) {
 					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
 				}
@@ -380,16 +387,48 @@ public class RBTree {
 		return rotations;
 	}
 
-	private RBNode fixDeleteCase2(RBNode nodeToFix, RBNode sibling) {
-		sibling.setRed();
-		nodeToFix = nodeToFix.getParent();
-		return nodeToFix;
+	/**
+	 * @param sibling
+	 * @return Whether setting fits case 3 of delete, when removing a left child
+	 */
+	private boolean isDeleteCase3Right(RBNode sibling) {
+		return (sibling.getLeft() != null) && sibling.getLeft().isBlack();
 	}
 
+	/**
+	 * @param sibling
+	 * @return Whether setting fits case 3 of delete, when removing a left child
+	 */
+	private boolean isDeleteCase3Left(RBNode sibling) {
+		return (sibling.getRight() != null) && sibling.getRight().isBlack();
+	}
+
+	/**
+	 * @param sibling
+	 * @return Whether setting fits with case 2 of delete
+	 */
+	private boolean isDeleteCase1(RBNode sibling) {
+		return (sibling != null) && !sibling.isBlack();
+	}
+
+	/**
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return The node after fix
+	 */
+	private RBNode fixDeleteCase2(RBNode nodeToFix, RBNode sibling) {
+		sibling.setRed();
+		return nodeToFix.getParent();
+	}
+
+	/**
+	 * @param sibling
+	 *            Sibling of node to fix
+	 * @return Whether setting fits with case 2 of delete
+	 */
 	private boolean isDeleteCase2(RBNode sibling) {
 		return (sibling.getLeft() == null && sibling.getRight() == null)
-				|| (sibling.getLeft().isBlack() && sibling.getRight()
-						.isBlack());
+				|| (sibling.getLeft().isBlack() && sibling.getRight().isBlack());
 	}
 
 	/**

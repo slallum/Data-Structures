@@ -65,8 +65,6 @@ public class TestTree {
 
 	@Test
 	public void testDeleteCase1() {
-
-		// CASE 1
 		RBNode root = createNode(5);
 		RBNode nodeToDelete = createNode(3);
 		RBNode nodeToRemain = createNode(8);
@@ -82,10 +80,9 @@ public class TestTree {
 		assertEquals("Delete Case 1 Tree", displayTree(testDelete.getRoot()),
 				expectedDeleteCase1Tree);
 	}
-	
+
 	@Test
 	public void testDeleteCase2() {
-		// CASE 2
 		RBNode root = createNode(5);
 		RBNode nodeToDelete = createNode(3);
 		RBNode nodeToDeleteL = createNode(1);
@@ -103,6 +100,34 @@ public class TestTree {
 		testDelete.delete(3);
 		assertEquals("Delete Case 2 (Both) Tree",
 				displayTree(testDelete.getRoot()), expectedDeleteCase2Tree);
+	}
+
+	@Test
+	public void testDeleteCase3() {
+		RBNode root = createNode(5);
+		RBNode nodeToDelete = createNode(3);
+		RBNode nodeToDeleteL = createNode(1);
+		RBNode nodeToDeleteR = createNode(4);
+		nodeToDelete.setLeft(nodeToDeleteL);
+		nodeToDelete.setRight(nodeToDeleteR);
+		RBNode nodeToRemain = createNode(9);
+		RBNode nodeToRemainL = createNode(7);
+		nodeToRemainL.setRed();
+		RBNode nodeToRemainR = createNode(10);
+		RBNode nodeToRemainSonL = createNode(6);
+		RBNode nodeToRemainSonR = createNode(8);
+		nodeToRemainL.setLeft(nodeToRemainSonL);
+		nodeToRemainL.setRight(nodeToRemainSonR);
+		nodeToRemain.setLeft(nodeToRemainL);
+		nodeToRemain.setRight(nodeToRemainR);
+		root.setLeft(nodeToDelete);
+		root.setRight(nodeToRemain);
+		RBTree testDelete = new RBTree(root);
+//		System.out.println(displayTree(testDelete.getRoot()));
+		testDelete.delete(3);
+//		System.out.println(displayTree(testDelete.getRoot()));
+		assertEquals("Delete Case 2 (Both) Tree",
+				displayTree(testDelete.getRoot()), excpectedDeleteCase3Tree);
 	}
 
 	public String displayTree(RBNode root) {
@@ -162,4 +187,8 @@ public class TestTree {
 	private String expectedDeleteCase2Tree = "                                5-B                                                              \n"
 			+ "                4-B                              8-R                              \n"
 			+ "        1-R              --              6-B              10-B              \n";
+	private String excpectedDeleteCase3Tree = "                                7-B                                                              \n"
+			+ "                5-B                              9-B                              \n"
+			+ "        4-B              6-B              8-B              10-B              \n"
+			+ "    1-R      --      --      --      --      --      --      --      \n";
 }
