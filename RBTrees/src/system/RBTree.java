@@ -206,13 +206,6 @@ public class RBTree {
 	}
 
 	/**
-	 * @return All keys of tree, in order
-	 */
-	public String treeToStr() {
-		return this.root.order("in");
-	}
-
-	/**
 	 * public int size()
 	 * 
 	 * Returns the number of nodes in the tree.
@@ -782,28 +775,6 @@ public class RBTree {
 			right.moveUp();
 			this.setRight(right.getLeft());
 			right.setLeft(this);
-		}
-
-		/**
-		 * 
-		 * @param type
-		 *            "pre" for pre-order values "post" for post-order values
-		 *            "in" or "" for in-order values
-		 * @return String of all node's keys in "type" order
-		 */
-		public String order(String type) {
-			String right = (this.right != null) ? this.right.order(type)
-					.toString() : "";
-			String left = (this.left != null) ? this.left.order(type)
-					.toString() : "";
-			switch (type) {
-			case "pre":
-				return this.key + left + right;
-			case "post":
-				return left + right + this.key;
-			default:
-				return left + this.key + right;
-			}
 		}
 
 		/**
