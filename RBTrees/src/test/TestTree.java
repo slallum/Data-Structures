@@ -2,6 +2,12 @@ package test;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 import org.junit.Test;
@@ -305,6 +311,31 @@ public class TestTree {
 				displayTree(testDelete.getRoot()),
 				excpectedDeleteRootFromCase4Tree);
 	}
+	
+	@Test
+	public void TestInsertAndDeleteRandomNumbers() {
+		List<Integer> randomNumbers = getRandomNumbersList(1000);
+		RBTree tree = new RBTree();
+		for (int n : randomNumbers) {
+			tree.insert(n);
+		}
+		
+		Collections.shuffle(randomNumbers);
+		for (int n : randomNumbers) {
+			tree.delete(n);
+		}
+		System.out.println(displayTree(tree.getRoot()));
+	}
+	
+	private List<Integer> getRandomNumbersList(int numbersCount) {
+		HashSet<Integer> numbers = new HashSet<Integer>();
+		Random rand = new Random();
+		for (int i = 0; i < numbersCount; i++) {
+			numbers.add(rand.nextInt(1073741824)); // 2**30
+		}
+		List<Integer> numbersList = new ArrayList<Integer>(numbers);
+		return numbersList;
+	}
 
 	public String displayTree(RBNode root) {
 		StringBuilder buildOutput = new StringBuilder();
@@ -347,6 +378,7 @@ public class TestTree {
 		}
 		return buildOutput.toString();
 	}
+	
 
 	private RBNode createNode(int key) {
 		return tree.new RBNode(null, null, null, key, true);
