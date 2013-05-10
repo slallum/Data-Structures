@@ -341,11 +341,8 @@ public class RBTree {
 					rotations++;
 					sibling = nodeToFix.getParent().getRight();
 				} 
-				if ((sibling.getLeft() == null && sibling.getRight() == null)
-						|| (sibling.getLeft().isBlack() && sibling.getRight()
-								.isBlack())) {
-					sibling.setRed();
-					nodeToFix = nodeToFix.getParent();
+				if (isDeleteCase2(sibling)) {
+					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
 				} else if ((sibling.getRight() != null) && sibling.getRight().isBlack()) {
 					sibling.getLeft().setBlack();
 					sibling.setRed();
@@ -367,11 +364,32 @@ public class RBTree {
 					nodeToFix.rotateLeft();
 					rotations++;
 				}
+			} else {
+				// Now dealing with left son
+				
+				// First IF
+				
+				// Case 2
+				if (isDeleteCase2(sibling)) {
+					nodeToFix = fixDeleteCase2(nodeToFix, sibling);
+				}
 			}
 			fixRoot();
 		}
 		nodeToFix.setBlack();
 		return rotations;
+	}
+
+	private RBNode fixDeleteCase2(RBNode nodeToFix, RBNode sibling) {
+		sibling.setRed();
+		nodeToFix = nodeToFix.getParent();
+		return nodeToFix;
+	}
+
+	private boolean isDeleteCase2(RBNode sibling) {
+		return (sibling.getLeft() == null && sibling.getRight() == null)
+				|| (sibling.getLeft().isBlack() && sibling.getRight()
+						.isBlack());
 	}
 
 	/**
