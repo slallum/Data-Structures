@@ -372,6 +372,15 @@ public class TestTree {
 		}
 		System.out.println(displayTree(tree.getRoot()));
 	}
+	
+	@Test
+	public void TestArrayToTree() {
+		int[] arr = new int[] {1, 4, 6, 8, 12, 14, 17, 23, 31, 32, 34, 36, 41, 42, 51, 52, 53, 62, 63, 65, 76, 78, 79, 84, 95, 111, 112, 113, 141, 151};
+		RBTree tree = new RBTree();
+		tree.insert(4);
+		tree.arrayToTree(arr);
+		assertEquals(true, isValidTree(tree));
+	}
 
 	private List<Integer> getRandomNumbersList(int numbersCount) {
 		HashSet<Integer> numbers = new HashSet<Integer>();
