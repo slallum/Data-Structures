@@ -52,6 +52,10 @@ public class RBTree {
 	 * terms of absolute difference)
 	 */
 	public int search(int i) {
+		if (this.empty()) {
+			return -1;
+		}
+		
 		int minVal = min();
 		int maxVal = max();
 		RBNode current = this.root;
