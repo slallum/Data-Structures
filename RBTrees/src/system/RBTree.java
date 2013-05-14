@@ -558,6 +558,11 @@ public class RBTree {
 		return nodeToFix;
 	}
 
+	/**
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return
+	 */
 	private RBNode fixDeleteCase4Right(RBNode nodeToFix, RBNode sibling) {
 		if (sibling.getLeft() != null) {
 			sibling.getLeft().setBlack();
@@ -568,12 +573,12 @@ public class RBTree {
 		return nodeToFix;
 	}
 
+	/**
+	 * @param nodeToFix
+	 * @param sibling
+	 */
 	private void fixDeleteCase4(RBNode nodeToFix, RBNode sibling) {
-		if (nodeToFix.getParent().isBlack()) {
-			sibling.setBlack();
-		} else {
-			sibling.setRed();
-		}
+		setSameColor(nodeToFix.getParent(), sibling);
 		if (nodeToFix.getParent() != null) {
 			nodeToFix.getParent().setBlack();
 		}
