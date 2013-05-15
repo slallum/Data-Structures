@@ -16,6 +16,9 @@ public class RBTree {
 	/** Starts the tree */
 	private RBNode root;
 	
+	/** Counts how many nodes in data structure */
+	private int size = 0;
+	
 	private boolean isBlack;
 
 	/**
@@ -96,6 +99,7 @@ public class RBTree {
 	public int insert(int i) {
 		if (this.empty()) {
 			this.root = new RBNode(null, null, null, i, true);
+			this.size++;
 			return 0;
 		}
 
@@ -110,6 +114,7 @@ public class RBTree {
 		} else {
 			position.setRight(newNode);
 		}
+		this.size++;
 		return fixInsert(newNode);
 	}
 
@@ -125,6 +130,7 @@ public class RBTree {
 		if (position.getKey() != i) {
 			return 0;
 		}
+		this.size--;
 		isBlack = position.isBlack();
 		RBNode nodeToFix;
 		if ((position.getRight() == null) && (position.getLeft() == null)) {
@@ -217,7 +223,7 @@ public class RBTree {
 	 * precondition: none postcondition: none
 	 */
 	public int size() {
-		return this.root.size();
+		return this.size;
 	}
 
 	// *** Private Methods ***//
@@ -232,11 +238,6 @@ public class RBTree {
 		newNode.setParent(oldNode.getParent());
 		newNode.setLeft(oldNode.getLeft());
 		newNode.setRight(oldNode.getRight());
-//		if (oldNode.isBlack()) {
-//			newNode.setBlack();
-//		} else {
-//			newNode.setRed();
-//		}
 		if (oldNode.getParent() == null) {
 			this.root = newNode;
 		} else if (oldNode.isRightSon()) {
@@ -562,6 +563,11 @@ public class RBTree {
 		return nodeToFix;
 	}
 
+	/**
+	 * @param nodeToFix
+	 * @param sibling
+	 * @return
+	 */
 	private RBNode fixDeleteCase4Right(RBNode nodeToFix, RBNode sibling) {
 		if (sibling.getLeft() != null) {
 			sibling.getLeft().setBlack();
@@ -572,12 +578,12 @@ public class RBTree {
 		return nodeToFix;
 	}
 
+	/**
+	 * @param nodeToFix
+	 * @param sibling
+	 */
 	private void fixDeleteCase4(RBNode nodeToFix, RBNode sibling) {
-		if (nodeToFix.getParent().isBlack()) {
-			sibling.setBlack();
-		} else {
-			sibling.setRed();
-		}
+		setSameColor(nodeToFix.getParent(), sibling);
 		if (nodeToFix.getParent() != null) {
 			nodeToFix.getParent().setBlack();
 		}
@@ -788,22 +794,6 @@ public class RBTree {
 			right.moveUp();
 			this.setRight(right.getLeft());
 			right.setLeft(this);
-		}
-
-		/**
-		 * Calls recursively and sums sizes of children's nodes
-		 * 
-		 * @return The amount of nodes under current node inclusive
-		 */
-		public int size() {
-			int sum = 1;
-			if (this.right != null) {
-				sum += this.right.size();
-			}
-			if (this.left != null) {
-				sum += this.left.size();
-			}
-			return sum;
 		}
 
 		/**
