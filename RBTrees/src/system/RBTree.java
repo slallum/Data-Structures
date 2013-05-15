@@ -26,6 +26,7 @@ public class RBTree {
 	 */
 	public RBTree(RBNode root) {
 		this.root = root;
+		this.size = 1;
 	}
 
 	/**
