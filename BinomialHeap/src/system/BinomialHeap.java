@@ -1,4 +1,8 @@
 package system;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * BinomialHeap
  *
@@ -111,8 +115,94 @@ public class BinomialHeap
     * another file
     *
     */
-    public class BinomialHeapTree{
+    public class BinomialHeapTree {
 
+    }
+    
+    /**
+     * Basic building stone of the tree, represents one link in the tree
+     * 
+     * @author Shir
+     */
+    public class BHTNode {
+    	
+    	/** The nodes parent.  Null if there isn't */
+    	private BHTNode parent;
+    	
+    	/** Node's children - first element is most left child */
+    	private LinkedList<BHTNode> children;
+    	
+    	/** Node's element - non-negative non-unique integers */
+    	private int key;
+
+    	/**
+    	 * Constructor
+    	 */
+    	public BHTNode(BHTNode parent) {
+			this.parent = parent;
+    		this.children = new LinkedList<>();
+    	}
+    	
+		/**
+		 * @return the parent
+		 */
+		public BHTNode getParent() {
+			return parent;
+		}
+
+		/**
+		 * @param parent the parent to set
+		 */
+		public void setParent(BHTNode parent) {
+			this.parent = parent;
+		}
+
+		/**
+		 * @return the children
+		 */
+		public LinkedList<BHTNode> getChildren() {
+			return children;
+		}
+
+		/**
+		 * @param children the children to set
+		 */
+		public void setChildren(LinkedList<BHTNode> children) {
+			this.children = children;
+		}
+
+		/**
+		 * @return the key
+		 */
+		public int getKey() {
+			return key;
+		}
+
+		/**
+		 * @param key the key to set
+		 */
+		public void setKey(int key) {
+			this.key = key;
+		}
+		
+		/**
+		 * @return	Most left child of tree
+		 */
+		public BHTNode getLeftChild() {
+			if (this.children.size() == 0) {
+				return null;
+			}
+			return this.children.getFirst();
+		}
+		
+		/**
+		 * Hangs the given node as most left son of current
+		 * 
+		 * @param leftChild	Node to hang onto current node
+		 */
+		public void addLeftChild(BHTNode leftChild) {
+			this.children.addFirst(leftChild);
+		}
     }
 
 }
