@@ -11,10 +11,10 @@ import java.util.LinkedList;
 public class BinomialHeap {
 
 	/** Lists of heaps roots, tidied in array according to their degree */
-	private ArrayList<LinkedList<BHTNode>> rootsList;
+	private ArrayList<LinkedList<BTNode>> rootsList;
 
 	/** Root with minimum value in the heap */
-	private BHTNode minValRoot;
+	private BTNode minValRoot;
 
 	/** How many roots saved in the heap */
 	private int rootsCount = 0;
@@ -23,7 +23,7 @@ public class BinomialHeap {
 	 * Creates an empty binomial heap
 	 */
 	public BinomialHeap() {
-		this.rootsList = new ArrayList<LinkedList<BHTNode>>();
+		this.rootsList = new ArrayList<LinkedList<BTNode>>();
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void insert(int value) {
-		BHTNode newNode = new BHTNode(null, value);
-		this.getRootsList().get(0).add(new BHTNode(null, value));
+		BTNode newNode = new BTNode(null, value);
+		this.getRootsList().get(0).add(new BTNode(null, value));
 		if (value < minValRoot.getKey()) {
 			minValRoot = newNode;
 		}
@@ -118,7 +118,7 @@ public class BinomialHeap {
 		int[] ranksInOrder = new int[rootsCount];
 		int arrInd = 0;
 		int rankInd = 0;
-		for (LinkedList<BHTNode> roots : rootsList) {
+		for (LinkedList<BTNode> roots : rootsList) {
 			for (int i = 0; i < roots.size(); i++) {
 				ranksInOrder[arrInd] = rankInd;
 				arrInd++;
@@ -131,7 +131,7 @@ public class BinomialHeap {
 	/**
 	 * @return the rootsList
 	 */
-	public ArrayList<LinkedList<BHTNode>> getRootsList() {
+	public ArrayList<LinkedList<BTNode>> getRootsList() {
 		return rootsList;
 	}
 
@@ -139,7 +139,7 @@ public class BinomialHeap {
 	 * @param rootsList
 	 *            the rootsList to set
 	 */
-	public void setRootsList(ArrayList<LinkedList<BHTNode>> rootsList) {
+	public void setRootsList(ArrayList<LinkedList<BTNode>> rootsList) {
 		this.rootsList = rootsList;
 	}
 	
@@ -161,12 +161,12 @@ public class BinomialHeap {
 	public class BinomialHeapTree {
 
 		/** The root of the tree */
-		private BHTNode root;
+		private BTNode root;
 
 		/**
 		 * @return the root
 		 */
-		public BHTNode getRoot() {
+		public BTNode getRoot() {
 			return root;
 		}
 
@@ -174,7 +174,7 @@ public class BinomialHeap {
 		 * @param root
 		 *            the root to set
 		 */
-		public void setRoot(BHTNode root) {
+		public void setRoot(BTNode root) {
 			this.root = root;
 		}
 
@@ -185,13 +185,13 @@ public class BinomialHeap {
 	 * 
 	 * @author Shir
 	 */
-	public class BHTNode {
+	public class BTNode {
 
 		/** The nodes parent. Null if there isn't */
-		private BHTNode parent;
+		private BTNode parent;
 
 		/** Node's children - first element is most left child */
-		private LinkedList<BHTNode> children;
+		private LinkedList<BTNode> children;
 
 		/** Node's element - non-negative non-unique integers */
 		private int key;
@@ -199,7 +199,7 @@ public class BinomialHeap {
 		/**
 		 * Constructor
 		 */
-		public BHTNode(BHTNode parent, int key) {
+		public BTNode(BTNode parent, int key) {
 			this.parent = parent;
 			this.key = key;
 			this.children = new LinkedList<>();
@@ -208,7 +208,7 @@ public class BinomialHeap {
 		/**
 		 * @return the parent
 		 */
-		public BHTNode getParent() {
+		public BTNode getParent() {
 			return parent;
 		}
 
@@ -216,14 +216,14 @@ public class BinomialHeap {
 		 * @param parent
 		 *            the parent to set
 		 */
-		public void setParent(BHTNode parent) {
+		public void setParent(BTNode parent) {
 			this.parent = parent;
 		}
 
 		/**
 		 * @return the children
 		 */
-		public LinkedList<BHTNode> getChildren() {
+		public LinkedList<BTNode> getChildren() {
 			return children;
 		}
 
@@ -231,7 +231,7 @@ public class BinomialHeap {
 		 * @param children
 		 *            the children to set
 		 */
-		public void setChildren(LinkedList<BHTNode> children) {
+		public void setChildren(LinkedList<BTNode> children) {
 			this.children = children;
 		}
 
@@ -253,7 +253,7 @@ public class BinomialHeap {
 		/**
 		 * @return Most left child of tree
 		 */
-		public BHTNode getLeftChild() {
+		public BTNode getLeftChild() {
 			if (this.children.size() == 0) {
 				return null;
 			}
@@ -266,7 +266,7 @@ public class BinomialHeap {
 		 * @param leftChild
 		 *            Node to hang onto current node
 		 */
-		public void addLeftChild(BHTNode leftChild) {
+		public void addLeftChild(BTNode leftChild) {
 			this.children.addFirst(leftChild);
 		}
 	}
