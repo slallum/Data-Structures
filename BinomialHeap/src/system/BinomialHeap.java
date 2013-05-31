@@ -141,7 +141,7 @@ public class BinomialHeap {
 	/**
 	 * A binomial tree
 	 * 
-	 * @author Shira
+	 * @author Shir
 	 */
 	public class BinomialTree {
 
