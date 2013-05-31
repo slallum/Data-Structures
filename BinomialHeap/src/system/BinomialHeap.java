@@ -134,14 +134,6 @@ public class BinomialHeap {
 		return ranksInOrder;
 	}
 
-	/**
-	 * @return the rootsList
-	 */
-	public ArrayList<LinkedList<BinomialTree>> getRootsList() {
-		return rootsList;
-	}
-
-
 	/* --- Private Methods --- */
 
 	private int successiveLinking() {
@@ -168,9 +160,6 @@ public class BinomialHeap {
 
 		/** Most left child of tree */
 		private BinomialTree mostLeftChild;
-
-		/** Value held in the node */
-		private int value;
 
 		/** Rank of tree as defined for binomial tree */
 		private int rank;
@@ -217,6 +206,7 @@ public class BinomialHeap {
 		 */
 		public void setLeftSibling(BinomialTree leftSibling) {
 			this.leftSibling = leftSibling;
+			this.leftSibling.setRightSibling(this);
 		}
 
 		/**
@@ -231,6 +221,7 @@ public class BinomialHeap {
 		 */
 		public void setRightSibling(BinomialTree rightSibling) {
 			this.rightSibling = rightSibling;
+			this.rightSibling.setLeftSibling(this);
 		}
 
 		/**
@@ -245,20 +236,21 @@ public class BinomialHeap {
 		 */
 		public void setMostLeftChild(BinomialTree mostLeftChild) {
 			this.mostLeftChild = mostLeftChild;
+			this.mostLeftChild.setParent(this);
 		}
 
 		/**
 		 * @return the value
 		 */
-		public int getValue() {
-			return value;
+		public int getKey() {
+			return key;
 		}
 
 		/**
-		 * @param value the value to set
+		 * @param key the value to set
 		 */
-		public void setValue(int value) {
-			this.value = value;
+		public void setKey(int key) {
+			this.key = key;
 		}
 
 		/**
@@ -273,6 +265,10 @@ public class BinomialHeap {
 		 */
 		public void setRank(int rank) {
 			this.rank = rank;
+		}
+		
+		public int size() {
+			return (int) Math.pow(2, this.rank);
 		}
 		
 	}
