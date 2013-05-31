@@ -53,7 +53,15 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void insert(int value) {
-		BinomialTree newTree = new BinomialTree(null, null, null, null, value);
+		BinomialTree newTree = new BinomialTree(value);
+		
+		if (this.size() == 0) {
+			this.minTree = newTree;
+			this.rightMostTree = newTree;
+			this.rootsCount++;
+			return;
+		}
+		
 		newTree.setLeftSibling(this.rightMostTree);
 		this.rightMostTree = newTree;
 
@@ -224,16 +232,16 @@ public class BinomialHeap {
 	public class BinomialTree {
 
 		/** The nodes parent. Null if there isn't */
-		private BinomialTree parent;
+		private BinomialTree parent = null;
 
 		/** Sibling of tree to it's left */
-		private BinomialTree leftSibling;
+		private BinomialTree leftSibling = null;
 
 		/** Sibling of tree to it's right */
-		private BinomialTree rightSibling;
+		private BinomialTree rightSibling = null;
 
 		/** Most left child of tree */
-		private BinomialTree mostLeftChild;
+		private BinomialTree mostLeftChild = null;
 
 		/** Rank of tree as defined for binomial tree */
 		private int rank;
@@ -244,14 +252,9 @@ public class BinomialHeap {
 		/**
 		 * Constructor
 		 */
-		public BinomialTree(BinomialTree parent, BinomialTree leftSibling,
-			BinomialTree rightSibling, BinomialTree mostLeftChild, int key) {
-			this.setParent(parent);
-			this.setLeftSibling(leftSibling);
-			this.setRightSibling(rightSibling);
-			this.setMostLeftChild(mostLeftChild);
+		public BinomialTree(int key) {
 			this.key = key;
-			this.setRank(mostLeftChild.getRank() + 1);
+			this.rank = 0;
 		}
 
 		/**
@@ -280,7 +283,12 @@ public class BinomialHeap {
 		 */
 		public void setLeftSibling(BinomialTree leftSibling) {
 			this.leftSibling = leftSibling;
-			this.leftSibling.setRightSibling(this);
+			this.leftSibling.rightSibling = this;
+			
+			if (this.getParent() == null) {
+				return;
+			}
+			
 			if (this.getParent().getMostLeftChild() == leftSibling.getRightSibling()) {
 				this.parent.setMostLeftChild(this);
 			}
@@ -298,7 +306,7 @@ public class BinomialHeap {
 		 */
 		public void setRightSibling(BinomialTree rightSibling) {
 			this.rightSibling = rightSibling;
-			this.rightSibling.setLeftSibling(this);
+			this.rightSibling.leftSibling = this;
 		}
 
 		/**
