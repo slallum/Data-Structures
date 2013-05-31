@@ -107,6 +107,7 @@ public class BinomialHeap {
 		BinomialTree current = this.rightMostTree;
 		if (current == null) {
 			this.rightMostTree = heap2.getRightMostTree();
+			return;
 		}
 		while (current.getLeftSibling() != null) {
 			current = current.getLeftSibling();
@@ -432,7 +433,7 @@ public class BinomialHeap {
 			if (rightMost == null) {
 				return null;
 			}
-			while (rightMost.getRightMostChild() != null) {
+			while (rightMost.getRightSibling() != null) {
 				rightMost = rightMost.getRightSibling();
 			}
 			return rightMost;
