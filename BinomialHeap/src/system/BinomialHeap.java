@@ -122,14 +122,10 @@ public class BinomialHeap {
 	 */
 	public int[] treesRanks() {
 		int[] ranksInOrder = new int[rootsCount];
-		int arrInd = 0;
-		int rankInd = 0;
-		for (LinkedList<BinomialTree> roots : rootsList) {
-			for (int i = 0; i < roots.size(); i++) {
-				ranksInOrder[arrInd] = rankInd;
-				arrInd++;
-			}
-			rankInd++;
+		int ranksInd = 0;
+		BinomialTree currentTree = this.rightMostTree;
+		while (currentTree.getLeftSibling() != null) {
+			ranksInOrder[ranksInd] = currentTree.getRank();
 		}
 		return ranksInOrder;
 	}
@@ -143,7 +139,7 @@ public class BinomialHeap {
 	}
 
 	/**
-	 * Basic building stone of the tree, represents one link in the tree
+	 * A binomial tree
 	 * 
 	 * @author Shir
 	 */
