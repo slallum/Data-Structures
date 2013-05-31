@@ -44,8 +44,8 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void insert(int value) {
-		BinomialTree newTree = new BinomialTree(null, value);
-		newTree.setLeft(this.rightMostTree);
+		BinomialTree newTree = new BinomialTree(null, null, null, null, value);
+		newTree.setLeftSibling(this.rightMostTree);
 		this.rightMostTree = newTree;
 
 		if (value < minTree.getKey()) {
@@ -97,7 +97,7 @@ public class BinomialHeap {
 		BinomialTree current = this.rightMostTree;
 		while (current != null) {
 			sum += current.size();
-			current = current.getLeft();
+			current = current.getLeftSibling();
 		}
 		return sum;
 	}
@@ -133,14 +133,6 @@ public class BinomialHeap {
 		}
 		return ranksInOrder;
 	}
-
-	/**
-	 * @return the rootsList
-	 */
-	public ArrayList<LinkedList<BinomialTree>> getRootsList() {
-		return rootsList;
-	}
-
 
 	/* --- Private Methods --- */
 
