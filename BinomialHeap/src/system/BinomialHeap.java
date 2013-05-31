@@ -87,10 +87,13 @@ public class BinomialHeap {
 	 * 
 	 */
 	public int deleteMin() {
-		removeMinRoot();
-		int linksCount = successiveLinking();
-		findNewMin();
-		return linksCount;
+		if (this.minTree != null) {
+			removeMinRoot();
+			int linksCount = successiveLinking();
+			findNewMin();
+			return linksCount;
+		}
+		return 0;
 	}
 
 	/**
@@ -168,7 +171,8 @@ public class BinomialHeap {
 	 * 
 	 * Return an array containing the ranks of the trees that represent the heap
 	 * in ascending order.
-	 * 
+	 * Just goes over in the order of the list, as we already made sure they are sorted,
+	 * during the successive linking process
 	 */
 	public int[] treesRanks() {
 		int[] ranksInOrder = new int[rootsCount];
@@ -192,72 +196,78 @@ public class BinomialHeap {
 	/* --- Private Methods --- */
 
 	/**
+	 * Goes over linked list of the nodes and inserts them into an array
+	 * that keeps only one tree of each rank.
+	 * 
 	 * @return The number of links performed
 	 */
 	private int successiveLinking() {
 		int linksCounter = 0;
-		BinomialTree[] linkedTrees = new BinomialTree[80000];
+		BinomialTree[] linkedTrees = new BinomialTree[this.size()];
 		BinomialTree current = this.rightMostTree;
-		BinomialTree next;
 		while (current != null) {
-//			if (next == current) {
-//				System.out.println("WTF?!");
-//			}
-//			if (current.getRank() > 150) {
-//				System.out.println("WTF?!");
-//			}
-			BinomialTree treeToHang = linkedTrees[current.getRank()];
-			// we'll link them
-			if (treeToHang != null) {
-				// Making sure that treeToHang is the maximum value between the
-				// two
-				next = current.getLeftSibling();				
-				if (current.getKey() > treeToHang.getKey()) {
-					BinomialTree temp = treeToHang;
-					treeToHang = current;
-					current = temp;
-				}
-				// Removing the hanged one from the array and from the list of trees
-				linkedTrees[treeToHang.getRank()] = null;
-				this.removeTree(treeToHang);
-				this.removeTree(current);
-				// Moving the linked tree up in array
-				current.hangTree(treeToHang);
-				linksCounter++;
-			} else {
-				linkedTrees[current.getRank()] = current;
-				this.removeTree(current);
-//				current = next;
-			}
+			BinomialTree next = current.getLeftSibling();
+			removeTree(current);
+			insertTree(current, linkedTrees);
+			current = next;
 		}
-		
 		recreateHeap(linkedTrees);
-		
 		return linksCounter;
 	}
+	
+	/**
+	 * Recursive function for inserting into an array of nodes, while each one is in
+	 * the cell matching it's rank.
+	 * If two are matching the same cell, must link them.
+	 * 
+	 * @param currentTree
+	 * @param linkedTrees
+	 */
+	private void insertTree(BinomialTree currentTree, BinomialTree[] linkedTrees) {
+		if (linkedTrees[currentTree.getRank()] == null) {
+			linkedTrees[currentTree.getRank()] = currentTree;
+		} else {
+			BinomialTree previousTree = linkedTrees[currentTree.getRank()];
+			linkedTrees[currentTree.getRank()] = null;
+			// Swap in order to maintain heap-order
+			if (previousTree.getKey() < currentTree.getKey()) {
+				BinomialTree temp = currentTree;
+				currentTree = previousTree;
+				previousTree = temp;
+			}
+			currentTree.hangTree(previousTree);
+			insertTree(currentTree, linkedTrees);
+		}
+	}
 
+	/**
+	 * Build heap from array containing nodes in un-consistent cells.
+	 * 
+	 * @param linkedTrees
+	 */
 	private void recreateHeap(BinomialTree[] linkedTrees) {
 		BinomialTree current;
 		
 		// find the first node 
-		this.rightMostTree = null;
 		int i = 0;
-		while (linkedTrees[i] == null) {
+		while ((i < linkedTrees.length) && (linkedTrees[i] == null)) {
 			i++;
 		}
-		this.rightMostTree = linkedTrees[i];
-		this.rootsCount = 1;
-		
-		// add the next nodes
-		current = this.rightMostTree;
-		i++;
-		while (i < linkedTrees.length) {
-			if (linkedTrees[i] != null) {
-				current.setLeftSibling(linkedTrees[i]);
-				current = current.getLeftSibling();
-				this.rootsCount++;
-			}
+		if (i < linkedTrees.length) {
+			this.rightMostTree = linkedTrees[i];
+			this.rootsCount = 1;
+			
+			// add the next nodes
+			current = this.rightMostTree;
 			i++;
+			while (i < linkedTrees.length) {
+				if (linkedTrees[i] != null) {
+					current.setLeftSibling(linkedTrees[i]);
+					current = current.getLeftSibling();
+					this.rootsCount++;
+				}
+				i++;
+			}
 		}
 	}
 
@@ -269,9 +279,13 @@ public class BinomialHeap {
 		if (this.minTree != null) {
 			removeTree(this.minTree);
 			this.meld(new BinomialHeap(this.minTree.getRightMostChild()));
+			this.minTree = null;
 		}
 	}
 
+	/**
+	 * @param tree
+	 */
 	private void removeTree(BinomialTree tree) {
 		if (tree != null) {
 			if (this.getRightMostTree() == tree) {
@@ -286,18 +300,9 @@ public class BinomialHeap {
 				right.setLeftSibling(left);			
 			}
 			this.rootsCount--;
+			tree.setRightSibling(null);
+			tree.setLeftSibling(null);
 		}
-		BinomialTree left = tree.getLeftSibling();
-		BinomialTree right = tree.getRightSibling();
-		if (left != null) {
-			left.setRightSibling(right);			
-		}
-		if (right != null) {
-			right.setLeftSibling(left);			
-		}
-		tree.setRightSibling(null);
-		tree.setLeftSibling(null);
-		//this.rootsCount--;
 	}
 
 	/**
