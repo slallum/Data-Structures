@@ -1,5 +1,6 @@
 package system;
 
+
 /**
  * BinomialHeap
  * 
@@ -137,7 +138,16 @@ public class BinomialHeap {
 	 * 
 	 */
 	public static int sortArray(int[] array) {
-		return 42; // to be replaced by student code
+		BinomialHeap sortingHeap = new BinomialHeap();
+		for (int i = 0; i < array.length; i++) {
+			sortingHeap.insert(array[i]);
+		}
+		int linksCount = 0;
+		for (int i = 0; i < array.length; i++) {
+			array[i] = sortingHeap.getMinVal();
+			linksCount += sortingHeap.deleteMin();
+		}
+		return linksCount;
 	}
 
 	/**
@@ -156,6 +166,13 @@ public class BinomialHeap {
 			currentTree = currentTree.getLeftSibling();
 		}
 		return ranksInOrder;
+	}
+	
+	/**
+	 * @return	The minimal value currently in the heap
+	 */
+	public int getMinVal() {
+		return this.minTree.getKey();
 	}
 
 	/* --- Private Methods --- */
@@ -213,6 +230,7 @@ public class BinomialHeap {
 		if (right != null) {
 			right.setLeftSibling(left);			
 		}
+		this.rootsCount--;
 	}
 
 	/**
