@@ -51,8 +51,30 @@ public class TestBinomialTree {
 	}
 
 	@Test
+	public void testSpecific() {
+		int[] numbers = new int[] { 21, 89, 37, 61, 19, 84, 13, 2, 78, 67, 28,
+				44, 19, 72 };
+		BinomialHeap heap = new BinomialHeap();
+
+		int myMin = Integer.MAX_VALUE;
+		for (int n : numbers) {
+			heap.insert(n);
+			myMin = Math.min(myMin, n);
+			assertEquals(myMin, heap.findMin());
+		}
+
+		List<Integer> newSortedList = new ArrayList<Integer>();
+
+		while (heap.size() > 0) {
+			newSortedList.add(heap.findMin());
+			heap.deleteMin();
+		}
+		assertTrue(isSorted(newSortedList));
+	}
+
+	@Test
 	public void testUltimate() {
-		List<Integer> randomNumbers = getRandomNumbersList(100);
+		List<Integer> randomNumbers = getRandomNumbersList(14);
 
 		BinomialHeap heap = new BinomialHeap();
 
@@ -69,14 +91,16 @@ public class TestBinomialTree {
 			newSortedList.add(heap.findMin());
 			heap.deleteMin();
 		}
-		
+
 		assertTrue(isSorted(newSortedList));
 	}
 
 	private boolean isSorted(List<Integer> newSortedList) {
-		Integer[] beforeArray = newSortedList.toArray(new Integer[newSortedList.size()]);
+		Integer[] beforeArray = newSortedList.toArray(new Integer[newSortedList
+				.size()]);
 		Collections.sort(newSortedList);
-		Integer[] afterArray = newSortedList.toArray(new Integer[newSortedList.size()]);
+		Integer[] afterArray = newSortedList.toArray(new Integer[newSortedList
+				.size()]);
 		return Arrays.equals(beforeArray, afterArray);
 	}
 
@@ -84,7 +108,7 @@ public class TestBinomialTree {
 		List<Integer> numbers = new ArrayList<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < numbersCount; i++) {
-			numbers.add(rand.nextInt(1073741824)); // 2**30
+			numbers.add(rand.nextInt(100)); // 1073741824)); // 2**30
 		}
 		return numbers;
 	}

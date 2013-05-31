@@ -194,12 +194,20 @@ public class BinomialHeap {
 		int linksCounter = 0;
 		BinomialTree[] linkedTrees = new BinomialTree[80000];
 		BinomialTree current = this.rightMostTree;
+		BinomialTree next;
 		while (current != null) {
-			BinomialTree next = current.getLeftSibling();
+//			if (next == current) {
+//				System.out.println("WTF?!");
+//			}
+//			if (current.getRank() > 150) {
+//				System.out.println("WTF?!");
+//			}
 			BinomialTree treeToHang = linkedTrees[current.getRank()];
+			// we'll link them
 			if (treeToHang != null) {
 				// Making sure that treeToHang is the maximum value between the
 				// two
+				next = current.getLeftSibling();				
 				if (current.getKey() > treeToHang.getKey()) {
 					BinomialTree temp = treeToHang;
 					treeToHang = current;
@@ -208,15 +216,45 @@ public class BinomialHeap {
 				// Removing the hanged one from the array and from the list of trees
 				linkedTrees[treeToHang.getRank()] = null;
 				this.removeTree(treeToHang);
+				this.removeTree(current);
 				// Moving the linked tree up in array
 				current.hangTree(treeToHang);
 				linksCounter++;
 			} else {
 				linkedTrees[current.getRank()] = current;
+				this.removeTree(current);
 				current = next;
 			}
 		}
+		
+		recreateHeap(linkedTrees);
+		
 		return linksCounter;
+	}
+
+	private void recreateHeap(BinomialTree[] linkedTrees) {
+		BinomialTree current;
+		
+		// find the first node 
+		this.rightMostTree = null;
+		int i = 0;
+		while (linkedTrees[i] == null) {
+			i++;
+		}
+		this.rightMostTree = linkedTrees[i];
+		this.rootsCount = 1;
+		
+		// add the next nodes
+		current = this.rightMostTree;
+		i++;
+		while (i < linkedTrees.length) {
+			if (linkedTrees[i] != null) {
+				current.setLeftSibling(linkedTrees[i]);
+				current = current.getLeftSibling();
+				this.rootsCount++;
+			}
+			i++;
+		}
 	}
 
 	/**
@@ -240,7 +278,9 @@ public class BinomialHeap {
 		if (right != null) {
 			right.setLeftSibling(left);			
 		}
-		this.rootsCount--;
+		tree.setRightSibling(null);
+		tree.setLeftSibling(null);
+		//this.rootsCount--;
 	}
 
 	/**
