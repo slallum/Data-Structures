@@ -135,19 +135,12 @@ public class BinomialHeap {
 		return rootsList;
 	}
 
-	/**
-	 * @param rootsList
-	 *            the rootsList to set
-	 */
-	public void setRootsList(ArrayList<LinkedList<BinomialTree>> rootsList) {
-		this.rootsList = rootsList;
-	}
-	
+
 	/* --- Private Methods --- */
-	
+
 	private int successiveLinking() {
 		int linksCounter = 0;
-		
+
 		return linksCounter;
 	}
 
@@ -161,8 +154,20 @@ public class BinomialHeap {
 		/** The nodes parent. Null if there isn't */
 		private BinomialTree parent;
 
-		/** Node's children - first element is most left child */
-		private LinkedList<BinomialTree> children;
+		/** Sibling of tree to it's left */
+		private BinomialTree leftSibling;
+
+		/** Sibling of tree to it's right */
+		private BinomialTree rightSibling;
+
+		/** Most left child of tree */
+		private BinomialTree mostLeftChild;
+
+		/** Value held in the node */
+		private int value;
+
+		/** Rank of tree as defined for binomial tree */
+		private int rank;
 
 		/** Node's element - non-negative non-unique integers */
 		private int key;
@@ -170,10 +175,14 @@ public class BinomialHeap {
 		/**
 		 * Constructor
 		 */
-		public BinomialTree(BinomialTree parent, int key) {
-			this.parent = parent;
+		public BinomialTree(BinomialTree parent, BinomialTree leftSibling,
+			BinomialTree rightSibling, BinomialTree mostLeftChild, int key) {
+			this.setParent(parent);
+			this.setLeftSibling(leftSibling);
+			this.setRightSibling(rightSibling);
+			this.setMostLeftChild(mostLeftChild);
 			this.key = key;
-			this.children = new LinkedList<>();
+			this.setRank(mostLeftChild.getRank() + 1);
 		}
 
 		/**
@@ -184,61 +193,81 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param parent
-		 *            the parent to set
+		 * @param parent the parent to set
 		 */
 		public void setParent(BinomialTree parent) {
 			this.parent = parent;
 		}
 
 		/**
-		 * @return the children
+		 * @return the leftSibling
 		 */
-		public LinkedList<BinomialTree> getChildren() {
-			return children;
+		public BinomialTree getLeftSibling() {
+			return leftSibling;
 		}
 
 		/**
-		 * @param children
-		 *            the children to set
+		 * @param leftSibling the leftSibling to set
 		 */
-		public void setChildren(LinkedList<BinomialTree> children) {
-			this.children = children;
+		public void setLeftSibling(BinomialTree leftSibling) {
+			this.leftSibling = leftSibling;
 		}
 
 		/**
-		 * @return the key
+		 * @return the rightSibling
 		 */
-		public int getKey() {
-			return key;
+		public BinomialTree getRightSibling() {
+			return rightSibling;
 		}
 
 		/**
-		 * @param key
-		 *            the key to set
+		 * @param rightSibling the rightSibling to set
 		 */
-		public void setKey(int key) {
-			this.key = key;
+		public void setRightSibling(BinomialTree rightSibling) {
+			this.rightSibling = rightSibling;
 		}
 
 		/**
-		 * @return Most left child of tree
+		 * @return the mostLeftChild
 		 */
-		public BinomialTree getLeftChild() {
-			if (this.children.size() == 0) {
-				return null;
-			}
-			return this.children.getFirst();
+		public BinomialTree getMostLeftChild() {
+			return mostLeftChild;
 		}
 
 		/**
-		 * Hangs the given node as most left son of current
-		 * 
-		 * @param leftChild
-		 *            Node to hang onto current node
+		 * @param mostLeftChild the mostLeftChild to set
 		 */
-		public void addLeftChild(BinomialTree leftChild) {
-			this.children.addFirst(leftChild);
+		public void setMostLeftChild(BinomialTree mostLeftChild) {
+			this.mostLeftChild = mostLeftChild;
 		}
+
+		/**
+		 * @return the value
+		 */
+		public int getValue() {
+			return value;
+		}
+
+		/**
+		 * @param value the value to set
+		 */
+		public void setValue(int value) {
+			this.value = value;
+		}
+
+		/**
+		 * @return the rank
+		 */
+		public int getRank() {
+			return rank;
+		}
+
+		/**
+		 * @param rank the rank to set
+		 */
+		public void setRank(int rank) {
+			this.rank = rank;
+		}
+		
 	}
 }
