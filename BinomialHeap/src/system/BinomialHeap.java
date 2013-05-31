@@ -100,6 +100,9 @@ public class BinomialHeap {
 	 * 
 	 */
 	public int findMin() {
+		if (minTree == null) {
+			return -1;
+		}
 		return minTree.getKey();
 	}
 
@@ -174,6 +177,7 @@ public class BinomialHeap {
 		while (currentTree != null) {
 			ranksInOrder[ranksInd] = currentTree.getRank();
 			currentTree = currentTree.getLeftSibling();
+			ranksInd++;
 		}
 		return ranksInOrder;
 	}
@@ -224,23 +228,27 @@ public class BinomialHeap {
 	 * roots of the tree
 	 */
 	private void removeMinRoot() {
-		removeTree(this.minTree);
-		this.meld(new BinomialHeap(this.minTree.getRightMostChild()));
+		if (this.minTree != null) {
+			removeTree(this.minTree);
+			this.meld(new BinomialHeap(this.minTree.getRightMostChild()));
+		}
 	}
 
 	private void removeTree(BinomialTree tree) {
-		if (this.getRightMostTree() == tree) {
-			this.rightMostTree = tree.getLeftSibling();
+		if (tree != null) {
+			if (this.getRightMostTree() == tree) {
+				this.rightMostTree = tree.getLeftSibling();
+			}
+			BinomialTree left = tree.getLeftSibling();
+			BinomialTree right = tree.getRightSibling();
+			if (left != null) {
+				left.setRightSibling(right);			
+			}
+			if (right != null) {
+				right.setLeftSibling(left);			
+			}
+			this.rootsCount--;
 		}
-		BinomialTree left = tree.getLeftSibling();
-		BinomialTree right = tree.getRightSibling();
-		if (left != null) {
-			left.setRightSibling(right);			
-		}
-		if (right != null) {
-			right.setLeftSibling(left);			
-		}
-		this.rootsCount--;
 	}
 
 	/**
