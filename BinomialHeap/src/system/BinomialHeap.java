@@ -30,8 +30,15 @@ public class BinomialHeap {
 	 */
 	public BinomialHeap(BinomialTree rightMostTree) {
 		this.rightMostTree = rightMostTree;
-		this.rootsCount = 1;
-		this.minTree = rightMostTree;
+		this.rootsCount = 0;
+		if (this.rightMostTree != null) {
+			BinomialTree current = this.rightMostTree;
+			while (current != null) {
+				this.rootsCount++;
+				current = current.getLeftSibling();
+			}
+		}
+		this.findNewMin();
 	}
 
 	/**
@@ -107,12 +114,14 @@ public class BinomialHeap {
 		BinomialTree current = this.rightMostTree;
 		if (current == null) {
 			this.rightMostTree = heap2.getRightMostTree();
+			this.rootsCount += heap2.getRootsCount();
 			return;
 		}
 		while (current.getLeftSibling() != null) {
 			current = current.getLeftSibling();
 		}
 		current.setLeftSibling(heap2.getRightMostTree());
+		this.rootsCount += heap2.getRootsCount();
 	}
 
 	/**
@@ -183,7 +192,7 @@ public class BinomialHeap {
 	 */
 	private int successiveLinking() {
 		int linksCounter = 0;
-		BinomialTree[] linkedTrees = new BinomialTree[rootsCount];
+		BinomialTree[] linkedTrees = new BinomialTree[80000];
 		BinomialTree current = this.rightMostTree;
 		while (current != null) {
 			BinomialTree next = current.getLeftSibling();
@@ -253,6 +262,14 @@ public class BinomialHeap {
 	 */
 	private BinomialTree getRightMostTree() {
 		return this.rightMostTree;
+	}
+	
+
+	/**
+	 * @return
+	 */
+	private int getRootsCount() {
+		return this.rootsCount;
 	}
 
 	/**
