@@ -42,5 +42,10 @@ public class TestBinomialTree {
 		heap.deleteMin();
 		assertEquals(10, heap.findMin());
 	}
+	
+	@Test
+	public void testUltimate() {
+		
+	}
 
 }

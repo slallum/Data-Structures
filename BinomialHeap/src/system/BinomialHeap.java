@@ -1,6 +1,5 @@
 package system;
 
-
 /**
  * BinomialHeap
  * 
@@ -22,7 +21,7 @@ public class BinomialHeap {
 	public BinomialHeap() {
 
 	}
-	
+
 	/**
 	 * Constructor with roots list
 	 * 
@@ -54,14 +53,14 @@ public class BinomialHeap {
 	 */
 	public void insert(int value) {
 		BinomialTree newTree = new BinomialTree(value);
-		
+
 		if (this.size() == 0) {
 			this.minTree = newTree;
 			this.rightMostTree = newTree;
 			this.rootsCount++;
 			return;
 		}
-		
+
 		newTree.setLeftSibling(this.rightMostTree);
 		this.rightMostTree = newTree;
 
@@ -162,63 +161,76 @@ public class BinomialHeap {
 	/* --- Private Methods --- */
 
 	/**
-	 * @return	The number of links performed
+	 * @return The number of links performed
 	 */
 	private int successiveLinking() {
 		int linksCounter = 0;
 		BinomialTree[] linkedTrees = new BinomialTree[rootsCount];
 		BinomialTree current = this.rightMostTree;
 		while (current != null) {
+			BinomialTree next = current.getLeftSibling();
 			BinomialTree treeToHang = linkedTrees[current.getRank()];
 			if (treeToHang != null) {
-				// Making sure that treeToHang is the maximum value between the two
+				// Making sure that treeToHang is the maximum value between the
+				// two
 				if (current.getKey() > treeToHang.getKey()) {
 					BinomialTree temp = treeToHang;
 					treeToHang = current;
 					current = temp;
 				}
+				// Removing the hanged one from the array and from the list of trees
+				linkedTrees[treeToHang.getRank()] = null;
+				this.removeTree(treeToHang);
 				// Moving the linked tree up in array
 				current.hangTree(treeToHang);
-				// Removing the hanged one
-				linkedTrees[treeToHang.getRank()] = null;
 				linksCounter++;
 			} else {
 				linkedTrees[current.getRank()] = current;
-				current = current.getLeftSibling();
+				current = next;
 			}
 		}
 		return linksCounter;
 	}
-	
-	
+
 	/**
-	 * Removes the root from list of roots and melds it's list of sons
-	 * with the roots of the tree
+	 * Removes the root from list of roots and melds it's list of sons with the
+	 * roots of the tree
 	 */
 	private void removeMinRoot() {
-
-		BinomialTree left = this.minTree.getLeftSibling();
-		BinomialTree right = this.minTree.getRightSibling();
-		left.setRightSibling(right);
-		right.setLeftSibling(left);
+		removeTree(this.minTree);
 		this.meld(new BinomialHeap(this.minTree.getRightMostChild()));
 	}
-	
+
+	private void removeTree(BinomialTree tree) {
+		if (this.getRightMostTree() == tree) {
+			this.rightMostTree = tree.getLeftSibling();
+		}
+		BinomialTree left = tree.getLeftSibling();
+		BinomialTree right = tree.getRightSibling();
+		if (left != null) {
+			left.setRightSibling(right);			
+		}
+		if (right != null) {
+			right.setLeftSibling(left);			
+		}
+	}
+
 	/**
 	 * Find the minimal root between binomial heap's roots
 	 */
 	private void findNewMin() {
-
 		BinomialTree current = this.rightMostTree;
+		this.minTree = current;
 		while (current != null) {
 			if (current.getKey() < this.minTree.getKey()) {
 				this.minTree = current;
 			}
+			current = current.getLeftSibling();
 		}
 	}
-	
+
 	/**
-	 * @return	The first root in roots' list of the heap
+	 * @return The first root in roots' list of the heap
 	 */
 	private BinomialTree getRightMostTree() {
 		return this.rightMostTree;
@@ -265,7 +277,8 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param parent the parent to set
+		 * @param parent
+		 *            the parent to set
 		 */
 		public void setParent(BinomialTree parent) {
 			this.parent = parent;
@@ -279,17 +292,24 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param leftSibling the leftSibling to set
+		 * @param leftSibling
+		 *            the leftSibling to set
 		 */
 		public void setLeftSibling(BinomialTree leftSibling) {
 			this.leftSibling = leftSibling;
+			if (leftSibling == null) {
+				return;
+			}
+
 			this.leftSibling.rightSibling = this;
-			
+
 			if (this.getParent() == null) {
 				return;
 			}
-			
-			if (this.getParent().getMostLeftChild() == leftSibling.getRightSibling()) {
+
+			// update the leftmost child
+			if (this.getParent().getMostLeftChild() == leftSibling
+					.getRightSibling()) {
 				this.parent.setMostLeftChild(this);
 			}
 		}
@@ -302,10 +322,14 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param rightSibling the rightSibling to set
+		 * @param rightSibling
+		 *            the rightSibling to set
 		 */
 		public void setRightSibling(BinomialTree rightSibling) {
 			this.rightSibling = rightSibling;
+			if (rightSibling == null) {
+				return;
+			}
 			this.rightSibling.leftSibling = this;
 		}
 
@@ -317,7 +341,8 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param mostLeftChild the mostLeftChild to set
+		 * @param mostLeftChild
+		 *            the mostLeftChild to set
 		 */
 		public void setMostLeftChild(BinomialTree mostLeftChild) {
 			this.mostLeftChild = mostLeftChild;
@@ -332,7 +357,8 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param key the value to set
+		 * @param key
+		 *            the value to set
 		 */
 		public void setKey(int key) {
 			this.key = key;
@@ -346,30 +372,42 @@ public class BinomialHeap {
 		}
 
 		/**
-		 * @param rank the rank to set
+		 * @param rank
+		 *            the rank to set
 		 */
 		public void setRank(int rank) {
 			this.rank = rank;
 		}
-		
+
 		/**
-		 * @return	The size of the tree - amount of nodes
+		 * @return The size of the tree - amount of nodes
 		 */
 		public int size() {
 			return (int) Math.pow(2, this.rank);
 		}
-		
+
 		/**
-		 * @param treeToHang	Tree to hang on current tree
+		 * @param treeToHang
+		 *            Tree to hang on current tree
 		 */
 		public void hangTree(BinomialTree treeToHang) {
+			if (this.mostLeftChild == null) {
+				this.setMostLeftChild(treeToHang);
+				treeToHang.setRightSibling(null);
+				treeToHang.setLeftSibling(null);
+				this.rank++;
+				return;
+			}
+			
+			treeToHang.setRightSibling(this.mostLeftChild);
+			treeToHang.setLeftSibling(null);
 			this.mostLeftChild.setLeftSibling(treeToHang);
-			this.rank ++;
+			this.rank++;
 			this.mostLeftChild = treeToHang;
 		}
-		
+
 		/**
-		 * @return	The most right son of the tree
+		 * @return The most right son of the tree
 		 */
 		private BinomialTree getRightMostChild() {
 			BinomialTree rightMost = this.getMostLeftChild();
@@ -381,6 +419,6 @@ public class BinomialHeap {
 			}
 			return rightMost;
 		}
-		
+
 	}
 }
