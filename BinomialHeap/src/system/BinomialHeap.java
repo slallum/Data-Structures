@@ -95,7 +95,15 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void meld(BinomialHeap heap2) {
-		return; // should be replaced by student code
+
+		BinomialTree current = this.rightMostTree;
+		if (current == null) {
+			this.rightMostTree = heap2.getRightMostTree();
+		}
+		while (current.getLeftSibling() != null) {
+			current = current.getLeftSibling();
+		}
+		current.setLeftSibling(heap2.getRightMostTree());
 	}
 
 	/**
@@ -188,9 +196,24 @@ public class BinomialHeap {
 		this.meld(new BinomialHeap(this.minTree.getRightMostChild()));
 	}
 	
+	/**
+	 * Find the minimal root between binomial heap's roots
+	 */
 	private void findNewMin() {
-		// TODO Auto-generated method stub
-		
+
+		BinomialTree current = this.rightMostTree;
+		while (current != null) {
+			if (current.getKey() < this.minTree.getKey()) {
+				this.minTree = current;
+			}
+		}
+	}
+	
+	/**
+	 * @return	The first root in roots' list of the heap
+	 */
+	private BinomialTree getRightMostTree() {
+		return this.rightMostTree;
 	}
 
 	/**
