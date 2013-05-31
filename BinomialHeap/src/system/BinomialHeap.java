@@ -10,11 +10,10 @@ import java.util.LinkedList;
  */
 public class BinomialHeap {
 
-	/** Lists of heaps roots, tidied in array according to their degree */
-	private ArrayList<LinkedList<BinomialTree>> rootsList;
+	private BinomialTree rightMostTree;
 
 	/** Root with minimum value in the heap */
-	private BinomialTree minValRoot;
+	private BinomialTree minTree;
 
 	/** How many roots saved in the heap */
 	private int rootsCount = 0;
@@ -23,7 +22,7 @@ public class BinomialHeap {
 	 * Creates an empty binomial heap
 	 */
 	public BinomialHeap() {
-		this.rootsList = new ArrayList<LinkedList<BinomialTree>>();
+
 	}
 
 	/**
@@ -35,10 +34,7 @@ public class BinomialHeap {
 	 * 
 	 */
 	public boolean empty() {
-		if (getRootsList().size() == 0) {
-			return true;
-		}
-		return false;
+		return this.rightMostTree == null;
 	}
 
 	/**
@@ -48,11 +44,15 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void insert(int value) {
-		BinomialTree newNode = new BinomialTree(null, value);
-		this.getRootsList().get(0).add(new BinomialTree(null, value));
-		if (value < minValRoot.getKey()) {
-			minValRoot = newNode;
+		BinomialTree newTree = new BinomialTree(null, value);
+		newTree.setLeft(this.rightMostTree);
+		this.rightMostTree = newTree;
+
+		if (value < minTree.getKey()) {
+			this.minTree = newTree;
 		}
+
+		this.rootsCount++;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class BinomialHeap {
 	 * 
 	 */
 	public int findMin() {
-		return minValRoot.getKey();
+		return minTree.getKey();
 	}
 
 	/**
@@ -93,7 +93,13 @@ public class BinomialHeap {
 	 * 
 	 */
 	public int size() {
-		return 42; // should be replaced by student code
+		int sum = 0;
+		BinomialTree current = this.rightMostTree;
+		while (current != null) {
+			sum += current.size();
+			current = current.getLeft();
+		}
+		return sum;
 	}
 
 	/**
