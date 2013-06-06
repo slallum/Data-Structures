@@ -121,6 +121,7 @@ public class BinomialHeap {
 		if (current == null) {
 			this.rightMostTree = heap2.getRightMostTree();
 			this.rootsCount += heap2.getRootsCount();
+			this.minTree = heap2.getMinTree();
 			return;
 		}
 		while (current.getLeftSibling() != null) {
@@ -128,6 +129,7 @@ public class BinomialHeap {
 		}
 		current.setLeftSibling(heap2.getRightMostTree());
 		this.rootsCount += heap2.getRootsCount();
+		findNewMin();
 	}
 
 	/**
@@ -332,6 +334,13 @@ public class BinomialHeap {
 	 */
 	private int getRootsCount() {
 		return this.rootsCount;
+	}
+	
+	/**
+	 * @return
+	 */
+	private BinomialTree getMinTree() {
+		return this.minTree;
 	}
 
 	/**
