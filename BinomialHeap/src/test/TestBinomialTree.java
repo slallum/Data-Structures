@@ -108,7 +108,7 @@ public class TestBinomialTree {
 		List<Integer> numbers = new ArrayList<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < numbersCount; i++) {
-			numbers.add(rand.nextInt(100)); // 1073741824)); // 2**30
+			numbers.add(rand.nextInt(1073741824)); // 2**30
 		}
 		return numbers;
 	}
