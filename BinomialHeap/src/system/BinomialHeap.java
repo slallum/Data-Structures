@@ -8,6 +8,7 @@ package system;
  */
 public class BinomialHeap {
 
+	/** First link iin list of tree roots contained */
 	private BinomialTree rightMostTree;
 
 	/** Root with minimum value in the heap */
@@ -20,7 +21,7 @@ public class BinomialHeap {
 	 * Creates an empty binomial heap
 	 */
 	public BinomialHeap() {
-
+		// Nothing to do
 	}
 
 	/**
@@ -61,21 +62,17 @@ public class BinomialHeap {
 	 */
 	public void insert(int value) {
 		BinomialTree newTree = new BinomialTree(value);
-
 		if (this.size() == 0) {
 			this.minTree = newTree;
 			this.rightMostTree = newTree;
-			this.rootsCount++;
-			return;
+		} else {
+			newTree.setLeftSibling(this.rightMostTree);
+			this.rightMostTree = newTree;
+	
+			if (value < minTree.getKey()) {
+				this.minTree = newTree;
+			}
 		}
-
-		newTree.setLeftSibling(this.rightMostTree);
-		this.rightMostTree = newTree;
-
-		if (value < minTree.getKey()) {
-			this.minTree = newTree;
-		}
-
 		this.rootsCount++;
 	}
 
@@ -124,6 +121,7 @@ public class BinomialHeap {
 			this.minTree = heap2.getMinTree();
 			return;
 		}
+		// Go to end of list in order to link to it the other
 		while (current.getLeftSibling() != null) {
 			current = current.getLeftSibling();
 		}
@@ -404,20 +402,15 @@ public class BinomialHeap {
 		 */
 		public void setLeftSibling(BinomialTree leftSibling) {
 			this.leftSibling = leftSibling;
-			if (leftSibling == null) {
-				return;
-			}
-
-			this.leftSibling.rightSibling = this;
-
-			if (this.getParent() == null) {
-				return;
-			}
-
-			// update the leftmost child
-			if (this.getParent().getMostLeftChild() == leftSibling
-					.getRightSibling()) {
-				this.parent.setMostLeftChild(this);
+			if (this.leftSibling != null) {
+				this.leftSibling.rightSibling = this;
+				if (this.getParent() != null) {
+					// update the leftmost child
+					if (this.getParent().getMostLeftChild() == leftSibling
+							.getRightSibling()) {
+						this.parent.setMostLeftChild(this);
+					}
+				}
 			}
 		}
 
@@ -503,14 +496,13 @@ public class BinomialHeap {
 				treeToHang.setRightSibling(null);
 				treeToHang.setLeftSibling(null);
 				this.rank++;
-				return;
+			} else {
+				treeToHang.setRightSibling(this.mostLeftChild);
+				treeToHang.setLeftSibling(null);
+				this.mostLeftChild.setLeftSibling(treeToHang);
+				this.rank++;
+				this.mostLeftChild = treeToHang;
 			}
-			
-			treeToHang.setRightSibling(this.mostLeftChild);
-			treeToHang.setLeftSibling(null);
-			this.mostLeftChild.setLeftSibling(treeToHang);
-			this.rank++;
-			this.mostLeftChild = treeToHang;
 		}
 
 		/**
