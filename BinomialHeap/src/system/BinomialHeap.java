@@ -215,7 +215,7 @@ public class BinomialHeap {
 		while (current != null) {
 			BinomialTree next = current.getLeftSibling();
 			removeTree(current);
-			insertTree(current, linkedTrees);
+			linksCounter += insertTree(current, linkedTrees);
 			current = next;
 		}
 		recreateHeap(linkedTrees);
@@ -230,21 +230,21 @@ public class BinomialHeap {
 	 * @param currentTree
 	 * @param linkedTrees
 	 */
-	private void insertTree(BinomialTree currentTree, BinomialTree[] linkedTrees) {
+	private int insertTree(BinomialTree currentTree, BinomialTree[] linkedTrees) {
 		if (linkedTrees[currentTree.getRank()] == null) {
 			linkedTrees[currentTree.getRank()] = currentTree;
-		} else {
-			BinomialTree previousTree = linkedTrees[currentTree.getRank()];
-			linkedTrees[currentTree.getRank()] = null;
-			// Swap in order to maintain heap-order
-			if (previousTree.getKey() < currentTree.getKey()) {
-				BinomialTree temp = currentTree;
-				currentTree = previousTree;
-				previousTree = temp;
-			}
-			currentTree.hangTree(previousTree);
-			insertTree(currentTree, linkedTrees);
+			return 0;
+		}	
+		BinomialTree previousTree = linkedTrees[currentTree.getRank()];
+		linkedTrees[currentTree.getRank()] = null;
+		// Swap in order to maintain heap-order
+		if (previousTree.getKey() < currentTree.getKey()) {
+			BinomialTree temp = currentTree;
+			currentTree = previousTree;
+			previousTree = temp;
 		}
+		currentTree.hangTree(previousTree);
+		return 1 + insertTree(currentTree, linkedTrees);
 	}
 
 	/**
