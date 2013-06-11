@@ -37,10 +37,12 @@ public class BinomialHeap {
 		this.rootsCount = 0;
 		if (this.rightMostTree != null) {
 			BinomialTree current = this.rightMostTree;
-			while (current != null) {
-				this.rootsCount++;
+			this.rootsCount++;
+			while (current.getLeftSibling() != null) {
 				current = current.getLeftSibling();
+				this.rootsCount++;
 			}
+			this.leftMostTree = current;
 		}
 		this.findNewMin();
 	}
@@ -273,7 +275,7 @@ public class BinomialHeap {
 				}
 				i++;
 			}
-			this.leftMostTree = current.getLeftSibling();
+			this.leftMostTree = current;
 		}
 	}
 
