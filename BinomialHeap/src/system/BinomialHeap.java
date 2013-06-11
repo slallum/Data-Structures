@@ -68,10 +68,7 @@ public class BinomialHeap {
 		if (this.size() == 0) {
 			this.minTree = newTree;
 			this.rightMostTree = newTree;
-<<<<<<< HEAD
 			this.leftMostTree = newTree;
-=======
->>>>>>> branch 'master' of https://github.com/slallum/Data-Structures.git
 		} else {
 			newTree.setLeftSibling(this.rightMostTree);
 			this.rightMostTree = newTree;
@@ -120,7 +117,7 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void meld(BinomialHeap heap2) {
-		if (heap2 == null) {
+		if ((heap2 == null) || (heap2.getRightMostTree() == null)) {
 			return;
 		}
 
@@ -131,17 +128,9 @@ public class BinomialHeap {
 			this.minTree = heap2.getMinTree();
 			return;
 		}
-		// Go to end of list in order to link to it the other
-<<<<<<< HEAD
 		
 		heap2.getLeftMostTree().setLeftSibling(this.getRightMostTree());
 		this.rightMostTree = heap2.getRightMostTree();
-=======
-		while (current.getLeftSibling() != null) {
-			current = current.getLeftSibling();
-		}
-		current.setLeftSibling(heap2.getRightMostTree());
->>>>>>> branch 'master' of https://github.com/slallum/Data-Structures.git
 		this.rootsCount += heap2.getRootsCount();
 		findNewMin();
 	}
@@ -311,9 +300,6 @@ public class BinomialHeap {
 			if (this.getLeftMostTree() == tree) {
 				this.leftMostTree = tree.getRightSibling();
 			}
-			if (this.getLeftMostTree() == tree) {
-				this.leftMostTree = tree.getRightSibling();
-			}
 			BinomialTree left = tree.getLeftSibling();
 			BinomialTree right = tree.getRightSibling();
 			if (left != null) {
@@ -355,14 +341,7 @@ public class BinomialHeap {
 	private BinomialTree getLeftMostTree() {
 		return this.leftMostTree;
 	}
-	/**
-	 * @return The first root in roots' list of the heap
-	 */
-	private BinomialTree getLeftMostTree() {
-		return this.leftMostTree;
-	}
 	
-
 	/**
 	 * @return
 	 */
