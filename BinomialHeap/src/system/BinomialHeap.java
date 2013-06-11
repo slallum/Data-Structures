@@ -18,6 +18,8 @@ public class BinomialHeap {
 
 	/** How many roots saved in the heap */
 	private int rootsCount = 0;
+	
+	private int size = 0;
 
 	/**
 	 * Creates an empty binomial heap
@@ -38,9 +40,11 @@ public class BinomialHeap {
 		if (this.rightMostTree != null) {
 			BinomialTree current = this.rightMostTree;
 			this.rootsCount++;
+			this.size += current.size();
 			while (current.getLeftSibling() != null) {
 				current = current.getLeftSibling();
 				this.rootsCount++;
+				this.size += current.size();
 			}
 			this.leftMostTree = current;
 		}
@@ -79,6 +83,7 @@ public class BinomialHeap {
 				this.minTree = newTree;
 			}
 		}
+		this.size++;
 		this.rootsCount++;
 	}
 
@@ -86,7 +91,7 @@ public class BinomialHeap {
 	 * public void deleteMin()
 	 * 
 	 * Delete the minimum value. Return the number of linking actions that
-	 * occurred in the process.
+	 * occured in the process.
 	 * 
 	 */
 	public int deleteMin() {
@@ -127,6 +132,7 @@ public class BinomialHeap {
 			this.rightMostTree = heap2.getRightMostTree();
 			this.leftMostTree = heap2.getLeftMostTree();
 			this.rootsCount += heap2.getRootsCount();
+			this.size += heap2.size();
 			this.minTree = heap2.getMinTree();
 			return;
 		}
@@ -134,6 +140,7 @@ public class BinomialHeap {
 		heap2.getLeftMostTree().setLeftSibling(this.getRightMostTree());
 		this.rightMostTree = heap2.getRightMostTree();
 		this.rootsCount += heap2.getRootsCount();
+		this.size += heap2.size();
 		findNewMin();
 	}
 
@@ -144,13 +151,7 @@ public class BinomialHeap {
 	 * 
 	 */
 	public int size() {
-		int sum = 0;
-		BinomialTree current = this.rightMostTree;
-		while (current != null) {
-			sum += current.size();
-			current = current.getLeftSibling();
-		}
-		return sum;
+		return this.size;
 	}
 
 	/**
@@ -167,7 +168,7 @@ public class BinomialHeap {
 		}
 		int linksCount = 0;
 		for (int i = 0; i < array.length; i++) {
-			array[i] = sortingHeap.getMinVal();
+			array[i] = sortingHeap.findMin();
 			linksCount += sortingHeap.deleteMin();
 		}
 		return linksCount;
@@ -191,13 +192,6 @@ public class BinomialHeap {
 			ranksInd++;
 		}
 		return ranksInOrder;
-	}
-
-	/**
-	 * @return The minimal value currently in the heap
-	 */
-	public int getMinVal() {
-		return this.minTree.getKey();
 	}
 
 	/* --- Private Methods --- */
@@ -263,6 +257,7 @@ public class BinomialHeap {
 		if (i < linkedTrees.length) {
 			this.rightMostTree = linkedTrees[i];
 			this.rootsCount = 1;
+			this.size = this.rightMostTree.size();
 			
 			// add the next nodes
 			current = this.rightMostTree;
@@ -271,6 +266,7 @@ public class BinomialHeap {
 				if (linkedTrees[i] != null) {
 					current.setLeftSibling(linkedTrees[i]);
 					current = current.getLeftSibling();
+					this.size += current.size();
 					this.rootsCount++;
 				}
 				i++;
@@ -311,6 +307,7 @@ public class BinomialHeap {
 				right.setLeftSibling(left);
 			}
 			this.rootsCount--;
+			this.size -= tree.size();
 			tree.setRightSibling(null);
 			tree.setLeftSibling(null);
 		}

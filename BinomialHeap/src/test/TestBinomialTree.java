@@ -74,7 +74,7 @@ public class TestBinomialTree {
 
 	@Test
 	public void testUltimate() {
-		List<Integer> randomNumbers = getRandomNumbersList(1000);
+		List<Integer> randomNumbers = getRandomNumbersList(100000);
 
 		BinomialHeap heap = new BinomialHeap();
 
