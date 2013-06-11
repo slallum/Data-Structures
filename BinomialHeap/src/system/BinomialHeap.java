@@ -8,8 +8,11 @@ package system;
  */
 public class BinomialHeap {
 
-	/** First link iin list of tree roots contained */
+	/** First link in list of tree roots contained */
 	private BinomialTree rightMostTree;
+	
+	/** Last link in list of tree roots */
+	private BinomialTree leftMostTree;
 
 	/** Root with minimum value in the heap */
 	private BinomialTree minTree;
@@ -268,6 +271,7 @@ public class BinomialHeap {
 				}
 				i++;
 			}
+			this.leftMostTree = current.getLeftSibling();
 		}
 	}
 
@@ -290,6 +294,9 @@ public class BinomialHeap {
 		if (tree != null) {
 			if (this.getRightMostTree() == tree) {
 				this.rightMostTree = tree.getLeftSibling();
+			}
+			if (this.getLeftMostTree() == tree) {
+				this.leftMostTree = tree.getRightSibling();
 			}
 			BinomialTree left = tree.getLeftSibling();
 			BinomialTree right = tree.getRightSibling();
@@ -324,6 +331,13 @@ public class BinomialHeap {
 	 */
 	private BinomialTree getRightMostTree() {
 		return this.rightMostTree;
+	}
+	
+	/**
+	 * @return The first root in roots' list of the heap
+	 */
+	private BinomialTree getLeftMostTree() {
+		return this.leftMostTree;
 	}
 	
 
