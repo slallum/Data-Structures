@@ -9,13 +9,13 @@ package system;
 public class BinomialHeap {
 
 	/** First link in list of tree roots contained */
-	private BinomialTree rightMostTree;
+	private BinomialTree rightMostTree = null;
 	
 	/** Last link in list of tree roots */
-	private BinomialTree leftMostTree;
+	private BinomialTree leftMostTree = null;
 
 	/** Root with minimum value in the heap */
-	private BinomialTree minTree;
+	private BinomialTree minTree = null;
 
 	/** How many roots saved in the heap */
 	private int rootsCount = 0;
