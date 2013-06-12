@@ -71,10 +71,93 @@ public class TestBinomialTree {
 		}
 		assertTrue(isSorted(newSortedList));
 	}
+	
+	@Test
+	public void testTreeRanksOrder() {
+		
+		BinomialHeap heap1 = new BinomialHeap();
+		BinomialHeap heap2 = new BinomialHeap();
+		List<Integer> randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap1.insert(n);
+		}
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap2.insert(n);
+		}
+		heap1.meld(heap2);
+		assertTrue(heap1.size() == 200);
+		int[] ranks = heap1.treesRanks();
+		int i = 1;
+		while (i < ranks.length && ranks[i] >= ranks[i-1]) {
+			i++;
+		}
+		assertTrue(i == ranks.length);
+		
+		heap1 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap1.insert(n);
+		}
+		heap2 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap2.insert(n);
+		}
+		heap1.deleteMin();
+		heap1.meld(heap2);
+		assertTrue(heap1.size() == 199);
+		ranks = heap1.treesRanks();
+		i = 1;
+		while (i < ranks.length && ranks[i] >= ranks[i-1]) {
+			i++;
+		}
+		assertTrue(i == ranks.length);
+		
+		heap1 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap1.insert(n);
+		}
+		heap2 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap2.insert(n);
+		}
+		heap1.meld(heap2);
+		heap1.deleteMin();
+		assertTrue(heap1.size() == 199);
+		ranks = heap1.treesRanks();
+		i = 1;
+		while (i < ranks.length && ranks[i] >= ranks[i-1]) {
+			i++;
+		}
+		assertTrue(i == ranks.length);
+		
+		heap1 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap1.insert(n);
+		}
+		heap2 = new BinomialHeap();
+		randomNumbers = getRandomNumbersList(100);
+		for (int n : randomNumbers) {
+			heap2.insert(n);
+		}
+		heap2.deleteMin();
+		assertTrue(heap1.size() == 100);
+		heap1.meld(heap2);
+		ranks = heap1.treesRanks();
+		i = 1;
+		while (i < ranks.length && ranks[i] >= ranks[i-1]) {
+			i++;
+		}
+		assertTrue(i == ranks.length);
+	}
 
 	@Test
 	public void testUltimate() {
-		List<Integer> randomNumbers = getRandomNumbersList(100000);
+		List<Integer> randomNumbers = getRandomNumbersList(1000);
 
 		BinomialHeap heap = new BinomialHeap();
 

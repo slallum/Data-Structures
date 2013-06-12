@@ -9,7 +9,7 @@ public class BinomialHeap {
 
 	/** First link in list of tree roots contained */
 	private BinomialTree rightMostTree = null;
-	
+
 	/** Last link in list of tree roots */
 	private BinomialTree leftMostTree = null;
 
@@ -18,8 +18,12 @@ public class BinomialHeap {
 
 	/** How many roots saved in the heap */
 	private int rootsCount = 0;
-	
+
+	/** Amount of elements in the heap */
 	private int size = 0;
+
+	/** Tree to perform merge from, if heaps were melded */
+	private BinomialTree ranksMergePoint = null;
 
 	/**
 	 * Creates an empty binomial heap
@@ -78,7 +82,7 @@ public class BinomialHeap {
 		} else {
 			newTree.setLeftSibling(this.rightMostTree);
 			this.rightMostTree = newTree;
-	
+
 			if (value < minTree.getKey()) {
 				this.minTree = newTree;
 			}
@@ -99,6 +103,7 @@ public class BinomialHeap {
 			removeMinRoot();
 			int linksCount = successiveLinking();
 			findNewMin();
+			this.ranksMergePoint = null;
 			return linksCount;
 		}
 		return 0;
@@ -124,10 +129,11 @@ public class BinomialHeap {
 	 * 
 	 */
 	public void meld(BinomialHeap heap2) {
+		// If heap2 is empty, stays as is
 		if ((heap2 == null) || (heap2.getRightMostTree() == null)) {
 			return;
 		}
-
+		// If ours is empty, just put heap2
 		if (this.rightMostTree == null) {
 			this.rightMostTree = heap2.getRightMostTree();
 			this.leftMostTree = heap2.getLeftMostTree();
@@ -136,12 +142,15 @@ public class BinomialHeap {
 			this.minTree = heap2.getMinTree();
 			return;
 		}
-		
+		// Need to combine both
 		heap2.getLeftMostTree().setLeftSibling(this.getRightMostTree());
+		this.ranksMergePoint = this.getRightMostTree();
 		this.rightMostTree = heap2.getRightMostTree();
 		this.rootsCount += heap2.getRootsCount();
 		this.size += heap2.size();
-		findNewMin();
+		if (heap2.findMin() < this.findMin()) {
+			this.minTree = heap2.getMinTree();
+		}
 	}
 
 	/**
@@ -178,17 +187,25 @@ public class BinomialHeap {
 	 * public int[] treesRanks()
 	 * 
 	 * Return an array containing the ranks of the trees that represent the heap
-	 * in ascending order.
-	 * Just goes over in the order of the list, as we already made sure they are sorted,
-	 * during the successive linking process
+	 * in ascending order. Just goes over in the order of the list, as we
+	 * already made sure they are sorted, during the successive linking process
 	 */
 	public int[] treesRanks() {
 		int[] ranksInOrder = new int[rootsCount];
 		int ranksInd = 0;
 		BinomialTree currentTree = this.rightMostTree;
-		while (currentTree != null) {
-			ranksInOrder[ranksInd] = currentTree.getRank();
-			currentTree = currentTree.getLeftSibling();
+		BinomialTree currentMergePoint = this.ranksMergePoint;
+		while ((currentTree != this.ranksMergePoint)
+				|| (currentMergePoint != null)) {
+			// If we have a merge point - means we have to take which of the two
+			// whos rank is lower, first
+			if (isMergeRootRankLower(currentTree, currentMergePoint)) {
+				ranksInOrder[ranksInd] = currentMergePoint.getRank();
+				currentMergePoint = currentMergePoint.getLeftSibling();
+			} else {
+				ranksInOrder[ranksInd] = currentTree.getRank();
+				currentTree = currentTree.getLeftSibling();
+			}
 			ranksInd++;
 		}
 		return ranksInOrder;
@@ -197,8 +214,8 @@ public class BinomialHeap {
 	/* --- Private Methods --- */
 
 	/**
-	 * Goes over linked list of the nodes and inserts them into an array
-	 * that keeps only one tree of each rank.
+	 * Goes over linked list of the nodes and inserts them into an array that
+	 * keeps only one tree of each rank.
 	 * 
 	 * @return The number of links performed
 	 */
@@ -217,9 +234,9 @@ public class BinomialHeap {
 	}
 
 	/**
-	 * Recursive function for inserting into an array of nodes, while each one is in
-	 * the cell matching it's rank.
-	 * If two are matching the same cell, must link them.
+	 * Recursive function for inserting into an array of nodes, while each one
+	 * is in the cell matching it's rank. If two are matching the same cell,
+	 * must link them.
 	 * 
 	 * @param currentTree
 	 * @param linkedTrees
@@ -228,7 +245,7 @@ public class BinomialHeap {
 		if (linkedTrees[currentTree.getRank()] == null) {
 			linkedTrees[currentTree.getRank()] = currentTree;
 			return 0;
-		}	
+		}
 		BinomialTree previousTree = linkedTrees[currentTree.getRank()];
 		linkedTrees[currentTree.getRank()] = null;
 		// Swap in order to maintain heap-order
@@ -248,8 +265,8 @@ public class BinomialHeap {
 	 */
 	private void recreateHeap(BinomialTree[] linkedTrees) {
 		BinomialTree current;
-		
-		// find the first node 
+
+		// find the first node
 		int i = 0;
 		while ((i < linkedTrees.length) && (linkedTrees[i] == null)) {
 			i++;
@@ -258,7 +275,7 @@ public class BinomialHeap {
 			this.rightMostTree = linkedTrees[i];
 			this.rootsCount = 1;
 			this.size = this.rightMostTree.size();
-			
+
 			// add the next nodes
 			current = this.rightMostTree;
 			i++;
@@ -328,19 +345,31 @@ public class BinomialHeap {
 	}
 
 	/**
+	 * @param currentTree
+	 * @param currentMergePoint
+	 * @return Whether there is a merge point and it's rank is lower than current
+	 */
+	private boolean isMergeRootRankLower(BinomialTree currentTree,
+			BinomialTree currentMergePoint) {
+		return (currentMergePoint != null)
+				&& ((currentTree == this.ranksMergePoint) || (currentMergePoint
+						.getRank() < currentTree.getRank()));
+	}
+
+	/**
 	 * @return The first root in roots' list of the heap
 	 */
 	private BinomialTree getRightMostTree() {
 		return this.rightMostTree;
 	}
-	
+
 	/**
 	 * @return The first root in roots' list of the heap
 	 */
 	private BinomialTree getLeftMostTree() {
 		return this.leftMostTree;
 	}
-	
+
 	/**
 	 * @return
 	 */
