@@ -95,18 +95,18 @@ public class TestBinomialTree {
 		assertTrue(i == ranks.length);
 		
 		heap1 = new BinomialHeap();
-		randomNumbers = getRandomNumbersList(100);
+		randomNumbers = getRandomNumbersList(10);
 		for (int n : randomNumbers) {
 			heap1.insert(n);
 		}
 		heap2 = new BinomialHeap();
-		randomNumbers = getRandomNumbersList(100);
+		randomNumbers = getRandomNumbersList(10);
 		for (int n : randomNumbers) {
 			heap2.insert(n);
 		}
 		heap1.deleteMin();
 		heap1.meld(heap2);
-		assertTrue(heap1.size() == 199);
+		assertTrue(heap1.size() == 19);
 		ranks = heap1.treesRanks();
 		i = 1;
 		while (i < ranks.length && ranks[i] >= ranks[i-1]) {

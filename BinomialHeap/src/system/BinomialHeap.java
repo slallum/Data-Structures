@@ -22,9 +22,6 @@ public class BinomialHeap {
 	/** Amount of elements in the heap */
 	private int size = 0;
 
-	/** Tree to perform merge from, if heaps were melded */
-	private BinomialTree ranksMergePoint = null;
-
 	/**
 	 * Creates an empty binomial heap
 	 */
@@ -103,7 +100,6 @@ public class BinomialHeap {
 			removeMinRoot();
 			int linksCount = successiveLinking();
 			findNewMin();
-			this.ranksMergePoint = null;
 			return linksCount;
 		}
 		return 0;
@@ -144,7 +140,6 @@ public class BinomialHeap {
 		}
 		// Need to combine both
 		heap2.getLeftMostTree().setLeftSibling(this.getRightMostTree());
-		this.ranksMergePoint = this.getRightMostTree();
 		this.rightMostTree = heap2.getRightMostTree();
 		this.rootsCount += heap2.getRootsCount();
 		this.size += heap2.size();
@@ -191,24 +186,36 @@ public class BinomialHeap {
 	 * already made sure they are sorted, during the successive linking process
 	 */
 	public int[] treesRanks() {
-		int[] ranksInOrder = new int[rootsCount];
-		int ranksInd = 0;
+		int[] ranks = new int[this.rootsCount];
+		int maxRank = 0;
+		int index = 0;
 		BinomialTree currentTree = this.rightMostTree;
-		BinomialTree currentMergePoint = this.ranksMergePoint;
-		while ((currentTree != this.ranksMergePoint)
-				|| (currentMergePoint != null)) {
-			// If we have a merge point - means we have to take which of the two
-			// whos rank is lower, first
-			if (isMergeRootRankLower(currentTree, currentMergePoint)) {
-				ranksInOrder[ranksInd] = currentMergePoint.getRank();
-				currentMergePoint = currentMergePoint.getLeftSibling();
-			} else {
-				ranksInOrder[ranksInd] = currentTree.getRank();
-				currentTree = currentTree.getLeftSibling();
+		while (currentTree != null) {
+			if (currentTree.getRank() > maxRank) {
+				maxRank = currentTree.getRank();
 			}
-			ranksInd++;
+			ranks[index] = currentTree.getRank();
+			index++;
+			currentTree = currentTree.getLeftSibling();
 		}
-		return ranksInOrder;
+		return this.countSort(ranks, maxRank);
+//		int ranksInd = 0;
+//		
+//		BinomialTree currentMergePoint = this.ranksMergePoint;
+//		while ((currentTree != this.ranksMergePoint)
+//				|| (currentMergePoint != null)) {
+//			// If we have a merge point - means we have to take which of the two
+//			// whos rank is lower, first
+//			if (isMergeRootRankLower(currentTree, currentMergePoint)) {
+//				ranksInOrder[ranksInd] = currentMergePoint.getRank();
+//				currentMergePoint = currentMergePoint.getLeftSibling();
+//			} else {
+//				ranksInOrder[ranksInd] = currentTree.getRank();
+//				currentTree = currentTree.getLeftSibling();
+//			}
+//			ranksInd++;
+//		}
+//		return ranksInOrder;
 	}
 
 	/* --- Private Methods --- */
@@ -343,17 +350,32 @@ public class BinomialHeap {
 			current = current.getLeftSibling();
 		}
 	}
-
+	
 	/**
-	 * @param currentTree
-	 * @param currentMergePoint
-	 * @return Whether there is a merge point and it's rank is lower than current
+	 * Uses a count-sort algorithm, as we know  the range of values we will have in the
+	 * array (maxRank) and we also know that because of the data structure,
+	 * the maximal rank will not be more than logn (n number of elements stored in the heap)
+	 * So the work done by the method will be at most O(n)
+	 * 
+	 * @param ranks		All ranks as is in roots list 
+	 * @param maxRank	Maximal rank between the ranks
+	 * @return			ranks ordered
 	 */
-	private boolean isMergeRootRankLower(BinomialTree currentTree,
-			BinomialTree currentMergePoint) {
-		return (currentMergePoint != null)
-				&& ((currentTree == this.ranksMergePoint) || (currentMergePoint
-						.getRank() < currentTree.getRank()));
+	private int[] countSort(int[] ranks, int maxRank) {
+		int[] ranksCount = new int[maxRank + 1];
+		for (int i = 0; i < ranks.length; i++) {
+			ranksCount[ranks[i]]++;
+		}
+		int[] sortedRanks = new int[ranks.length];
+		int countInd = 0;
+		for (int i = 0; i < ranks.length; i++) {
+			while (ranksCount[countInd] == 0) {
+				countInd++;
+			}
+			sortedRanks[i] = countInd;
+			ranksCount[countInd]--;
+		}
+		return sortedRanks;
 	}
 
 	/**
