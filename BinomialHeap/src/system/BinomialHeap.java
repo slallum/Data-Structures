@@ -198,24 +198,7 @@ public class BinomialHeap {
 			index++;
 			currentTree = currentTree.getLeftSibling();
 		}
-		return this.countSort(ranks, maxRank);
-//		int ranksInd = 0;
-//		
-//		BinomialTree currentMergePoint = this.ranksMergePoint;
-//		while ((currentTree != this.ranksMergePoint)
-//				|| (currentMergePoint != null)) {
-//			// If we have a merge point - means we have to take which of the two
-//			// whos rank is lower, first
-//			if (isMergeRootRankLower(currentTree, currentMergePoint)) {
-//				ranksInOrder[ranksInd] = currentMergePoint.getRank();
-//				currentMergePoint = currentMergePoint.getLeftSibling();
-//			} else {
-//				ranksInOrder[ranksInd] = currentTree.getRank();
-//				currentTree = currentTree.getLeftSibling();
-//			}
-//			ranksInd++;
-//		}
-//		return ranksInOrder;
+		return this.countSort(ranks, maxRank);	
 	}
 
 	/* --- Private Methods --- */
