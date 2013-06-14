@@ -98,6 +98,9 @@ public class BinomialHeap {
 	public int deleteMin() {
 		if (this.minTree != null) {
 			removeMinRoot();
+			if (this.size() == 0) {
+				return 0;
+			}
 			int linksCount = successiveLinking();
 			findNewMin();
 			return linksCount;
@@ -211,7 +214,7 @@ public class BinomialHeap {
 	 */
 	private int successiveLinking() {
 		int linksCounter = 0;
-		BinomialTree[] linkedTrees = new BinomialTree[this.size()];
+		BinomialTree[] linkedTrees = new BinomialTree[BinomialHeap.log(this.size(), 2) + 1];
 		BinomialTree current = this.rightMostTree;
 		while (current != null) {
 			BinomialTree next = current.getLeftSibling();
@@ -387,6 +390,11 @@ public class BinomialHeap {
 	 */
 	private BinomialTree getMinTree() {
 		return this.minTree;
+	}
+	
+	static int log(int x, int base)
+	{
+	    return (int) (Math.log(x) / Math.log(base));
 	}
 
 	/**
