@@ -1,4 +1,5 @@
-Data-Structures
+TAU exercises
 ===============
 
-Data Structures exercises
+ - Data Structures exercises
+ - Code Project (c) exercises
