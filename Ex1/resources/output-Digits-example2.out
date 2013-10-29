@@ -1,0 +1,3 @@
+Enter a long number and a non-negative integer:
+The number of digits in x=9062802321400 is 13
+ERROR: i=0 is an invalid digit number for x=9062802321400
