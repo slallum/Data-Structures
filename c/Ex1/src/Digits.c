@@ -25,7 +25,7 @@ int main(void)
 		return 1;
 	}
 	
-	ith_digit = (labs(x) / (int)pow(10, index-1)) % 10;
+	ith_digit = (int)(labs(x) / pow(10, index-1)) % 10;
 	printf("The digit of x=%ld at index i=%d is %d\n", x, index, ith_digit);
 
 	return 0;
