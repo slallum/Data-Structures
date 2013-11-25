@@ -10,19 +10,22 @@
 
 typedef struct Board {
 	int num_of_heaps;
-	int heaps[];
+	int *heaps;
 } Board;
 
 /**
- * Should ask for paremeters and make validation tests
+ * Should ask for parameters and make validation tests
  */
-Board request_board();
+Board* request_board();
 
-void print_board(Board current_board);
+/**
+ * Print content of board
+ */
+void print_board(Board* current_board);
 
 /**
  * Checks if all the heaps are empty
  */
-int is_board_empty(Board current_board);
+int is_board_empty(Board* current_board);
 
 #endif /* BOARD_H_ */

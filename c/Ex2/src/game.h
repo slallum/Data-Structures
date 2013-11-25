@@ -24,16 +24,16 @@ typedef struct Game {
 /**
  * Should check validity
  */
-Move request_move(Board current_board);
+Move* request_move(Board* current_board);
 
-int make_move(Board current_board, Move requested_move);
+int make_move(Board* current_board, Move* requested_move);
 
-void print_move(Move move, is_comp_turn);
+void print_move(Move* move, is_comp_turn);
 
-void print_game_status(Game game);
+void print_game_status(Game* game);
 
 void play_game();
 
-void print_winner(Game game);
+void print_winner(Game* game);
 
 #endif /* GAME_H_ */
