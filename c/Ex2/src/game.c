@@ -4,6 +4,7 @@
  *  Created on: Nov 12, 2013
  *      Author: shir
  */
+#include <stdio.h>
 
 #include "game.h"
 
