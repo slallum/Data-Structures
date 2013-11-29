@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include <board.h>
+#include "board.h"
 
 /**
  * Read the board parameters from the user.
@@ -35,7 +35,7 @@ Board* request_board() {
 			printf("Error: the size of heap (%d) should be positive.\n", i);
 		}
 	}
-	return *(Board){.num_of_heaps=num_of_heaps, .heaps=heaps};
+	return &(Board){.num_of_heaps=num_of_heaps, .heaps=heaps};
 }
 
 /**
@@ -43,23 +43,22 @@ Board* request_board() {
  */
 int is_board_empty(Board current_board) {
 
-	int is_empty = 1;
 	int i;
 
 	for (i = 0; i < current_board.num_of_heaps; i++) {
 		if (sizeof(current_board.heaps[i]) != 0) {
-			is_empty = 0;
+			return 0;
 		}
 	}
-	return is_empty;
+	return 1;
 }
 
 void print_board(Board* current_board) {
 
 	int max_heap_size = 0;
 	int i, j;
-	char heap_separator = '';
-	char level_separator = '';
+	char heap_separator;
+	char level_separator;
 	// Find max size in order to know how many lines needed to be printed
 	for (i = 0; i < current_board->num_of_heaps; i++) {
 		if (*(current_board->heaps + i) > max_heap_size) {

@@ -30,7 +30,7 @@ int make_move(Board* current_board, Move* requested_move);
 
 void print_move(Move* move, is_comp_turn);
 
-void print_game_status(Game* game);
+void print_game_status(Game game);
 
 void play_game();
 

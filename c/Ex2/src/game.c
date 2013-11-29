@@ -4,9 +4,10 @@
  *  Created on: Nov 12, 2013
  *      Author: shir
  */
+#include <stdio.h>
 
-#include <game.h>
-#include <board.h>
+#include "game.h"
+#include "board.h"
 
 int main() {
 	play_game();
@@ -14,10 +15,11 @@ int main() {
 
 void play_game() {
 
-	Game game = {.is_comp_turn=0, .board=request_board(), .turn_counter=1};
+	Game game = { .is_comp_turn=1, .board=*request_board(), .turn_counter=1 };
 	if (game.board == 0) {
 		return;
 	}
+
 	Move* current_move;
 	while (!is_empty_board(&game.board)) {
 		print_game_status(game);

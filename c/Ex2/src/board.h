@@ -26,6 +26,6 @@ void print_board(Board* current_board);
 /**
  * Checks if all the heaps are empty
  */
-int is_board_empty(Board* current_board);
+int is_board_empty(Board current_board);
 
 #endif /* BOARD_H_ */
