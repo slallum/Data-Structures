@@ -5,58 +5,37 @@
  *      Author: shir
  */
 
-#include <game.h>
-#include <board.h>
+#include "game.h"
 
-int main() {
-	play_game();
-}
+/**
+ * Ask user for a move to make on the board and check it is
+ * actually valid according to current status of the board
+ * (that heap exists and has at least amount of objects required to remove)
+ * As long as move is not legal, requests another one.
+ */
+void request_move(Move* current_move, Board* current_board) {
 
-void play_game() {
-
-	Game game = {.is_comp_turn=0, .board=request_board(), .turn_counter=1};
-	if (game.board == 0) {
-		return;
-	}
-	Move* current_move;
-	while (!is_empty_board(&game.board)) {
-		print_game_status(game);
-		if (game.is_comp_turn == 1) {
-			current_move = calculate_next_best_move(&game.board);
-			print_move(current_move, 1);
-		} else {
-			print_board(&game.board);
-			current_move = request_move(&game.board);
-		}
-		make_move(current_move);
-		game.turn_counter++;
-		game.is_comp_turn = !game.is_comp_turn;
-	}
-	print_winner(game);
-	free(game.board.heaps);
-}
-
-Move* request_move(Board* current_board) {
-
-	int* heap_num, objects_num;
+	int heap_num, objects_num;
 	int valid = 0;
 	char* message;
+
 	printf("Your turn: please enter the heap index and the number of removed objects.\n");
 	while (!valid) {
-		printf(message);
-		scanf("%d", heap_num);
-		scanf("%d", objects_num);
-		valid = valid && checkValidity(current_board, heap_num, objects_num);
+		printf("%s", message);
+		scanf("%d", &heap_num);
+		scanf("%d", &objects_num);
+		valid = valid && checkValidity(current_board, &heap_num, &objects_num);
 		message = "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n";
 	}
-	return *(Move){.heap_num=heap_num, .num_of_objects=objects_num};
+	current_move->heap_num = &heap_num;
+	current_move->num_of_objects = &objects_num;
 }
 
 /**
  * Checks if user's request for moving objects from heap is acceptable for the
  * current state of the board.
  */
-int checkValidity(Board* current_board, int* heap_num, int* objects_num) {
+int checkValidity(Board* current_board, int* heap_num, int *objects_num) {
 	if (*heap_num > current_board->num_of_heaps) {
 		return 0;
 	}
@@ -66,6 +45,46 @@ int checkValidity(Board* current_board, int* heap_num, int* objects_num) {
 	return 1;
 }
 
-int make_move(Board* current_board, Move* requested_move) {
-	return 0;
+/**
+ * Performs the move as requested - actually reduces the number of objects
+ * in the requested heap by the requested amount.
+ */
+void make_move(Board* current_board, Move* requested_move) {
+
+	*(current_board->heaps + *(requested_move->heap_num)) -= *(requested_move->num_of_objects);
 }
+
+/**
+ * Prints details of the move to the user
+ */
+void print_move(Move* move, int is_comp_turn) {
+	if (is_comp_turn) {
+		printf("Computer takes ");
+	} else {
+		printf("You take ");
+	}
+	printf("%d objects from heap %d.\n", *(move->num_of_objects), *(move->heap_num));
+}
+
+/**
+ * Prints current status of the game
+ */
+void print_game_status(Game* game) {
+	printf("In turn %d heap sizes are:", game->turn_counter);
+	for (int i = 0; i < game->board->num_of_heaps; i++) {
+		printf(" h%d=%d", i + 1, *(game->board->heaps + i));
+	}
+	printf(".\n");
+}
+
+/**
+ * Prints who won the game
+ */
+void print_winner(Game* game) {
+	if (game->is_comp_turn) {
+		printf("You win!");
+	} else {
+		printf("Computer wins!");
+	}
+}
+

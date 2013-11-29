@@ -8,6 +8,9 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct Board {
 	int num_of_heaps;
 	int *heaps;
