@@ -31,6 +31,7 @@ Board* request_board() {
 		scanf("%d", heaps + i);
 		if (*(heaps + i) < 0) {
 			printf("Error: the size of heap (%d) should be positive.\n", i);
+			return NULL;
 		}
 	}
 	return &(Board){.num_of_heaps=num_of_heaps, .heaps=heaps};
