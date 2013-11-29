@@ -40,17 +40,15 @@ Board* request_board() {
 /**
  * Go over all of heaps - if any of their sizes is not 0, return false
  */
-int is_board_empty(Board* current_board) {
-
-	int is_empty = 1;
+int is_board_empty(Board current_board) {
 	int i;
 
-	for (i = 0; i < current_board->num_of_heaps; i++) {
-		if (sizeof(current_board->heaps[i]) != 0) {
-			is_empty = 0;
+	for (i = 0; i < current_board.num_of_heaps; i++) {
+		if (sizeof(current_board.heaps[i]) != 0) {
+			return 0;
 		}
 	}
-	return is_empty;
+	return 1;
 }
 
 void print_board(Board* current_board) {
