@@ -24,7 +24,7 @@ void play_game() {
 		return;
 	}
 	Move* current_move = &(Move){.heap_num=NULL, .num_of_objects=NULL};
-	while (!(is_board_empty(*game.board) == 1)) {
+	while (!(is_board_empty(game.board) == 1)) {
 		print_game_status(&game);
 		if (game.is_comp_turn == 1) {
 			calculate_next_best_move(current_move, game.board);
