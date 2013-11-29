@@ -6,15 +6,11 @@
  */
 
 #include "nim.h"
+#include "ai_nim.h"
 
 int main() {
 	play_game();
 	return 0;
-}
-
-void calculate_next_best_move(Move* current_move, Board* current_board) {
-
-
 }
 
 void play_game() {
@@ -27,7 +23,7 @@ void play_game() {
 	while (!(is_board_empty(game.board) == 1)) {
 		print_game_status(&game);
 		if (game.is_comp_turn == 1) {
-			calculate_next_best_move(current_move, game.board);
+			current_move = calculate_next_best_move(*game.board);
 			print_move(current_move, 1);
 		} else {
 			print_board(game.board);
