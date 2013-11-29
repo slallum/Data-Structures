@@ -8,21 +8,21 @@
 } Move;*/
 
 Move calculate_next_best_move(Board current_board){
-     int nim_sum, i;
-     nim_sum = calculate_nim_sum(current_board);
-     if (nim_sum != 0) {
+    int nim_sum, i;
+    nim_sum = calculate_nim_sum(current_board);
+    if (nim_sum != 0) {
         for (i=0; i < current_board.num_of_heaps; i++) {
-            if (current_board.heaps[i] ^ nim_sum) < current_board.heaps[i]) {
-                return (Move){.heap_num = i, .number_of_objects = current_board.heaps[i] - (nim_sum ^ current_board.heaps[i])};
-            }
-        }
-     } else {
-        for (i=0; i < current_board.num_of_heaps; i++) {
-            if (current_board.heaps[i] > 0) {
-                return (Move){.heap_num = i, .number_of_objects = 1}
-            }
-        }
-     }
+            if ((current_board.heaps[i] ^ nim_sum) < current_board.heaps[i]) {
+                return (Move){.heap_num = i, .num_of_objects = current_board.heaps[i] - (nim_sum ^ current_board.heaps[i])};;
+           }
+       }
+    } else {
+       for (i=0; i < current_board.num_of_heaps; i++) {
+           if (current_board.heaps[i] > 0) {
+               return (Move){.heap_num = i, .num_of_objects = 1};
+           }
+       }
+    }
 
 }
 
