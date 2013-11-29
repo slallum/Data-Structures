@@ -23,7 +23,7 @@ void play_game() {
 	while (!(is_board_empty(game.board) == 1)) {
 		print_game_status(&game);
 		if (game.is_comp_turn == 1) {
-			current_move = calculate_next_best_move(*game.board);
+			*current_move = calculate_next_best_move(*game.board);
 			print_move(current_move, 1);
 		} else {
 			print_board(game.board);
