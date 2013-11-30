@@ -15,7 +15,6 @@ int main() {
 
 void play_game() {
 	Move* current_move;
-
 	Game game = {.is_comp_turn=0, .board=request_board(), .turn_counter=1};
 	if (game.board == 0) {
 		return;
@@ -24,7 +23,7 @@ void play_game() {
 		print_game_status(&game);
 		if (game.is_comp_turn == 1) {
 			*current_move = calculate_next_best_move(*game.board);
-			print_move(*current_move, 1);
+			print_move(current_move, 1);
 		} else {
 			print_board(game.board);
 			request_move(current_move, game.board);

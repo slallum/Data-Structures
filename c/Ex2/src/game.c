@@ -23,7 +23,7 @@ void request_move(Move* current_move, Board* current_board) {
 	while (!valid) {
 		scanf("%d", &heap_num);
 		scanf("%d", &objects_num);
-		valid = checkValidity(current_board, &heap_num, &objects_num);
+		valid = checkValidity(current_board, heap_num, objects_num);
 		if (!valid) {
 			printf("%s", "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n");
 		}
@@ -58,13 +58,13 @@ void make_move(Board* current_board, Move* requested_move) {
 /**
  * Prints details of the move to the user
  */
-void print_move(Move move, int is_comp_turn) {
+void print_move(Move* move, int is_comp_turn) {
 	if (is_comp_turn) {
 		printf("Computer takes ");
 	} else {
 		printf("You take ");
 	}
-	printf("%d objects from heap %d.\n", move.num_of_objects, move.heap_num);
+	printf("%d objects from heap %d.\n", move->num_of_objects, move->heap_num);
 }
 
 /**
