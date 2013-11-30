@@ -20,7 +20,7 @@ Board* request_board() {
 	int i;
 
 	printf("Enter the number of heaps:\n");
-	num_of_heaps = scanf("%d", &num_of_heaps);
+	scanf("%d", &num_of_heaps);
 	if ((num_of_heaps < 1) || (num_of_heaps > 32)) {
 		printf("Error: the number of heaps must be between 1 and 32.\n");
 		return NULL;
