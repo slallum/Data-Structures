@@ -18,15 +18,15 @@ void request_move(Move* current_move, Board* current_board) {
 
 	int heap_num, objects_num;
 	int valid = 0;
-	char* message;
 
 	printf("Your turn: please enter the heap index and the number of removed objects.\n");
 	while (!valid) {
-		printf("%s", message);
 		scanf("%d", &heap_num);
 		scanf("%d", &objects_num);
-		valid = valid && checkValidity(current_board, &heap_num, &objects_num);
-		message = "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n";
+		valid = checkValidity(current_board, &heap_num, &objects_num);
+		if (!valid) {
+			printf("%s", "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n");
+		}
 	}
 	current_move->heap_num = &heap_num;
 	current_move->num_of_objects = &objects_num;
@@ -36,11 +36,12 @@ void request_move(Move* current_move, Board* current_board) {
  * Checks if user's request for moving objects from heap is acceptable for the
  * current state of the board.
  */
-int checkValidity(Board* current_board, int* heap_num, int *objects_num) {
-	if (*heap_num > current_board->num_of_heaps) {
+int checkValidity(Board* current_board, int heap_num, int objects_num) {
+	int* heaps = current_board->heaps;
+	if (heap_num > current_board->num_of_heaps) {
 		return 0;
 	}
-	if (current_board->heaps[(*heap_num) - 1] < *objects_num) {
+	if (heaps[heap_num - 1] < objects_num) {
 		return 0;
 	}
 	return 1;
@@ -71,9 +72,12 @@ void print_move(Move* move, int is_comp_turn) {
  * Prints current status of the game
  */
 void print_game_status(Game* game) {
+	int i;
+	int *heaps = game->board->heaps;
+
 	printf("In turn %d heap sizes are:", game->turn_counter);
-	for (int i = 0; i < game->board->num_of_heaps; i++) {
-		printf(" h%d=%d", i + 1, *(game->board->heaps + i));
+	for (i = 0; i < game->board->num_of_heaps; i++) {
+		printf(" h%d=%d", i + 1, heaps[i]);
 	}
 	printf(".\n");
 }

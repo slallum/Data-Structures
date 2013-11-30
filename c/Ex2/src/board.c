@@ -20,17 +20,17 @@ Board* request_board() {
 	int i;
 
 	printf("Enter the number of heaps:\n");
-	num_of_heaps = scanf("%d", &num_of_heaps);
+	scanf("%d", &num_of_heaps);
 	if ((num_of_heaps < 1) || (num_of_heaps > 32)) {
 		printf("Error: the number of heaps must be between 1 and 32.\n");
 		return NULL;
 	}
-	heaps = (int*) malloc(num_of_heaps);
+	heaps = (int*) calloc(sizeof(int)*num_of_heaps, 0);
 	printf("Enter the heap sizes:\n");
 	for (i = 0; i < num_of_heaps; i++) {
-		scanf("%d", heaps + i);
-		if (*(heaps + i) < 0) {
-			printf("Error: the size of heap (%d) should be positive.\n", i);
+		scanf("%1d", &heaps[i]);
+		if (heaps[i] < 0) {
+			printf("Error: the size of heap %d should be positive.\n", i  + 1);
 			return NULL;
 		}
 	}
@@ -51,27 +51,28 @@ int is_board_empty(Board* current_board) {
 	return 1;
 }
 
+/**
+ * Prints the contents of all the stacks in the form of
+ * a pile of stars representing each object
+ */
 void print_board(Board* current_board) {
 
 	int max_heap_size = 0;
 	int i, j;
-	char heap_separator = '\0';
-	char level_separator = '\0';
+	int *heaps = current_board->heaps;
 	// Find max size in order to know how many lines needed to be printed
 	for (i = 0; i < current_board->num_of_heaps; i++) {
-		if (*(current_board->heaps + i) > max_heap_size) {
-			max_heap_size = *(current_board->heaps + i);
+		if (heaps[i] > max_heap_size) {
+			max_heap_size = heaps[i];
 		}
 	}
 	// Print heaps
 	for (i = 0; i < max_heap_size; i++) {
-		printf("%c", level_separator);
 		for (j = 0; j < current_board->num_of_heaps; j++) {
-			if (*(current_board->heaps + j) - i > 0) {
-				printf("%c*", heap_separator);
+			if (heaps[j] - i > 0) {
+				printf("%s", "\t*");
 			}
-			heap_separator = '\t';
 		}
-		level_separator = '\n';
+		printf("%c", '\n');
 	}
 }
