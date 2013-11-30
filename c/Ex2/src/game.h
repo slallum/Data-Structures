@@ -29,7 +29,7 @@ typedef struct Game {
  */
 void request_move(Move* current_move, Board* current_board);
 
-int checkValidity(Board* current_board, int* heap_num, int* objects_num);
+int checkValidity(Board current_board, int heap_num, int objects_num);
 
 void make_move(Board* current_board, Move* requested_move);
 
