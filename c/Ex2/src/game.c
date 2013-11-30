@@ -21,8 +21,8 @@ void request_move(Move* current_move, Board* current_board) {
 
 	printf("Your turn: please enter the heap index and the number of removed objects.\n");
 	while (!valid) {
-		scanf("%d", &heap_num);
-		scanf("%d", &objects_num);
+		scanf("%1d", &heap_num);
+		scanf("%1d", &objects_num);
 		valid = checkValidity(current_board, heap_num, objects_num);
 		if (!valid) {
 			printf("%s", "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n");
@@ -37,8 +37,11 @@ void request_move(Move* current_move, Board* current_board) {
  * current state of the board.
  */
 int checkValidity(Board* current_board, int heap_num, int objects_num) {
-	int* heaps = current_board->heaps;
-	if (heap_num > current_board->num_of_heaps) {
+
+	int num_of_heaps = current_board->num_of_heaps;
+	int *heaps = current_board->heaps;
+
+	if (heap_num > num_of_heaps) {
 		return 0;
 	}
 	if (heaps[heap_num - 1] < objects_num) {

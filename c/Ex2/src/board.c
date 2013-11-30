@@ -57,20 +57,23 @@ int is_board_empty(Board* current_board) {
  */
 void print_board(Board* current_board) {
 
+	int num_of_heaps = current_board->num_of_heaps;
 	int max_heap_size = 0;
 	int i, j;
 	int *heaps = current_board->heaps;
 	// Find max size in order to know how many lines needed to be printed
-	for (i = 0; i < current_board->num_of_heaps; i++) {
+	for (i = 0; i < num_of_heaps; i++) {
 		if (heaps[i] > max_heap_size) {
 			max_heap_size = heaps[i];
 		}
 	}
 	// Print heaps
 	for (i = 0; i < max_heap_size; i++) {
-		for (j = 0; j < current_board->num_of_heaps; j++) {
-			if (heaps[j] - i > 0) {
-				printf("%s", "\t*");
+		for (j = 0; j < num_of_heaps; j++) {
+			if ((heaps[j] + i) >= max_heap_size) {
+				printf("%s", "*\t");
+			} else {
+				printf("%s", " \t");
 			}
 		}
 		printf("%c", '\n');
