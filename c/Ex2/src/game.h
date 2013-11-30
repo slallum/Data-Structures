@@ -14,8 +14,8 @@
 #include "board.h"
 
 typedef struct Move {
-	int *heap_num;
-	int *num_of_objects;
+	int heap_num;
+	int num_of_objects;
 } Move;
 
 typedef struct Game {
@@ -33,7 +33,7 @@ int checkValidity(Board* current_board, int* heap_num, int* objects_num);
 
 void make_move(Board* current_board, Move* requested_move);
 
-void print_move(Move* move, int is_comp_turn);
+void print_move(Move move, int is_comp_turn);
 
 void print_game_status(Game* game);
 
