@@ -13,8 +13,6 @@
 
 int main(void);
 
-void calculate_next_best_move(Move* current_move, Board* current_board);
-
 void play_game();
 
 #endif /* NIM_H_ */

@@ -28,8 +28,8 @@ void request_move(Move* current_move, Board* current_board) {
 			printf("%s", "Error: Invalid input.\nPlease enter again the heap index and the number of removed objects.\n");
 		}
 	}
-	current_move->heap_num = &heap_num;
-	current_move->num_of_objects = &objects_num;
+	current_move->heap_num = heap_num;
+	current_move->num_of_objects = objects_num;
 }
 
 /**
@@ -52,20 +52,19 @@ int checkValidity(Board* current_board, int heap_num, int objects_num) {
  * in the requested heap by the requested amount.
  */
 void make_move(Board* current_board, Move* requested_move) {
-
-	*(current_board->heaps + *(requested_move->heap_num)) -= *(requested_move->num_of_objects);
+	current_board->heaps[requested_move->heap_num] -= requested_move->num_of_objects;
 }
 
 /**
  * Prints details of the move to the user
  */
-void print_move(Move* move, int is_comp_turn) {
+void print_move(Move move, int is_comp_turn) {
 	if (is_comp_turn) {
 		printf("Computer takes ");
 	} else {
 		printf("You take ");
 	}
-	printf("%d objects from heap %d.\n", *(move->num_of_objects), *(move->heap_num));
+	printf("%d objects from heap %d.\n", move.num_of_objects, move.heap_num);
 }
 
 /**
