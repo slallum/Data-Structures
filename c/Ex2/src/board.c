@@ -25,16 +25,19 @@ Board* request_board() {
 		printf("Error: the number of heaps must be between 1 and 32.\n");
 		return NULL;
 	}
-	heaps = (int*) calloc(sizeof(int)*num_of_heaps, 0);
+	heaps = (int*) calloc(num_of_heaps, sizeof(int));
 	printf("Enter the heap sizes:\n");
 	for (i = 0; i < num_of_heaps; i++) {
-		scanf("%1d", &heaps[i]);
+		scanf("%d", &heaps[i]);
 		if (heaps[i] < 0) {
 			printf("Error: the size of heap %d should be positive.\n", i  + 1);
 			return NULL;
 		}
 	}
-	return &(Board){.num_of_heaps=num_of_heaps, .heaps=heaps};
+	Board* board = (Board*) malloc(sizeof(Board));
+	board->num_of_heaps = num_of_heaps;
+	board->heaps = heaps;
+	return board;
 }
 
 /**
