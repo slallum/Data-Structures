@@ -10,6 +10,7 @@
 
 #include "game.h"
 #include "board.h"
+#include "ai_nim.h"
 
 int main(void);
 

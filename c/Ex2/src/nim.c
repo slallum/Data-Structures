@@ -6,13 +6,15 @@
  */
 
 #include "nim.h"
-#include "ai_nim.h"
 
 int main() {
 	play_game();
 	return 0;
 }
 
+/**
+ * Manages the whole game from building the board until victory
+ */
 void play_game() {
 	Move* current_move = &((Move){.heap_num=0, .num_of_objects=0});
 	Game game = {.is_comp_turn=0, .board=request_board(), .turn_counter=1};
@@ -20,7 +22,7 @@ void play_game() {
 	if (game.board == 0) {
 		return;
 	}
-	while (!(is_board_empty(game.board) == 1)) {
+	while (is_board_empty(game.board) == 0) {
 		print_game_status(&game);
 		if (game.is_comp_turn == 1) {
 			*current_move = calculate_next_best_move(*game.board);
