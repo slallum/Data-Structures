@@ -71,8 +71,10 @@ void print_board(Board* current_board) {
 
 	// print heaps
 	for (level = max_heap_size; level > 0 ; level--) {
+		// first - print " " or "*" according to the first heap
 		if (current_board->heaps[0] >= level) printf("*");
 		else printf(" ");
+		// now for the tabs and other spaces/*
 		for (i = 1; i < current_board->num_of_heaps; i++) {
 			printf("\t");
 			if (current_board->heaps[i] >= level) printf("*");
