@@ -59,23 +59,24 @@ int is_board_empty(Board* current_board) {
  * a pile of stars representing each object
  */
 void print_board(Board* current_board) {
-
 	int max_heap_size = 0;
-	int i, j;
+	int i, level;
+
 	// Find max size in order to know how many lines needed to be printed
 	for (i = 0; i < current_board->num_of_heaps; i++) {
 		if (current_board->heaps[i] > max_heap_size) {
 			max_heap_size = current_board->heaps[i];
 		}
 	}
-	// Print heaps
-	for (i = 0; i < max_heap_size; i++) {
-		for (j = 0; j < current_board->num_of_heaps; j++) {
-			if ((current_board->heaps[j] + i) >= max_heap_size) {
-				printf("*\t");
-			} else {
-				printf(" \t");
-			}
+
+	// print heaps
+	for (level = max_heap_size; level > 0 ; level--) {
+		if (current_board->heaps[0] >= level) printf("*");
+		else printf(" ");
+		for (i = 1; i < current_board->num_of_heaps; i++) {
+			printf("\t");
+			if (current_board->heaps[i] >= level) printf("*");
+			else printf(" ");
 		}
 		printf("\n");
 	}
