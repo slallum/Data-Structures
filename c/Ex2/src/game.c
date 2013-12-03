@@ -40,10 +40,10 @@ int checkValidity(Board* current_board, int heap_num, int objects_num) {
 	int num_of_heaps = current_board->num_of_heaps;
 	int *heaps = current_board->heaps;
 
-	if (heap_num > num_of_heaps) {
+	if ((heap_num > num_of_heaps) || (heap_num < 0)) {
 		return 0;
 	}
-	if (heaps[heap_num - 1] < objects_num) {
+	if ((heaps[heap_num - 1] < objects_num) || (objects_num < 0)) {
 		return 0;
 	}
 	return 1;
@@ -88,9 +88,9 @@ void print_game_status(Game game) {
  */
 void print_winner(Game* game) {
 	if (game->is_comp_turn) {
-		printf("You win!");
+		printf("You win!\n");
 	} else {
-		printf("Computer wins!");
+		printf("Computer wins!\n");
 	}
 }
 

@@ -17,7 +17,7 @@ int main() {
  */
 void play_game() {
 	Move current_move = (Move){.heap_num=0, .num_of_objects=0};
-	Game game = {.is_comp_turn=0, .board=request_board(), .turn_counter=1};
+	Game game = {.is_comp_turn=1, .board=request_board(), .turn_counter=1};
 
 	if (game.board == 0) {
 		return;
