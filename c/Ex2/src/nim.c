@@ -26,11 +26,12 @@ void play_game() {
 		print_game_status(game);
 		if (game.is_comp_turn == 1) {
 			current_move = calculate_next_best_move(*game.board);
-			print_move(&current_move, 1);
+			// print_move(&current_move, game.is_comp_turn);
 		} else {
 			print_board(game.board);
 			request_move(&current_move, game.board);
 		}
+		print_move(&current_move, game.is_comp_turn);
 		make_move(game.board, &current_move);
 		game.turn_counter++;
 		game.is_comp_turn = !game.is_comp_turn;

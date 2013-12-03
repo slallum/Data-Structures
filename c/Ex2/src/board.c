@@ -72,11 +72,11 @@ void print_board(Board* current_board) {
 	for (i = 0; i < max_heap_size; i++) {
 		for (j = 0; j < current_board->num_of_heaps; j++) {
 			if ((current_board->heaps[j] + i) >= max_heap_size) {
-				printf("%s", "*\t");
+				printf("*\t");
 			} else {
-				printf("%s", " \t");
+				printf(" \t");
 			}
 		}
-		printf("%c", '\n');
+		printf("\n");
 	}
 }

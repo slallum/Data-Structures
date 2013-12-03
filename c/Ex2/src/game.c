@@ -66,7 +66,7 @@ void print_move(Move* move, int is_comp_turn) {
 	} else {
 		printf("You take ");
 	}
-	printf("%d objects from heap %d.\n", move->num_of_objects, move->heap_num);
+	printf("%d objects from heap %d.\n", move->num_of_objects, (move->heap_num)+1);
 }
 
 /**
