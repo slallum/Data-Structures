@@ -51,7 +51,7 @@ void print_move(Move *move, int is_comp_turn);
 /**
  * Prints current status of the game
  */
-void print_game_status(Game* game);
+void print_game_status(Game game);
 
 /**
  * Prints who won the game

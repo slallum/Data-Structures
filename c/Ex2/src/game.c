@@ -72,12 +72,12 @@ void print_move(Move* move, int is_comp_turn) {
 /**
  * Prints current status of the game
  */
-void print_game_status(Game* game) {
+void print_game_status(Game game) {
 	int i;
-	int *heaps = game->board->heaps;
+	int *heaps = game.board->.heaps;
 
-	printf("In turn %d heap sizes are:", game->turn_counter);
-	for (i = 0; i < game->board->num_of_heaps; i++) {
+	printf("In turn %d heap sizes are:", game.turn_counter);
+	for (i = 0; i < game.board->num_of_heaps; i++) {
 		printf(" h%d=%d", i + 1, heaps[i]);
 	}
 	printf(".\n");
