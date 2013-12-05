@@ -25,6 +25,7 @@ Board* request_board() {
 		printf("Error: the number of heaps must be between 1 and 32.\n");
 		return NULL;
 	}
+	// Creating a heap per given size
 	heaps = (int*) calloc(num_of_heaps, sizeof(int));
 	printf("Enter the heap sizes:\n");
 	for (i = 0; i < num_of_heaps; i++) {
@@ -34,6 +35,7 @@ Board* request_board() {
 			return NULL;
 		}
 	}
+	// Allocating new struct of a board - to be used throughout game
 	Board* board = (Board*) malloc(sizeof(Board));
 	board->num_of_heaps = num_of_heaps;
 	board->heaps = heaps;

@@ -39,10 +39,11 @@ int checkValidity(Board* current_board, int heap_num, int objects_num) {
 
 	int num_of_heaps = current_board->num_of_heaps;
 	int *heaps = current_board->heaps;
-
+	// Invalid number of heap
 	if ((heap_num > num_of_heaps) || (heap_num < 0)) {
 		return 0;
 	}
+	//Invalid number of objects
 	if ((heaps[heap_num - 1] < objects_num) || (objects_num < 0)) {
 		return 0;
 	}
