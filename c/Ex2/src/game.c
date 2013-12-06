@@ -7,7 +7,8 @@
 #include <stdio.h>
 
 #include "game.h"
-
+#include "board.h"
+ 
 /**
  * Ask user for a move to make on the board and check it is
  * actually valid according to current status of the board

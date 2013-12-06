@@ -1,6 +1,7 @@
 #include "ai_nim.h"
 #include "game.h"
 
+static int calculate_nim_sum(Board board);
 
 Move calculate_next_best_move(Board current_board){
     int nim_sum, i;
@@ -23,8 +24,7 @@ Move calculate_next_best_move(Board current_board){
 }
 
 
-// TODO: static?
-int calculate_nim_sum(Board board) {
+static int calculate_nim_sum(Board board) {
     int i, result = 0;
     for (i=0; i < board.num_of_heaps; i++){
         result ^= board.heaps[i];
