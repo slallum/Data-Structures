@@ -28,7 +28,7 @@ void play_game() {
 		print_game_status(game);
 		if (game.is_comp_turn == 1) {
 			// Computer's automatic move
-			current_move = calculate_next_best_move(*game.board);
+			calculate_next_best_move(&current_move, *game.board);
 		} else {
 			// User's move
 			print_board(game.board);

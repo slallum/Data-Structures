@@ -5,7 +5,7 @@
 #include "game.h"
 
 
-Move calculate_next_best_move(Board current_board);
+void calculate_next_best_move(Move *new_move, Board current_board);
 
 
 #endif /* AI_NIM_H_ */
