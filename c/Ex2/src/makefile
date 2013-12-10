@@ -9,6 +9,7 @@ nim.o: nim.c board.h game.h nim.h ai_nim.h
 	gcc $(CFLAGS) -c nim.c -o nim.o
 
 ai_nim.o: ai_nim.c ai_nim.h game.h
+	gcc $(CFLAGS) -c ai_nim.c -o ai_nim.o
 
 board.o: board.c board.h
 	gcc $(CFLAGS) -c board.c -o board.o
