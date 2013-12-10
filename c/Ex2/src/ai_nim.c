@@ -3,6 +3,10 @@
 
 static int calculate_nim_sum(Board board);
 
+/**
+ * Calculates the next best move by a given board (according to the algorithm given in the exercise).
+ * Populates *new_move with the next best move calculatd.
+ */
 void calculate_next_best_move(Move *new_move, Board current_board){
     int nim_sum, i;
     nim_sum = calculate_nim_sum(current_board);
@@ -25,6 +29,9 @@ void calculate_next_best_move(Move *new_move, Board current_board){
     }
 }
 
+/**
+ * calculates the nim-sum of the board, according to the algorithm given in the exercise
+ */
 static int calculate_nim_sum(Board board) {
     int i, result = 0;
     for (i=0; i < board.num_of_heaps; i++){
