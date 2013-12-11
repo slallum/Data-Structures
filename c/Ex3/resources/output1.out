@@ -1,0 +1,103 @@
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Error: first command must be set_number_steps
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|   X O O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|       X       |
+|       O       |
+|       X       |
+|   X O O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 6
+|               |
+|               |
+|       X       |
+|       O       |
+|       X       |
+|   X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Suggested move: add disc to column 4
+Computer move: add disc to column 3
+|               |
+|       O       |
+|       X       |
+|       O       |
+|     X X       |
+|   X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Suggested move: add disc to column 5
+Computer move: add disc to column 5
+|               |
+|       O       |
+|       X       |
+|       O X     |
+|     X X O     |
+|   X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 3
+|               |
+|       O       |
+|       X       |
+|     X O X     |
+|     X X O O   |
+|   X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|               |
+|       O       |
+|     O X       |
+|     X O X     |
+|   X X X O O   |
+|   X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 1
+|               |
+|       O       |
+|     O X       |
+|     X O X     |
+| X X X X O O   |
+| O X O O O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Game over: computer wins
+Error: game is over
+Game restarted
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  

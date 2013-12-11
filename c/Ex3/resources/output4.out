@@ -1,0 +1,164 @@
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 5
+|               |
+|               |
+|               |
+|               |
+|         X     |
+|         O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 5
+|               |
+|               |
+|         X     |
+|         O     |
+|         X     |
+|         O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|         O     |
+|         X     |
+|         O     |
+|         X     |
+|       X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|         O     |
+|         X     |
+|       X O     |
+|       O X     |
+|       X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|       X O     |
+|       O X     |
+|       X O     |
+|       O X     |
+|       X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|       O       |
+|       X O     |
+|       O X     |
+|       X O     |
+|       O X     |
+|   X   X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|       O       |
+|       X O     |
+|       O X     |
+|   X   X O     |
+|   O   O X     |
+|   X   X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|       O O     |
+|       X O     |
+|   X   O X     |
+|   X   X O     |
+|   O   O X     |
+|   X   X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 2
+|       O O     |
+|   X   X O     |
+|   X   O X     |
+|   X   X O     |
+|   O   O X     |
+| O X   X O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 6
+|   O   O O     |
+|   X   X O     |
+|   X   O X     |
+|   X   X O     |
+|   O   O X     |
+| O X   X O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 6
+|   O   O O     |
+|   X   X O     |
+|   X   O X     |
+|   X   X O     |
+| O O   O X X   |
+| O X   X O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 6
+|   O   O O     |
+|   X   X O     |
+|   X   O X     |
+| O X   X O X   |
+| O O   O X X   |
+| O X   X O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 3
+|   O   O O     |
+|   X   X O     |
+|   X   O X     |
+| O X   X O X   |
+| O O X O X X   |
+| O X O X O X   |
+-----------------
+  1 2 3 4 5 6 7  
+Game over: computer wins
+Error: game is over
+Error: game is over
+Game restarted
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|       X       |
+|       O       |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 3
+|               |
+|               |
+|       X       |
+|       O       |
+|       X       |
+|   O X O       |
+-----------------
+  1 2 3 4 5 6 7  

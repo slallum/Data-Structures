@@ -1,0 +1,16 @@
+add_disc 4
+set_number_steps 5
+add_disc 4
+add_disc 3
+add_disc 4
+add_disc 5
+suggest_move
+add_disc 4
+suggest_move
+add_disc 5
+add_disc 6
+add_disc 3
+add_disc 1
+suggest_move
+restart_game
+quit

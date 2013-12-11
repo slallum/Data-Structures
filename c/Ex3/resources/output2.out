@@ -1,0 +1,135 @@
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|       X       |
+|       X       |
+|       O O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|       X       |
+|       X       |
+|       X       |
+|       O O O   |
+-----------------
+  1 2 3 4 5 6 7  
+|               |
+|               |
+|       X       |
+|       X       |
+|       X       |
+|     O O O O   |
+-----------------
+  1 2 3 4 5 6 7  
+Game over: you win
+Game restarted
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|       X       |
+|       X       |
+|       O O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 1
+|               |
+|               |
+|               |
+|       X       |
+|       X       |
+| X     O O O   |
+-----------------
+  1 2 3 4 5 6 7  
+|               |
+|               |
+|               |
+|       X       |
+|       X       |
+| X   O O O O   |
+-----------------
+  1 2 3 4 5 6 7  
+Game over: you win
+Game restarted
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7  
+Error: cannot set number of steps - too many steps
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|       O       |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 3
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|     X O O     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 7
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|     X O O O X |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 6
+|               |
+|               |
+|               |
+|               |
+|     O X   X   |
+|     X O O O X |
+-----------------
+  1 2 3 4 5 6 7  

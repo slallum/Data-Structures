@@ -1,0 +1,19 @@
+set_number_steps 1
+add_disc 4
+add_disc 5
+add_disc 6
+add_disc 3
+set_number_steps 3
+restart_game
+add_disc 4
+add_disc 5
+add_disc 6
+add_disc 3
+restart_game
+set_number_steps 9
+set_number_steps 7
+add_disc 4
+add_disc 5
+add_disc 6
+add_disc 3
+quit
