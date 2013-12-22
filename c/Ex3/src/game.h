@@ -11,8 +11,10 @@ typedef struct game_s {
     int depth;
 } game;
 
-void make_move(game *current_game, int move_column);
+void make_user_move(game *current_game, int move_column);
 
-int get_next_comp_move(game *current_game);
+int make_comp_move(game *current_game);
+
+int make_connect4_move(int** cells, int n, int i, int value);
 
 #endif /* GAME_H_ */
