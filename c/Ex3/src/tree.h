@@ -41,16 +41,20 @@ typedef struct minmax_tree_s {
 minmax_tree* create_tree(board_t* board, int depth);
 
 /**
+ * Adds levels to tree until reaching requested depth
+ */
+void update_tree(minmax_tree *tree, board_t* board, int col, int depth);
+
+
+/* --- Helper Methods --- */
+
+/**
  * Receives a leaf in the tree and extends it with all options for moves.
  * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
  *
  */
 void extend(vertex* node, board_t* board, int depth);
 
-/**
- * Adds levels to tree until reaching requested depth
- */
-void update_tree(minmax_tree *tree, board_t* board, int col, int depth);
 
 /**
  * Frees all vertexts, elements, lists under requested node, recursively

@@ -1,10 +1,10 @@
 CFLAGS = -std=c99 -Wall -g -pedantic-errors -lm
-O_FILES = board.o connect4.o game.o interpreter.o tree.o
+O_FILES = board.o connect4.o game.o interpreter.o tree.o scoring.o
 
 all: connect4
 test: scoring.test
 clean:
-	-rm $(O_FILES) connect4
+	-rm $(O_FILES) connect4 scoring.test scoring.test.o
 
 connect4.o: connect4.c board.h game.h connect4.h tree.h interpreter.h scoring.h
 	gcc $(CFLAGS) -c connect4.c -o connect4.o
