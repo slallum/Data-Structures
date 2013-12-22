@@ -7,6 +7,7 @@
 
 #include "tree.h"
 
+#include <stdlib.h>
 
 /**
  * Initializes a new tree and builds it until requested depth.
@@ -19,7 +20,8 @@ minmax_tree* create_tree(board_t* board, int depth) {
 
 	root->score = 0;
 	root->column_num = 0;
-	extend(root, board, depth, 1);
+	root->value = 1;
+	extend(root, board, depth);
 
 	tree->root = root;
 	return tree;
@@ -30,33 +32,109 @@ minmax_tree* create_tree(board_t* board, int depth) {
  * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
  *
  */
-void extend(vertex* node, board_t* board, int depth, int value) {
+void extend(vertex* node, board_t* board, int depth) {
 
 	int i, move;
-	linked_list* children;
-	element* iterator;
+	linked_list* children = (linked_list*) malloc(sizeof(linked_list));
+	element* previous = (element*) malloc(sizeof(element));
+	element* next;
 	vertex* child;
-
+	children->head = previous;
+	node->children = children;
 	if (depth == 0) {
+		//Done extending
 		return;
 	}
-	children = (linked_list*) malloc(sizeof(linked_list));
-		for (i = 0; i < board->m; i++) {
-		move = execute_move(board, i, value);
+	// Extends per each possible move
+	for (i = 0; i < board->m; i++) {
+		move = execute_move(board, i, node->value);
+		// Unless this coloumn is full
 		if (move != 0) {
-			iterator = (element*) malloc(sizeof(element));
 			child = (vertex*) malloc(sizeof(vertex));
 			child->column_num = i;
+			child->value = (-1)*(node->value);
 			child->score = get_score(board);
+			// Recursively perform for children too
+			extend(child, board, depth - 1);
+			previous->node = child;
+			// Place element in list and link to next element
+			next = (element*) malloc(sizeof(element));
+			previous->next = next;
+			next->prev = previous;
+			previous = next;
+			board->cells[move][i] = 0;
 		}
 	}
+	children->tail = previous->prev;
+	children->tail->next = NULL;
 }
 
+/**
+ * Updates root of tree according to col played
+ * Adds levels to tree until reaching requested depth
+ *
+ * @param	board - after performing move
+ * @param	col - last chosen col
+ * @param	depth - max depth chosen
+ */
+void update_tree(minmax_tree *tree, board_t* board, int col, int depth) {
 
+	vertex* root = tree->root;
+	element* iterator;
+	if (root->children != NULL) {
+		iterator = root->children->head;
+		while ((iterator->node->column_num != col) &&
+				(iterator != NULL)) {
+			iterator = iterator->next;
+		}
+		if (iterator != NULL) {
+			tree->root = iterator->node;
+			iterator->prev->next = iterator->next;
+			remove_tree(root);
+		}
+	}
+	extend_leafs(tree->root, board, depth);
+}
 
 /**
- * Adds levels to tree until reaching requested depth
+ * Frees all vertexts, elements, lists under node, recursively
+ *
  */
-void update_tree(minmax_tree *tree, int depth, int is_comp_turn) {
+void remove_tree(vertex* node) {
 
+	element* prev;
+	element* next;
+	if (node->children != NULL) {
+		prev = node->children->head;
+		while (prev != NULL) {
+			remove_tree(prev->node);
+			free(prev->node);
+			next = prev->next;
+			free(prev);
+			prev = next;
+		}
+		free(node->children);
+	}
+	free(node);
+}
+
+/**
+ * Goes recursively down tree, thile building the appropriate boards.
+ * When reaching a leaf, performs extension of the tree.
+ */
+void extend_leafs(vertex* node, board_t* board, int depth) {
+
+	element* iterator;
+	int move;
+	if (node->children == NULL) {
+		extend(node, board, depth - 1);
+	} else {
+		iterator = node->children->head;
+		while (iterator != NULL) {
+			move = execute_move(board, iterator->node->column_num, iterator->node->value);
+			extend_leafs(iterator->node, board, depth - 1);
+			board->cells[move][iterator->node->column_num] = 0;
+			iterator = iterator->next;
+		}
+	}
 }

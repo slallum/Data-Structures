@@ -4,8 +4,6 @@
 #include "board.h"
 #include "scoring.h"
 
-#include <stdlib.h>
-
 // Linked list element
 typedef struct element_s {
     struct vertex_s     *node;
@@ -15,8 +13,8 @@ typedef struct element_s {
 
 // Linked list
 typedef struct linked_list_s {
-    element head;
-    element tail;
+    struct element_s *head;
+    struct element_s *tail;
 } linked_list;
 
 // Tree vertex holding data
@@ -25,7 +23,8 @@ typedef struct vertex_s {
     int             score;
     // The move that leads to this node
     int             column_num;
-    linked_list     children;
+    int				value;
+    linked_list     *children;
 } vertex;
 
 // Tree represented by root
@@ -46,11 +45,22 @@ minmax_tree* create_tree(board_t* board, int depth);
  * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
  *
  */
-void extend(vertex* node, board_t* board, int depth, int value);
+void extend(vertex* node, board_t* board, int depth);
 
 /**
  * Adds levels to tree until reaching requested depth
  */
-void update_tree(minmax_tree *tree, int depth, int is_comp_turn);
+void update_tree(minmax_tree *tree, board_t* board, int col, int depth);
+
+/**
+ * Frees all vertexts, elements, lists under requested node, recursively
+ */
+void remove_tree(vertex* node);
+
+/**
+ * Goes recursively down tree, thile building the appropriate boards.
+ * When reaching a leaf, performs extension of the tree.
+ */
+void extend_leafs(vertex* node, board_t* board, int depth);
 
 #endif /* TREE_H_ */
