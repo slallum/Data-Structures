@@ -5,9 +5,10 @@
  *      Author: shir
  */
 
+#include <stdlib.h>
+
 #include "tree.h"
 
-#include <stdlib.h>
 
 /**
  * Initializes a new tree and builds it until requested depth.

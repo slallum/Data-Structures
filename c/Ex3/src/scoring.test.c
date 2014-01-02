@@ -5,11 +5,11 @@
  *      Author: shir
  */
 
-#include "scoring.h"
-#include "board.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "scoring.h"
+#include "board.h"
 
 void testConnect4Scoring() {
 

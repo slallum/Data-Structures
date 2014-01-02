@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#define DASHES_COUNT 17
+#define BOARD_HEIGHT 6
+#define BOARD_WIDTH 7
+
 typedef struct Board {
 	int** cells;
 	int n;

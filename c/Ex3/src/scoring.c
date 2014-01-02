@@ -19,22 +19,22 @@ static void count_diagonal(int *spans_count, int** board, int n, int m);
  */
 int connect4_scoring(int** board, int n, int m) {
 
-	int weight[9] = { 0, -5, -2, -1, 0, 1, 2, 5, 0};
+	int weight[9] = { 0, -5, -2, -1, 0, 1, 2, 5, 0 };
 	int spans_count[9] = { 0 };
 	int i;
 	int result = 0;
 
-	count_horizontal((int*)&spans_count, board, n, m);
-	count_vertical((int*)&spans_count, board, n, m);
-	count_diagonal((int*)&spans_count, board, n, m);
+	count_horizontal(spans_count, board, n, m);
+	count_vertical(spans_count, board, n, m);
+	count_diagonal(spans_count, board, n, m);
 
 	// Negative player wins
 	if (spans_count[0] > 0) {
-		return -1000000;
+		return -EXTREME_VALUE;
 	}
 	// Positive player wins
 	if (spans_count[8] > 0) {
-		return 1000000;
+		return EXTREME_VALUE;
 	}
 	// Multiply sums with the weight function
 	for (i = 0; i < 9; i++) {

@@ -28,7 +28,7 @@ void print_board(board_t *board) {
 		printf(" |\n");
 	}
 	// Add dashes line
-	for (i = 0; i < 17; i++) {
+	for (i = 0; i < DASHES_COUNT; i++) {
 		printf("-");
 	}
 	printf("\n  ");
