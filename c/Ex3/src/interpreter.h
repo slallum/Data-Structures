@@ -3,6 +3,8 @@
 
 #include "game.h"
 
+#define MAX_STEPS_NUMBER 7
+
 void run_interpreter();
 
 void run_command(char *command);
@@ -13,7 +15,7 @@ void suggest_move(game current_game);
 
 void add_disc(game current_game, int column_num);
 
-void restart_game(game current_game);
+void restart_game(game *current_game);
 
 void quit();
 

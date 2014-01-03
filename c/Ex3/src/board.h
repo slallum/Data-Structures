@@ -7,6 +7,9 @@
 #define BOARD_HEIGHT 6
 #define BOARD_WIDTH 7
 
+#define PLAYER_SYMBOL 'O'
+#define COMPUTERR_SYMBOL 'X'
+
 typedef struct Board {
 	int** cells;
 	int n;

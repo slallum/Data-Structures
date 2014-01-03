@@ -18,9 +18,9 @@ void print_board(board_t *board) {
 		// Print the data
 		for (j = 0; j < board->m; j++) {
 			if (board->cells[i][j] == -1) {
-				printf(" X");
+				printf(" %c", COMPUTERR_SYMBOL);
 			} else if (board->cells[i][j] == 1) {
-				printf(" O");
+				printf(" %c", PLAYER_SYMBOL);
 			} else {
 				printf("  ");
 			}
