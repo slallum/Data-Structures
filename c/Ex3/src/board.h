@@ -12,7 +12,7 @@ typedef struct Board {
 	int n;
 	int m;
 	int (*scoring_func)(int**, int, int);
-	int (*make_move)(int**, int, int);
+	int (*make_move)(int**, int, int, int);
 } board_t;
 
 /**
@@ -26,7 +26,7 @@ void print_board(board_t* board);
  */
 int get_score(board_t* board);
 
-int execute_move(board_t* board, int i, int value);
+int execute_move(board_t* board, int n, int i, int value);
 
 
 #endif /* BOARD_H_ */

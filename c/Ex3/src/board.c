@@ -47,6 +47,6 @@ int get_score(board_t *board) {
 	return (*board->scoring_func)(board->cells, board->n, board->m);
 }
 
-int execute_move(board_t* board, int i, int value) {
-	return (*board->make_move)(board->cells, i, value);
+int execute_move(board_t* board, int n, int i, int value) {
+	return (*board->make_move)(board->cells, n, i, value);
 }
