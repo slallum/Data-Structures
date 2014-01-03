@@ -7,7 +7,7 @@ void run_interpreter();
 
 void run_command(char *command);
 
-void set_number_steps(int steps);
+void set_number_steps(game current_game, int steps);
 
 void suggest_move(game current_game);
 

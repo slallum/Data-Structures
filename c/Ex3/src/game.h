@@ -4,12 +4,17 @@
 #include "tree.h"
 #include "board.h"
 
+#define BOARD_HEIGHT 6
+#define BOARD_WIDTH 7
+
 typedef struct game_s {
     board_t current_board;
     int is_comp_turn;
     minmax_tree *tree;
     int depth;
 } game;
+
+int make_move(int** cells, int n, int i, int value);
 
 void make_user_move(game *current_game, int move_column);
 

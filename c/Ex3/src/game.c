@@ -7,13 +7,20 @@
 
 #include "game.h"
 #include "board.h"
-
+#include "scoring.h"
+#include "tree.h"
 
 static int get_first_empty_row(board_t board, int column);
 
 
-int make_move(int** cells, int n, int i, int value) {
+game new_game(int depth) {
+    int** cells = {0};
+    board_t current_board = { cells, BOARD_HEIGHT, BOARD_WIDTH, &connect4_scoring, &make_move };
+    return (game) {.current_board=current_board, .is_comp_turn=0, .tree=NULL, .depth=depth};
+}
 
+
+int make_move(int** cells, int n, int i, int value) {
 	int j = 0;
 	while ((j < n) && (cells[j][i] == 0)) {
 		j++;
