@@ -34,7 +34,6 @@ char *get_command_line() {
             printf("Error: command line must have at least one non-whitespace character\n");
             continue; /* continue with  while(1) loop */
         }
-
         res = &command_line[0];
         return res;
     }

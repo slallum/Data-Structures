@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include "tree.h"
+#include "scoring.h"
 
 
 /**

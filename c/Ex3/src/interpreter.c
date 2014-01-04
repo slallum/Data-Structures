@@ -209,7 +209,7 @@ int get_first_depth() {
         // got cmd - checking that the first command line is `set number of steps`
         if (!is_set_depth_command(command_line)) {
             // maybe it is a `quit` command?
-            if (strcmp(command_line, COMMAND_QUIT)) {
+            if (strcmp(command_line, COMMAND_QUIT) == 0) {
                 return 0;
             }
             printf(ERROR_MESSAGE_FIRST_COMMAND_SET_NUMBER_STEPS);            
