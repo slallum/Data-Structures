@@ -17,13 +17,15 @@ typedef struct game_s {
 
 game *new_game(int depth);
 
-int make_connect4_move(int** cells, int n, int i, int value);
+vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn);
 
 int *get_computer_move(game *current_game);
 
 int* get_best_move_for_player(game *current_game);
 
 int won_board(board_t board);
+
+int make_connect4_move(int** cells, int n, int i, int value);
 
 
 #endif /* GAME_H_ */

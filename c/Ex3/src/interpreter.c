@@ -34,7 +34,6 @@ void run_interpreter() {
         return;
     }
     current_game->depth = depth;
-
     play_game_forever(current_game);
     return;
 }
