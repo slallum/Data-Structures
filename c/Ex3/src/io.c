@@ -42,50 +42,61 @@ char *get_command_line() {
 
 
 command_t *parse_command_line(char *command_line) {
-    int i;
-    char first_word[MAX_COMMAND_LENGTH];
-    command_t command;
-    //command_t *res;
-    //debug
-    printf("2: %s", command_line);
-    for (i=0; i<MAX_COMMAND_LENGTH; i++) {
-        printf("%c\n", command_line[i]);
-        if (isspace(command_line[i])) {
+    command_t command = {0,0};
+    char first[40];
+    strcpy(first, command_line);
+    char second[40];
+    int i, j;
+    for (i=0; i<40; i++) {
+        if (first[i] == ' ' || first[i] == '\n') {
+            if (first[i] == ' ') {
+                for (j=i+1; j<40; j++) {
+                    if (first[j] == '\n') {
+                        second[j-(i+1)] = '\0';
+                        break;
+                    }
+                    second[j-(i+1)] = first[j];
+                }
+            }
+            first[i] = '\0';
             break;
         }
-        first_word[i] = command_line[i];
+        first[i] = command_line[i];
     }
-    //debug
-    printf("3: %s", command_line);
-    printf("first word: %s", first_word);
+    printf("first: %s\n", first);
+    printf("sec: %s\n", second);
+
+
     // switch
-    if (strcmp(first_word, COMMAND_QUIT)) {
+    if (strcmp(first, COMMAND_QUIT) == 0) {
         command.command_code = COMMAND_CODE_QUIT;
         // no argument
         command.arg = -1;
     }
-    else if (strcmp(first_word, COMMAND_RESTART)) {
+    else if (strcmp(first, COMMAND_RESTART) == 0) {
         command.command_code = COMMAND_CODE_RESTART;
         // no argument
         command.arg = -1;
     }
-    else if (strcmp(first_word, COMMAND_ADD_DISC)) {
+    else if (strcmp(first, COMMAND_ADD_DISC) == 0) {
         command.command_code = COMMAND_CODE_ADD_DISC;
-        command.arg = str_to_int(command_line, strlen(COMMAND_ADD_DISC)+1);
+        command.arg = str_to_int(second, 0);
     }
-    else if (strcmp(first_word, COMMAND_SUGGEST_MOVE)) {
+    else if (strcmp(first, COMMAND_SUGGEST_MOVE) == 0) {
         command.command_code = COMMAND_CODE_SUGGEST_MOVE;
     }
-    else if (strcmp(first_word, COMMAND_SET_STEPS)) {
+    else if (strcmp(first, COMMAND_SET_STEPS) == 0) {
         command.command_code = COMMAND_CODE_SET_STEPS;
-        command.arg = str_to_int(command_line, strlen(COMMAND_SET_STEPS)+1);
+        command.arg = str_to_int(second, 0);
     }
     else {
         command.command_code = COMMAND_CODE_NOT_FOUND;
         // no argument
         command.arg = -1;
     }
-    return NULL;
+    command_t *res;
+    res = &command;
+    return res;
     // if ((res = (command_t*)malloc(sizeof(command_t))) == NULL) {
     //     return NULL;
     // }

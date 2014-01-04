@@ -42,7 +42,7 @@ void run_interpreter() {
 
 void play_game_forever(game *current_game) {
     char *command_line;
-    
+
     command_t *command;
     while (1) {
         if ((command_line = get_command_line()) == NULL) {
@@ -52,6 +52,7 @@ void play_game_forever(game *current_game) {
         if ((command = parse_command_line(command_line)) == NULL) {
             return;
         }
+        printf("%d %d\n", command->command_code, command->arg);
         if (validate_command(*command, current_game)) {
             if (execute_command(*command, current_game) == 0) {
                 return;
