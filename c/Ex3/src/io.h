@@ -33,6 +33,8 @@
 #define MESSAGE_GAME_OVER_USER_WINS "Game over: you win\n"
 #define MESSAGE_GAME_OVER_COMP_WINS "Game over: computer wins\n"
 #define MESSAGE_GAME_RESTARTED "Game restarted\n"
+#define MESSAGE_GAME_COMPUTER_MOVE "Computer move: add disc to column %d\n"
+
 
 // CODES
 

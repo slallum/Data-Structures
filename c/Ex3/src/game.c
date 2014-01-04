@@ -38,7 +38,7 @@ game *new_game(int depth) {
         }
     }
     // create  the board
-    board_t current_board = { cells, BOARD_HEIGHT, BOARD_WIDTH, &connect4_scoring, &make_move };
+    board_t current_board = { cells, BOARD_HEIGHT, BOARD_WIDTH, &connect4_scoring, &make_connect4_move };
 
     result->current_board = current_board;
     result->is_comp_turn = 0;
@@ -49,7 +49,7 @@ game *new_game(int depth) {
 }
 
 
-int make_move(int** cells, int n, int i, int value) {
+int make_connect4_move(int** cells, int n, int i, int value) {
 	int j = 0;
 	while ((j < n) && (cells[j][i] == 0)) {
 		j++;
@@ -75,5 +75,12 @@ static int get_first_empty_row(board_t board, int column) {
     return -1;
 }
 
-int make_comp_move(game *current_game);
-int make_connect4_move(int** cells, int n, int i, int value);
+int *get_computer_move(game *current_game) {
+    return 0;
+}
+
+
+int make_comp_move(game *current_game) {
+    // TODO: implement
+    return 0;
+}

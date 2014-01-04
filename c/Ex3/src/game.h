@@ -17,12 +17,9 @@ typedef struct game_s {
 
 game *new_game(int depth);
 
-int make_move(int** cells, int n, int i, int value);
-
-void make_user_move(game *current_game, int move_column);
-
-int make_comp_move(game *current_game);
-
 int make_connect4_move(int** cells, int n, int i, int value);
+
+int *get_computer_move(game *current_game);
+
 
 #endif /* GAME_H_ */

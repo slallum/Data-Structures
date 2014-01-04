@@ -97,6 +97,8 @@ int validate_command(command_t command, game *current_game){
  * assumes the command is valid
  */
 int execute_command(command_t command, game *current_game) {
+    int *computer_move;
+
     // restart_game
     if (command.command_code == COMMAND_CODE_RESTART) {
         // creating new game
@@ -117,7 +119,21 @@ int execute_command(command_t command, game *current_game) {
     // set_number_steps #
     if (command.command_code == COMMAND_CODE_SET_STEPS) {
         current_game->depth = command.arg;
+        return 1;
     }
+
+    // add_disc
+    if (command.command_code == COMMAND_CODE_ADD_DISC) {
+        execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg, 1);
+        if ((computer_move = get_computer_move(current_game)) == NULL) {
+            return 0;
+        }
+        printf(MESSAGE_GAME_COMPUTER_MOVE, *computer_move);
+        execute_move(&(current_game->current_board), BOARD_HEIGHT, *computer_move, -1);
+        print_board(&(current_game->current_board));
+    }
+
+    // suggest_move
 
 
     return 0;    
