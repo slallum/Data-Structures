@@ -31,5 +31,4 @@ int get_score(board_t* board);
 
 int execute_move(board_t* board, int n, int i, int value);
 
-
 #endif /* BOARD_H_ */

@@ -75,12 +75,32 @@ static int get_first_empty_row(board_t board, int column) {
     return -1;
 }
 
+
+/*
+ * checks if the board has a winning streak (the player who won doesn't matter)
+ */
+int won_board(board_t board) {
+    int score = connect4_scoring(board.cells, BOARD_HEIGHT, BOARD_WIDTH);
+    if (score == EXTREME_VALUE || score == -EXTREME_VALUE) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/*
+ * returns pointer to the column that the computer will add disc to
+ * returns NULL if there was an error while executing some allocationg command
+ */
 int *get_computer_move(game *current_game) {
+    // TODO: implement
     return 0;
 }
 
-
-int make_comp_move(game *current_game) {
+/*
+ * gets the best column to insert a disc if the current player is the user
+ */
+int* get_best_move_for_player(game *current_game) {
     // TODO: implement
     return 0;
 }

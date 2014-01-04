@@ -97,7 +97,7 @@ int validate_command(command_t command, game *current_game){
  * assumes the command is valid
  */
 int execute_command(command_t command, game *current_game) {
-    int *computer_move;
+    int *preferred_move;
 
     // restart_game
     if (command.command_code == COMMAND_CODE_RESTART) {
@@ -125,16 +125,37 @@ int execute_command(command_t command, game *current_game) {
     // add_disc
     if (command.command_code == COMMAND_CODE_ADD_DISC) {
         execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg, 1);
-        if ((computer_move = get_computer_move(current_game)) == NULL) {
+
+        // check if the user just won
+        if (won_board(current_game->current_board)) {
+            printf(MESSAGE_GAME_OVER_USER_WINS);
+            current_game->game_over = 1;
+        }
+
+
+        if ((preferred_move = get_computer_move(current_game)) == NULL) {
             return 0;
         }
-        printf(MESSAGE_GAME_COMPUTER_MOVE, *computer_move);
-        execute_move(&(current_game->current_board), BOARD_HEIGHT, *computer_move, -1);
+        printf(MESSAGE_GAME_COMPUTER_MOVE, *preferred_move);
+        execute_move(&(current_game->current_board), BOARD_HEIGHT, *preferred_move, -1);
         print_board(&(current_game->current_board));
+
+        if (won_board(current_game->current_board)) {
+            printf(MESSAGE_GAME_OVER_COMP_WINS);
+            current_game->game_over = 1;
+        }
+
+        return 1;
     }
 
     // suggest_move
-
+    if (command.command_code == COMMAND_CODE_SUGGEST_MOVE) {
+        if ((preferred_move = get_best_move_for_player(current_game)) == NULL) {
+            return 0;
+        }
+        printf(MESSAGE_GAME_SUGGESTED_MOVE, *preferred_move);
+        return 1;
+    }
 
     return 0;    
 }

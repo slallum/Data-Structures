@@ -21,5 +21,9 @@ int make_connect4_move(int** cells, int n, int i, int value);
 
 int *get_computer_move(game *current_game);
 
+int* get_best_move_for_player(game *current_game);
+
+int won_board(board_t board);
+
 
 #endif /* GAME_H_ */
