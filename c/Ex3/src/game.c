@@ -44,6 +44,7 @@ game *new_game(int depth) {
     result->is_comp_turn = 0;
     result->tree=NULL;
     result->depth=depth;
+    result->game_over=0;
     return result;
 }
 

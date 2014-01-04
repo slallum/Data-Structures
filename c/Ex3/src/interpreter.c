@@ -18,7 +18,6 @@ static int get_depth(char *command_line);
 static int is_set_depth_command(char* command_line);
 
 void run_interpreter() {
-    // char *command_line;
     int depth;
     game *current_game;
 
@@ -35,7 +34,39 @@ void run_interpreter() {
         return;
     }
     current_game->depth = depth;
+    
+    play_game_forever(current_game);
     return;
+}
+
+
+void play_game_forever(game *current_game) {
+    char *command_line;
+    command_t *command;
+    while (1) {
+        if ((command_line = get_command_line()) == NULL) {
+            return;
+        }
+
+        if ((command = parse_command_line(command_line)) == NULL) {
+            return;
+        }
+        if (validate_command(*command, current_game)) {
+            if (execute_command(*command, current_game) == 0) {
+                return;
+            }
+        }
+    }
+
+}
+
+int validate_command(command_t command, game *current_game){
+    // TODO: implement
+    return 0;
+}
+int execute_command(command_t command, game *current_game) {
+    // TODO: implement
+    return 0;    
 }
 
 
@@ -119,12 +150,5 @@ static int is_set_depth_command(char* command_line) {
 * assumes that command_line is a valid command line of `set number of steps`
 */
 static int get_depth(char *command_line) {
-    int i = strlen(COMMAND_SET_STEPS) + 1;
-    int res = 0;
-
-    while (48 <= command_line[i] && command_line[i] <= 57) {
-        res = res * 10 + (command_line[i] - 48);
-        i++;
-    }
-    return res;
+    return str_to_int(command_line, strlen(COMMAND_SET_STEPS) + 1);
 }

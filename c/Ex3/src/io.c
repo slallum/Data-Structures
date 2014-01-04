@@ -41,8 +41,35 @@ char *get_command_line() {
 }
 
 
-int parse_command_line(char *command_line) {
-    return -1;
+command_t *parse_command_line(char *command_line) {
+    char *first_word;
+    command_t* command;
+    if ((first_word = (char*)malloc(MAX_COMMAND_LENGTH * sizeof(char))) == NULL) {
+        return NULL;
+    }
+    if  ((command = (command_t*)malloc(sizeof(command_t))) == NULL) {
+        return NULL;
+    }
+    get_first_word(command_line, first_word);
+
+    // switch
+    if (strcmp(first_word, COMMAND_QUIT)) {
+        command->command_code = COMMAND_CODE_QUIT;
+    }
+    if (strcmp(first_word, COMMAND_RESTART)) {
+        command->command_code = COMMAND_CODE_RESTART;
+    }
+    if (strcmp(first_word, COMMAND_ADD_DISC)) {
+        command->command_code = COMMAND_CODE_ADD_DISC;
+    }
+    if (strcmp(first_word, COMMAND_SUGGEST_MOVE)) {
+        command->command_code = COMMAND_CODE_SUGGEST_MOVE;
+    }
+    if (strcmp(first_word, COMMAND_SET_STEPS)) {
+        command->command_code = COMMAND_CODE_SET_STEPS;
+    }
+
+    return NULL;
 }
 
 static int only_whitespaces(char *str) {
@@ -53,4 +80,21 @@ static int only_whitespaces(char *str) {
         str ++;
     }
     return 1;
+}
+
+
+int str_to_int(char *str, int start) {
+    int i = start;
+    int res = 0;
+
+    while (48 <= str[i] && str[i] <= 57) {
+        res = res * 10 + (str[i] - 48);
+        i++;
+    }
+    return res;
+}
+
+void get_first_word(char *command_line, char *first_word) {
+    // TODO: implement
+    return;
 }

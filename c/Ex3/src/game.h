@@ -12,6 +12,7 @@ typedef struct game_s {
     int is_comp_turn;
     minmax_tree *tree;
     int depth;
+    int game_over;
 } game;
 
 game *new_game(int depth);
