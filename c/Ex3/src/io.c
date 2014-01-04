@@ -63,9 +63,6 @@ command_t *parse_command_line(char *command_line) {
         }
         first[i] = command_line[i];
     }
-    printf("first: %s\n", first);
-    printf("sec: %s\n", second);
-
 
     // switch
     if (strcmp(first, COMMAND_QUIT) == 0) {
@@ -97,13 +94,6 @@ command_t *parse_command_line(char *command_line) {
     command_t *res;
     res = &command;
     return res;
-    // if ((res = (command_t*)malloc(sizeof(command_t))) == NULL) {
-    //     return NULL;
-    // }
-    // *res = command;
-    // //debug
-    // printf("%d %d", res->command_code, res->arg);
-    // return res;
 }
 
 static int only_whitespaces(char *str) {

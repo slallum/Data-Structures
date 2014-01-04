@@ -52,7 +52,6 @@ void play_game_forever(game *current_game) {
         if ((command = parse_command_line(command_line)) == NULL) {
             return;
         }
-        printf("%d %d\n", command->command_code, command->arg);
         if (validate_command(*command, current_game)) {
             if (execute_command(*command, current_game) == 0) {
                 return;
@@ -94,9 +93,33 @@ int validate_command(command_t command, game *current_game){
     return 1;
 }
 
-
+/*
+ * assumes the command is valid
+ */
 int execute_command(command_t command, game *current_game) {
-    // TODO: implement
+    // restart_game
+    if (command.command_code == COMMAND_CODE_RESTART) {
+        // creating new game
+        if ((current_game = new_game(current_game->depth)) == NULL) {
+            return 0;
+        }
+        printf(MESSAGE_GAME_RESTARTED);
+        print_board(&(current_game->current_board));
+        return 1;
+    }
+
+    // quit
+    if (command.command_code == COMMAND_CODE_QUIT) {
+        free(current_game);
+        return 0;
+    }
+
+    // set_number_steps #
+    if (command.command_code == COMMAND_CODE_SET_STEPS) {
+        current_game->depth = command.arg;
+    }
+
+
     return 0;    
 }
 
@@ -117,6 +140,10 @@ int get_first_depth() {
         }
         // got cmd - checking that the first command line is `set number of steps`
         if (!is_set_depth_command(command_line)) {
+            // maybe it is a `quit` command?
+            if (strcmp(command_line, COMMAND_QUIT)) {
+                return 0;
+            }
             printf(ERROR_MESSAGE_FIRST_COMMAND_SET_NUMBER_STEPS);            
         }
         // cmd is indeed `set number of steps`
