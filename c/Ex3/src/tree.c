@@ -111,8 +111,10 @@ void extend(vertex* node, board_t* board, int depth) {
 			child->column_num = i;
 			child->value = (-1)*(node->value);
 			child->score = get_score(board);
-			// Recursively perform for children too
-			extend(child, board, depth - 1);
+			if ((child->score != EXTEME_VALUE) && (child->score != -EXTEME_VALUE)) {
+				// Recursively perform for children too
+				extend(child, board, depth - 1);
+			}
 			previous->node = child;
 			// Place element in list and link to next element
 			next = (element*) malloc(sizeof(element));
