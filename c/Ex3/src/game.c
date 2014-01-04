@@ -93,14 +93,52 @@ int won_board(board_t board) {
  * returns NULL if there was an error while executing some allocationg command
  */
 int *get_computer_move(game *current_game) {
-    // TODO: implement
-    return 0;
+    vertex *next_vertex;
+    next_vertex = run_minmax_on_vertex(current_game->tree->root, 1);
+    return &(next_vertex->column_num);
 }
 
 /*
  * gets the best column to insert a disc if the current player is the user
  */
 int* get_best_move_for_player(game *current_game) {
-    // TODO: implement
-    return 0;
+    vertex *next_vertex;
+    next_vertex = run_minmax_on_vertex(current_game->tree->root, 0);
+    return &(next_vertex->column_num);
+}
+
+vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
+    // is leaf?
+    int min = EXTREME_VALUE;
+    int max = -EXTREME_VALUE;
+    element *iterator;
+    vertex *chosen_vertex;
+
+    // stop the iteration if this vertex is a leaf or if the vertex's score indicates that somebody already won
+    if ((v->children == NULL) || v->score == EXTREME_VALUE || v->score == -EXTREME_VALUE) {
+        return v;
+    }
+    // recursion with min
+    iterator = v->children->head;
+    if (is_comp_turn) {
+        do {
+            if (iterator->node->score < min) {
+                min = iterator->node->score;
+                chosen_vertex = iterator->node;
+            }
+            iterator = iterator->next;
+        }
+        while (iterator->next != NULL);
+    } else {
+        do {
+            if (iterator->node->score < max) {
+                max = iterator->node->score;
+                chosen_vertex = iterator->node;
+            }
+            iterator = iterator->next;
+        }
+        while (iterator->next != NULL);
+    }
+    v->score = chosen_vertex->score;
+    return chosen_vertex;
 }

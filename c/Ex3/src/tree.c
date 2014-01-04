@@ -90,7 +90,6 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
  *
  */
 void extend(vertex* node, board_t* board, int depth) {
-
 	int i, move;
 	linked_list* children = (linked_list*) malloc(sizeof(linked_list));
 	element* previous = (element*) malloc(sizeof(element));
