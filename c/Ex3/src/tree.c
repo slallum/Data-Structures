@@ -14,10 +14,18 @@
  * Initializes a new tree and builds it until requested depth.
  * User is always first so root will be his turn.
  */
-minmax_tree* create_tree(board_t* board, int depth) {
+minmax_tree *create_tree(board_t* board, int depth) {
 
-	minmax_tree* tree = (minmax_tree*) malloc(sizeof(minmax_tree));
-	vertex* root = (vertex*) malloc(sizeof(vertex));
+	minmax_tree* tree;
+	vertex* root;
+	if ((tree = (minmax_tree*) malloc(sizeof(minmax_tree))) == NULL) {
+		perror("Error: standard function malloc has failed");
+		return NULL;
+	}
+	if ((root = (vertex*) malloc(sizeof(vertex))) == NULL) {
+		perror("Error: standard function malloc has failed");
+		return NULL;
+	}
 
 	root->score = 0;
 	root->column_num = 0;
@@ -61,7 +69,6 @@ void update_tree(minmax_tree *tree, board_t* board, int col, int depth) {
  * When reaching a leaf, performs extension of the tree.
  */
 void extend_leafs(vertex* node, board_t* board, int depth) {
-
 	element* iterator;
 	int move;
 	if (node->children == NULL) {

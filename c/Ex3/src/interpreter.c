@@ -130,9 +130,21 @@ int execute_command(command_t command, game *current_game) {
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_USER_WINS);
             current_game->game_over = 1;
+            return 1;
         }
 
+        // tree isn't initialized yet?
+        if (current_game->tree == NULL) {
+            // so create it now
+            if ((current_game->tree = create_tree(&(current_game->current_board), current_game->depth)) == NULL) {
+                return 0;
+            }
+        // if the tree is already initialized - then we'll update it according to the user move
+        } else {
+            update_tree(current_game->tree, &(current_game->current_board), command.arg, current_game->depth);
+        }
 
+        // now we'll get the computer's next move
         if ((preferred_move = get_computer_move(current_game)) == NULL) {
             return 0;
         }
@@ -143,13 +155,25 @@ int execute_command(command_t command, game *current_game) {
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_COMP_WINS);
             current_game->game_over = 1;
+            return 1;
         }
 
+        // if the computer didn't win - we'll update the tree
+        update_tree(current_game->tree, &(current_game->current_board), *preferred_move, current_game->depth);
         return 1;
     }
 
     // suggest_move
     if (command.command_code == COMMAND_CODE_SUGGEST_MOVE) {
+        // tree isn't initalized yet?
+        if (current_game->tree == NULL) {
+            // so create it now
+            if ((current_game->tree = create_tree(&(current_game->current_board), current_game->depth)) == NULL) {
+                return 0;
+            }
+        }
+
+        // now - get the best move
         if ((preferred_move = get_best_move_for_player(current_game)) == NULL) {
             return 0;
         }
