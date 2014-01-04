@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "io.h"
 #include "interpreter.h"
@@ -74,8 +75,6 @@ int get_first_depth() {
         
 }
 
-
-
 void run_command(char *command){
 
 }
@@ -105,7 +104,13 @@ void quit() {
 
 
 static int is_set_depth_command(char* command_line) {
-    // TODO: implement
+    int i;
+    for (i=0; i<strlen(COMMAND_SET_STEPS); i++){
+        if (command_line[i] != COMMAND_SET_STEPS[i]) {
+            return 0;
+        }
+    }
+    // we assume the user gives us a good parameter after the command
     return 1;
 }
 
@@ -114,6 +119,12 @@ static int is_set_depth_command(char* command_line) {
 * assumes that command_line is a valid command line of `set number of steps`
 */
 static int get_depth(char *command_line) {
-    // TODO: implement
-    return 1;
+    int i = strlen(COMMAND_SET_STEPS) + 1;
+    int res = 0;
+
+    while (48 <= command_line[i] && command_line[i] <= 57) {
+        res = res * 10 + (command_line[i] - 48);
+        i++;
+    }
+    return res;
 }

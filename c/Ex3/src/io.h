@@ -3,11 +3,14 @@
 
 #define MAX_COMMAND_LENGTH 40
 
+// commands
+#define COMMAND_SET_STEPS "set_number_steps"
+
 // error messages
 #define ERROR_MESSAGE_COMMAND_LINE_LENGTH_EXCEEDED "Error: command length must be less than or equal to 40 characters\n"
 #define ERROR_MESSAGE_FIRST_COMMAND_SET_NUMBER_STEPS "Error: first command must be set_number_steps\n"
 #define ERROR_MESSAGE_STEPS_NON_ZERO "Error: number of minimax steps must be non-zero\n"
-#define ERROR_MESSAGE_STEPS_OVER_LIMIT "Error: cannot set number of steps – too many steps\n"
+#define ERROR_MESSAGE_STEPS_OVER_LIMIT "Error: cannot set number of steps - too many steps\n"
 
 // in-game messages
 #define MESSAGE_GAME_OVER_USER_WINS "Game over: you win\n"
@@ -25,6 +28,5 @@ typedef struct Command {
 // functions
 char *get_command_line();
 int parse_command_line(char *command_line);
-
 
 #endif /* IO_H_ */
