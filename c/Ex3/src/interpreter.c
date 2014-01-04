@@ -44,14 +44,17 @@ void play_game_forever(game *current_game) {
 
     command_t *command;
     while (1) {
+        printf("getting command\n");
         if ((command_line = get_command_line()) == NULL) {
             return;
         }
-
+        printf("parsing command: %s", command_line);
         if ((command = parse_command_line(command_line)) == NULL) {
             return;
         }
+        printf("validating\n");
         if (validate_command(*command, current_game)) {
+            printf("executing\n");
             if (execute_command(*command, current_game) == 0) {
                 return;
             }
@@ -61,6 +64,7 @@ void play_game_forever(game *current_game) {
 }
 
 int validate_command(command_t command, game *current_game){
+    printf("validating: %d %d\n", command.command_code, command.arg);
     if ((command.command_code == COMMAND_CODE_SET_STEPS) && (command.arg == 0)) {
         printf(ERROR_MESSAGE_STEPS_NON_ZERO);
         return 0;
@@ -97,6 +101,7 @@ int validate_command(command_t command, game *current_game){
  */
 int execute_command(command_t command, game *current_game) {
     int *preferred_move;
+    printf("debug: in execute_command func\n");
 
     // restart_game
     if (command.command_code == COMMAND_CODE_RESTART) {
@@ -123,7 +128,9 @@ int execute_command(command_t command, game *current_game) {
 
     // add_disc
     if (command.command_code == COMMAND_CODE_ADD_DISC) {
+        printf("debug: adding disc..\n");
         execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg, 1);
+        printf("debug: done adding\n");
 
         // check if the user just won
         if (won_board(current_game->current_board)) {
@@ -132,13 +139,15 @@ int execute_command(command_t command, game *current_game) {
             return 1;
         }
         current_game->is_comp_turn = 1;
-
+        printf("debug: handling tree\n");
         // tree isn't initialized yet?
         if (current_game->tree == NULL) {
+            printf("debug: tree is not initiazlized, creating it\n");
             // so create it now
             if ((current_game->tree = create_tree(&(current_game->current_board), current_game->depth)) == NULL) {
                 return 0;
             }
+            printf("debug: created tree\n");
             current_game->tree->make_move = &make_connect4_move;
             current_game->tree->scoring_func = &connect4_scoring;
 
@@ -209,7 +218,7 @@ int get_first_depth() {
         // got cmd - checking that the first command line is `set number of steps`
         if (!is_set_depth_command(command_line)) {
             // maybe it is a `quit` command?
-            if (strcmp(command_line, COMMAND_QUIT) == 0) {
+            if (strcmp(command_line, "quit\n") == 0) {
                 return 0;
             }
             printf(ERROR_MESSAGE_FIRST_COMMAND_SET_NUMBER_STEPS);            

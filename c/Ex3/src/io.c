@@ -46,6 +46,7 @@ command_t *parse_command_line(char *command_line) {
     strcpy(first, command_line);
     char second[40];
     int i, j;
+    printf("cmd: %s", command_line);
     for (i=0; i<40; i++) {
         if (first[i] == ' ' || first[i] == '\n') {
             if (first[i] == ' ') {
@@ -63,35 +64,48 @@ command_t *parse_command_line(char *command_line) {
         first[i] = command_line[i];
     }
 
+    printf("first: %s\n", first);
+    printf("second: %s\n", second);
+
     // switch
     if (strcmp(first, COMMAND_QUIT) == 0) {
+        printf("debug: found quit\n");
         command.command_code = COMMAND_CODE_QUIT;
         // no argument
         command.arg = -1;
     }
     else if (strcmp(first, COMMAND_RESTART) == 0) {
+        printf("debug: found restart\n");
         command.command_code = COMMAND_CODE_RESTART;
         // no argument
         command.arg = -1;
     }
     else if (strcmp(first, COMMAND_ADD_DISC) == 0) {
+        printf("debug: found add disc\n");
         command.command_code = COMMAND_CODE_ADD_DISC;
         command.arg = str_to_int(second, 0);
     }
     else if (strcmp(first, COMMAND_SUGGEST_MOVE) == 0) {
+        printf("debug: found suggest move\n");
         command.command_code = COMMAND_CODE_SUGGEST_MOVE;
     }
     else if (strcmp(first, COMMAND_SET_STEPS) == 0) {
+        printf("debug: found set steps\n");
         command.command_code = COMMAND_CODE_SET_STEPS;
         command.arg = str_to_int(second, 0);
     }
     else {
+        printf("debug: command not found\n");
         command.command_code = COMMAND_CODE_NOT_FOUND;
         // no argument
         command.arg = -1;
     }
     command_t *res;
-    res = &command;
+    if ((res = (command_t*)malloc(sizeof(command_t))) == NULL) {
+        perror("Error: standard function malloc has failed");
+        return NULL;
+    }
+    *res = command;
     return res;
 }
 
