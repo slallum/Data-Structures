@@ -140,6 +140,9 @@ int execute_command(command_t command, game *current_game) {
             if ((current_game->tree = create_tree(&(current_game->current_board), current_game->depth)) == NULL) {
                 return 0;
             }
+            current_game->tree->make_move = &make_connect4_move;
+            current_game->tree->scoring_func = &connect4_scoring;
+
         // if the tree is already initialized - then we'll update it according to the user move
         // if the tree wasn't initialized - we don't need to anything
         } else {
@@ -174,6 +177,8 @@ int execute_command(command_t command, game *current_game) {
             if ((current_game->tree = create_tree(&(current_game->current_board), current_game->depth)) == NULL) {
                 return 0;
             }
+            current_game->tree->make_move = &make_connect4_move;
+            current_game->tree->scoring_func = &connect4_scoring;
         }
 
         // now - get the best move
