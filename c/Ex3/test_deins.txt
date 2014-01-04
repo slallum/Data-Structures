@@ -1,0 +1,334 @@
+test1
+-------------------------------------------------------------------------------------------------
+
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7
+set_number_steps 7
+add_disc 3
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|               |
+|     O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+|       X       |
+|   O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 1
+Computer move: add disc to column 3
+|               |
+|               |
+|               |
+|               |
+|     X X       |
+| O O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 3
+|               |
+|               |
+|               |
+|     X         |
+|   O X X       |
+| O O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 4
+Computer move: add disc to column 2
+|               |
+|               |
+|               |
+|   X X O       |
+|   O X X       |
+| O O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 7
+Computer move: add disc to column 2
+|               |
+|               |
+|   X           |
+|   X X O       |
+|   O X X       |
+| O O O X     O |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 5
+Computer move: add disc to column 1
+|               |
+|               |
+|   X           |
+|   X X O       |
+| X O X X       |
+| O O O X O   O |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 3
+Computer move: add disc to column 1
+|               |
+|               |
+|   X O         |
+| X X X O       |
+| X O X X       |
+| O O O X O   O |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 1
+Computer move: add disc to column 1
+|               |
+| X             |
+| O X O         |
+| X X X O       |
+| X O X X       |
+| O O O X O   O |
+-----------------
+  1 2 3 4 5 6 7
+Game over: computer wins
+
+test2
+-----------------------------------------------------------------------------------------------------------
+
+set_number_steps 2
+restart_game
+Game restarted
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7
+add disc 1
+Error: command not found
+add_disc 1
+Computer move: add disc to column 1
+|               |
+|               |
+|               |
+|               |
+| X             |
+| O             |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 2
+|               |
+|               |
+|               |
+|               |
+| X X           |
+| O O           |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 3
+Computer move: add disc to column 4
+|               |
+|               |
+|               |
+|               |
+| X X           |
+| O O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 3
+Computer move: add disc to column 3
+|               |
+|               |
+|               |
+|     X         |
+| X X O         |
+| O O O X       |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 5
+Computer move: add disc to column 3
+|               |
+|               |
+|     X         |
+|     X         |
+| X X O         |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 3
+|               |
+|     X         |
+|     X         |
+|   O X         |
+| X X O         |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 3
+Computer move: add disc to column 2
+|     O         |
+|     X         |
+|   X X         |
+|   O X         |
+| X X O         |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 4
+Computer move: add disc to column 4
+|     O         |
+|     X         |
+|   X X         |
+|   O X X       |
+| X X O O       |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 4
+|     O         |
+|   O X         |
+|   X X X       |
+|   O X X       |
+| X X O O       |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 1
+Computer move: add disc to column 1
+|     O         |
+|   O X         |
+| X X X X       |
+| O O X X       |
+| X X O O       |
+| O O O X O     |
+-----------------
+  1 2 3 4 5 6 7
+Game over: computer wins
+
+test 3
+------
+|               |
+|               |
+|               |
+|               |
+|               |
+|               |
+-----------------
+  1 2 3 4 5 6 7
+set_number_steps 4
+add_disc 5
+Computer move: add disc to column 5
+|               |
+|               |
+|               |
+|               |
+|         X     |
+|         O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 2
+Computer move: add disc to column 5
+|               |
+|               |
+|               |
+|         X     |
+|         X     |
+|   O     O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 4
+Computer move: add disc to column 3
+|               |
+|               |
+|               |
+|         X     |
+|         X     |
+|   O X O O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 5
+Computer move: add disc to column 5
+|               |
+|         X     |
+|         O     |
+|         X     |
+|         X     |
+|   O X O O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 4
+Computer move: add disc to column 4
+|               |
+|         X     |
+|         O     |
+|       X X     |
+|       O X     |
+|   O X O O     |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 6
+Computer move: add disc to column 7
+|               |
+|         X     |
+|         O     |
+|       X X     |
+|       O X     |
+|   O X O O O X |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 3
+Computer move: add disc to column 4
+|               |
+|         X     |
+|       X O     |
+|       X X     |
+|     O O X     |
+|   O X O O O X |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 7
+Computer move: add disc to column 2
+|               |
+|         X     |
+|       X O     |
+|       X X     |
+|   X O O X   O |
+|   O X O O O X |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 5
+Computer move: add disc to column 1
+|         O     |
+|         X     |
+|       X O     |
+|       X X     |
+|   X O O X   O |
+| X O X O O O X |
+-----------------
+  1 2 3 4 5 6 7
+add_disc 6
+Computer move: add disc to column 3
+|         O     |
+|         X     |
+|       X O     |
+|     X X X     |
+|   X O O X O O |
+| X O X O O O X |
+-----------------
+  1 2 3 4 5 6 7
+Game over: computer wins
