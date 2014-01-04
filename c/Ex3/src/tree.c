@@ -16,24 +16,27 @@
  * User is always first so root will be his turn.
  */
 minmax_tree *create_tree(board_t* board, int depth) {
-
 	minmax_tree* tree;
-	vertex* root;
-	if ((tree = (minmax_tree*) malloc(sizeof(minmax_tree))) == NULL) {
-		perror("Error: standard function malloc has failed");
-		return NULL;
-	}
-	if ((root = (vertex*) malloc(sizeof(vertex))) == NULL) {
+	vertex root;
+
+	if ((tree = (minmax_tree*) calloc(1, sizeof(struct minmax_tree_s))) == NULL) {
 		perror("Error: standard function malloc has failed");
 		return NULL;
 	}
 
-	root->score = 0;
-	root->column_num = 0;
-	root->value = 1;
-	extend(root, board, depth);
+	/* if ((root = (vertex*) malloc(sizeof(struct vertex_s))) == NULL) {
+	// 	perror("Error: standard function malloc has failed");
+	// 	return NULL;
+	// } */
 
-	tree->root = root;
+	root.score = 0;
+	root.column_num = 0;
+	root.value = 1;
+	printf("ok cool\n");
+	extend(&root, board, depth);
+	printf("after extend\n");
+
+	tree->root = &root;
 	return tree;
 }
 
@@ -91,6 +94,7 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
  *
  */
 void extend(vertex* node, board_t* board, int depth) {
+	printf("%d\n", node->column_num);
 	int i, move;
 	linked_list* children = (linked_list*) malloc(sizeof(linked_list));
 	element* previous = (element*) malloc(sizeof(element));
@@ -98,6 +102,7 @@ void extend(vertex* node, board_t* board, int depth) {
 	vertex* child;
 	children->head = previous;
 	node->children = children;
+	printf("debug: after some cool stuff in extend func. depth: %d\n", depth);
 	if (depth == 0) {
 		//Done extending
 		return;
