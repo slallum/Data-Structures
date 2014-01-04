@@ -42,6 +42,7 @@ void run_interpreter() {
 
 void play_game_forever(game *current_game) {
     char *command_line;
+    
     command_t *command;
     while (1) {
         if ((command_line = get_command_line()) == NULL) {

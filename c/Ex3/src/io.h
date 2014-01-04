@@ -46,7 +46,7 @@ typedef struct Command {
 char *get_command_line();
 command_t *parse_command_line(char *command_line);
 
-void get_first_word(char *command_line, char *first_word);
+char *get_first_word(const char *command_line);
 int str_to_int(char *str, int start);
 
 #endif /* IO_H_ */

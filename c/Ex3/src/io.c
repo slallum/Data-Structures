@@ -42,44 +42,57 @@ char *get_command_line() {
 
 
 command_t *parse_command_line(char *command_line) {
-    char *first_word;
-    command_t* command;
-    if ((first_word = (char*)malloc(MAX_COMMAND_LENGTH * sizeof(char))) == NULL) {
-        return NULL;
+    int i;
+    char first_word[MAX_COMMAND_LENGTH];
+    command_t command;
+    //command_t *res;
+    //debug
+    printf("2: %s", command_line);
+    for (i=0; i<MAX_COMMAND_LENGTH; i++) {
+        printf("%c\n", command_line[i]);
+        if (isspace(command_line[i])) {
+            break;
+        }
+        first_word[i] = command_line[i];
     }
-    if  ((command = (command_t*)malloc(sizeof(command_t))) == NULL) {
-        return NULL;
-    }
-    get_first_word(command_line, first_word);
-
+    //debug
+    printf("3: %s", command_line);
+    printf("first word: %s", first_word);
     // switch
     if (strcmp(first_word, COMMAND_QUIT)) {
-        command->command_code = COMMAND_CODE_QUIT;
+        command.command_code = COMMAND_CODE_QUIT;
         // no argument
-        command->arg = -1;
+        command.arg = -1;
     }
     else if (strcmp(first_word, COMMAND_RESTART)) {
-        command->command_code = COMMAND_CODE_RESTART;
+        command.command_code = COMMAND_CODE_RESTART;
         // no argument
-        command->arg = -1;
+        command.arg = -1;
     }
     else if (strcmp(first_word, COMMAND_ADD_DISC)) {
-        command->command_code = COMMAND_CODE_ADD_DISC;
-        command->arg = str_to_int(command_line, strlen(COMMAND_ADD_DISC)+1);
+        command.command_code = COMMAND_CODE_ADD_DISC;
+        command.arg = str_to_int(command_line, strlen(COMMAND_ADD_DISC)+1);
     }
     else if (strcmp(first_word, COMMAND_SUGGEST_MOVE)) {
-        command->command_code = COMMAND_CODE_SUGGEST_MOVE;
+        command.command_code = COMMAND_CODE_SUGGEST_MOVE;
     }
     else if (strcmp(first_word, COMMAND_SET_STEPS)) {
-        command->command_code = COMMAND_CODE_SET_STEPS;
-        command->arg = str_to_int(command_line, strlen(COMMAND_SET_STEPS)+1);
+        command.command_code = COMMAND_CODE_SET_STEPS;
+        command.arg = str_to_int(command_line, strlen(COMMAND_SET_STEPS)+1);
     }
     else {
-        command->command_code = COMMAND_CODE_NOT_FOUND;
+        command.command_code = COMMAND_CODE_NOT_FOUND;
         // no argument
-        command->arg = -1;
+        command.arg = -1;
     }
-    return command;
+    return NULL;
+    // if ((res = (command_t*)malloc(sizeof(command_t))) == NULL) {
+    //     return NULL;
+    // }
+    // *res = command;
+    // //debug
+    // printf("%d %d", res->command_code, res->arg);
+    // return res;
 }
 
 static int only_whitespaces(char *str) {
@@ -104,9 +117,4 @@ int str_to_int(char *str, int start) {
         i++;
     }
     return res;
-}
-
-void get_first_word(char *command_line, char *first_word) {
-    // TODO: implement
-    return;
 }
