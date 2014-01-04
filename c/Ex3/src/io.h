@@ -25,6 +25,9 @@
 #define ERROR_MESSAGE_STEPS_NON_ZERO "Error: number of minimax steps must be non-zero\n"
 #define ERROR_MESSAGE_STEPS_OVER_LIMIT "Error: cannot set number of steps - too many steps\n"
 #define ERROR_MESSAGE_GAME_OVER "Error: game is over\n"
+#define ERROR_MESSAGE_COMMAND_NOT_FOUND "Error: command not found\n"
+#define ERROR_MESSAGE_COLUMN_NUMBER_NOT_VALID "Error: column number must be in range 1-7\n"
+#define ERROR_MESSAGE_COLUMN_FULL "Error: column (%d) is full\n"
 
 // in-game messages
 #define MESSAGE_GAME_OVER_USER_WINS "Game over: you win\n"

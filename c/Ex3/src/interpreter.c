@@ -34,7 +34,7 @@ void run_interpreter() {
         return;
     }
     current_game->depth = depth;
-    
+
     play_game_forever(current_game);
     return;
 }
@@ -61,9 +61,38 @@ void play_game_forever(game *current_game) {
 }
 
 int validate_command(command_t command, game *current_game){
-    // TODO: implement
-    return 0;
+    if ((command.command_code == COMMAND_CODE_SET_STEPS) && (command.arg == 0)) {
+        printf(ERROR_MESSAGE_STEPS_NON_ZERO);
+        return 0;
+    }
+    if (command.command_code == COMMAND_CODE_ADD_DISC){
+        if ( !( (command.arg >= 1) && (command.arg <= BOARD_WIDTH) ) ) {
+            printf(ERROR_MESSAGE_COLUMN_NUMBER_NOT_VALID);
+            return 0;
+        }
+        // check if chosen column is full
+        if (current_game->current_board.cells[0][command.arg] != 0) {
+            printf(ERROR_MESSAGE_COLUMN_FULL, command.arg);
+            return 0;
+        }
+    }
+
+    if (command.command_code == COMMAND_CODE_NOT_FOUND) {
+        printf(ERROR_MESSAGE_COMMAND_NOT_FOUND);
+        return 0;
+    }
+
+
+    if ((command.command_code == COMMAND_CODE_SET_STEPS) && (command.arg > MAX_STEPS_NUMBER)) {
+        printf(ERROR_MESSAGE_STEPS_OVER_LIMIT);
+        return 0;
+    }
+
+    // everything is O.K!
+    return 1;
 }
+
+
 int execute_command(command_t command, game *current_game) {
     // TODO: implement
     return 0;    

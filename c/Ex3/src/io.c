@@ -55,21 +55,31 @@ command_t *parse_command_line(char *command_line) {
     // switch
     if (strcmp(first_word, COMMAND_QUIT)) {
         command->command_code = COMMAND_CODE_QUIT;
+        // no argument
+        command->arg = -1;
     }
-    if (strcmp(first_word, COMMAND_RESTART)) {
+    else if (strcmp(first_word, COMMAND_RESTART)) {
         command->command_code = COMMAND_CODE_RESTART;
+        // no argument
+        command->arg = -1;
     }
-    if (strcmp(first_word, COMMAND_ADD_DISC)) {
+    else if (strcmp(first_word, COMMAND_ADD_DISC)) {
         command->command_code = COMMAND_CODE_ADD_DISC;
+        command->arg = str_to_int(command_line, strlen(COMMAND_ADD_DISC)+1);
     }
-    if (strcmp(first_word, COMMAND_SUGGEST_MOVE)) {
+    else if (strcmp(first_word, COMMAND_SUGGEST_MOVE)) {
         command->command_code = COMMAND_CODE_SUGGEST_MOVE;
     }
-    if (strcmp(first_word, COMMAND_SET_STEPS)) {
+    else if (strcmp(first_word, COMMAND_SET_STEPS)) {
         command->command_code = COMMAND_CODE_SET_STEPS;
+        command->arg = str_to_int(command_line, strlen(COMMAND_SET_STEPS)+1);
     }
-
-    return NULL;
+    else {
+        command->command_code = COMMAND_CODE_NOT_FOUND;
+        // no argument
+        command->arg = -1;
+    }
+    return command;
 }
 
 static int only_whitespaces(char *str) {
@@ -87,8 +97,10 @@ int str_to_int(char *str, int start) {
     int i = start;
     int res = 0;
 
-    while (48 <= str[i] && str[i] <= 57) {
-        res = res * 10 + (str[i] - 48);
+    while ((48 <= str[i] && str[i] <= 57) || isspace(str[i])) {
+        if (!isspace(str[i])) {
+            res = res * 10 + (str[i] - 48);
+        }
         i++;
     }
     return res;
