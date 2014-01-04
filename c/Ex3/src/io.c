@@ -32,7 +32,6 @@ char *get_command_line() {
         if (only_whitespaces(command_line))
         {
             printf("Error: command line must have at least one non-whitespace character\n");
-            printf("%s", command_line);
             continue; /* continue with  while(1) loop */
         }
 
