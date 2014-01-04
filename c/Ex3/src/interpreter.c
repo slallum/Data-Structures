@@ -132,6 +132,7 @@ int execute_command(command_t command, game *current_game) {
             current_game->game_over = 1;
             return 1;
         }
+        current_game->is_comp_turn = 1;
 
         // tree isn't initialized yet?
         if (current_game->tree == NULL) {
@@ -140,6 +141,7 @@ int execute_command(command_t command, game *current_game) {
                 return 0;
             }
         // if the tree is already initialized - then we'll update it according to the user move
+        // if the tree wasn't initialized - we don't need to anything
         } else {
             update_tree(current_game->tree, &(current_game->current_board), command.arg, current_game->depth);
         }
@@ -157,6 +159,7 @@ int execute_command(command_t command, game *current_game) {
             current_game->game_over = 1;
             return 1;
         }
+        current_game->is_comp_turn = 0;
 
         // if the computer didn't win - we'll update the tree
         update_tree(current_game->tree, &(current_game->current_board), *preferred_move, current_game->depth);
