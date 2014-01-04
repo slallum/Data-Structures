@@ -14,7 +14,7 @@ typedef struct game_s {
     int depth;
 } game;
 
-game new_game(int depth);
+game *new_game(int depth);
 
 int make_move(int** cells, int n, int i, int value);
 

@@ -11,7 +11,6 @@
  * Prints the board's current state
  */
 void print_board(board_t *board) {
-
 	int i, j;
 	for (i = 0; i < board->n; i++) {
 		printf("|");

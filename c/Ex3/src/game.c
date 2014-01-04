@@ -5,6 +5,8 @@
  *      Author: shir
  */
 
+#include <stdlib.h>
+
 #include "game.h"
 #include "board.h"
 #include "scoring.h"
@@ -13,10 +15,36 @@
 static int get_first_empty_row(board_t board, int column);
 
 
-game new_game(int depth) {
-    int** cells = {0};
+game *new_game(int depth) {
+    int **cells;
+    int i, j;
+    game* result = (game*)malloc(sizeof(game));
+
+    // allocate all the cells
+    if ((cells = (int**)malloc(BOARD_HEIGHT * sizeof(int*))) == NULL) {
+        perror("Error: standard function malloc has failed");
+        return NULL;
+    }
+    for (i=0; i<BOARD_HEIGHT; i++) {
+        if ((cells[i] = (int*)malloc(BOARD_WIDTH * sizeof(int))) == NULL) {
+            perror("Error: standard function malloc has failed");
+            return NULL;
+        }
+    }
+    // init cells with zeros
+    for (i=0; i<BOARD_HEIGHT; i++) {
+        for (j=0; j<BOARD_WIDTH; j++) {
+            cells[i][j] = 0;
+        }
+    }
+    // create  the board
     board_t current_board = { cells, BOARD_HEIGHT, BOARD_WIDTH, &connect4_scoring, &make_move };
-    return (game) {.current_board=current_board, .is_comp_turn=0, .tree=NULL, .depth=depth};
+
+    result->current_board = current_board;
+    result->is_comp_turn = 0;
+    result->tree=NULL;
+    result->depth=depth;
+    return result;
 }
 
 
