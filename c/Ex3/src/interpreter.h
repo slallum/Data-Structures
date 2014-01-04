@@ -6,7 +6,7 @@
 #define MAX_STEPS_NUMBER 7
 
 
-int get_first_depth(char *command_line);
+int get_first_depth();
 
 
 

@@ -1,4 +1,4 @@
-#ifndef IO_H_
+#ifndef IO_H_   
 #define IO_H_
 
 #define MAX_COMMAND_LENGTH 40
@@ -23,7 +23,7 @@ typedef struct Command {
 } command_t;
 
 // functions
-int get_command_line(char *command_line);
+char *get_command_line();
 int parse_command_line(char *command_line);
 
 

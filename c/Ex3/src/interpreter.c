@@ -17,7 +17,7 @@ static int get_depth(char *command_line);
 static int is_set_depth_command(char* command_line);
 
 void run_interpreter() {
-    char command_line[MAX_COMMAND_LENGTH + 2];
+    // char *command_line;
     int depth;
     game *current_game;
 
@@ -28,8 +28,7 @@ void run_interpreter() {
 
     print_board(&(current_game->current_board));
 
-    get_command_line(command_line);
-    depth = get_first_depth(command_line);
+    depth = get_first_depth();
     // error
     if (depth == 0) {
         return;
@@ -43,13 +42,14 @@ void run_interpreter() {
 / gets the depth from the first command
 / keeps running until an error is accured or we got a good depth (between 1 and MAX_STEPS_NUMBER)
 */
-int get_first_depth(char *command_line) {
+int get_first_depth() {
+    char *command_line;
     int depth = -1;
-    int result;
+
     while (1) {
-        result = get_command_line(command_line);
+        command_line = get_command_line();
         // error in get_command_line - exit
-        if (result == 0) {
+        if (command_line == NULL) {
             return 0;
         }
         // got cmd - checking that the first command line is `set number of steps`
