@@ -87,6 +87,13 @@ int validate_command(command_t command, game *current_game){
         return 0;
     }
 
+    if (current_game->game_over) {
+        if (command.command_code == COMMAND_CODE_ADD_DISC || command.command_code == COMMAND_CODE_SUGGEST_MOVE) {
+            printf(ERROR_MESSAGE_GAME_OVER);
+            return 0;
+        }
+    }
+
     // everything is O.K!
     return 1;
 }
