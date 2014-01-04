@@ -17,26 +17,25 @@
  */
 minmax_tree *create_tree(board_t* board, int depth) {
 	minmax_tree* tree;
-	vertex root;
+	vertex* current_root;
 
 	if ((tree = (minmax_tree*) calloc(1, sizeof(struct minmax_tree_s))) == NULL) {
 		perror("Error: standard function malloc has failed");
 		return NULL;
 	}
 
-	/* if ((root = (vertex*) malloc(sizeof(struct vertex_s))) == NULL) {
-	// 	perror("Error: standard function malloc has failed");
-	// 	return NULL;
-	// } */
+	if ((current_root = (vertex*) malloc(sizeof(struct vertex_s))) == NULL) {
+	 	perror("Error: standard function malloc has failed");
+	 	return NULL;
+	}
 
-	root.score = 0;
-	root.column_num = 0;
-	root.value = 1;
+	current_root->score = 0;
+	current_root->column_num = 0;
+	current_root->value = 1;
 	printf("ok cool\n");
-	extend(&root, board, depth);
-	printf("after extend\n");
+	extend(current_root, board, depth);
 
-	tree->root = &root;
+	tree->root = current_root;
 	return tree;
 }
 
@@ -50,18 +49,27 @@ minmax_tree *create_tree(board_t* board, int depth) {
  */
 void update_tree(minmax_tree *tree, board_t* board, int col, int depth) {
 
-	vertex* root = tree->root;
 	element* iterator;
-	if (root->children != NULL) {
-		iterator = root->children->head;
+	vertex* current_root = tree->root;
+	if (current_root->children != NULL) {
+		iterator = current_root->children->head;
 		while ((iterator->node->column_num != col) &&
 				(iterator != NULL)) {
 			iterator = iterator->next;
 		}
 		if (iterator != NULL) {
 			tree->root = iterator->node;
-			iterator->prev->next = iterator->next;
-			remove_tree(root);
+			if (iterator->prev != NULL) {
+				iterator->prev->next = iterator->next;
+			} else {
+				current_root->children->head = iterator->next;
+			}
+			if (iterator->next != NULL) {
+				iterator->next->prev = iterator->prev;
+			} else {
+				current_root->children->tail = iterator->prev;
+			}
+//			remove_tree(current_root);
 		}
 	}
 	extend_leafs(tree->root, board, depth);
@@ -94,7 +102,6 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
  *
  */
 void extend(vertex* node, board_t* board, int depth) {
-	printf("%d\n", node->column_num);
 	int i, move;
 	linked_list* children = (linked_list*) malloc(sizeof(linked_list));
 	element* previous = (element*) malloc(sizeof(element));
@@ -102,11 +109,6 @@ void extend(vertex* node, board_t* board, int depth) {
 	vertex* child;
 	children->head = previous;
 	node->children = children;
-	printf("debug: after some cool stuff in extend func. depth: %d\n", depth);
-	if (depth == 0) {
-		//Done extending
-		return;
-	}
 	// Extends per each possible move
 	for (i = 0; i < board->m; i++) {
 		move = execute_move(board, board->n, i, node->value);
@@ -116,7 +118,7 @@ void extend(vertex* node, board_t* board, int depth) {
 			child->column_num = i;
 			child->value = (-1)*(node->value);
 			child->score = get_score(board);
-			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE)) {
+			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE) && (depth -1 > 0)) {
 				// Recursively perform for children too
 				extend(child, board, depth - 1);
 			}
@@ -137,20 +139,19 @@ void extend(vertex* node, board_t* board, int depth) {
  * Frees all vertexts, elements, lists under node, recursively
  *
  */
-void remove_tree(vertex* node) {
+void remove_tree(vertex* current_node) {
 
-	element* prev;
-	element* next;
-	if (node->children != NULL) {
-		prev = node->children->head;
-		while (prev != NULL) {
-			remove_tree(prev->node);
-			free(prev->node);
-			next = prev->next;
-			free(prev);
-			prev = next;
+	element* previous;
+	element* nextush;
+	if ((current_node != NULL) && (current_node->children != NULL)) {
+		previous = current_node->children->head;
+		while (previous != NULL) {
+			remove_tree(previous->node);
+			nextush = previous->next;
+			free(previous);
+			previous = nextush;
 		}
-		free(node->children);
+		free(current_node->children);
 	}
-	free(node);
+	free(current_node);
 }

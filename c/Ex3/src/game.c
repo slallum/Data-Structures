@@ -26,7 +26,7 @@ game *new_game(int depth) {
         return NULL;
     }
     for (i=0; i<BOARD_HEIGHT; i++) {
-        if ((cells[i] = (int*)malloc(BOARD_WIDTH * sizeof(int))) == NULL) {
+        if ((cells[i] = (int*)malloc(BOARD_WIDTH * sizeof(int*))) == NULL) {
             perror("Error: standard function malloc has failed");
             return NULL;
         }
@@ -55,7 +55,7 @@ int make_connect4_move(int** cells, int n, int i, int value) {
 		j++;
 	}
 	cells[j - 1][i] = value;
-	return j;
+	return j - 1;
 }
 
 
