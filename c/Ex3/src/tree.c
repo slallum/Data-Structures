@@ -110,7 +110,7 @@ void extend(vertex* node, board_t* board, int depth) {
 			child->column_num = i;
 			child->value = (-1)*(node->value);
 			child->score = get_score(board);
-			if ((child->score != EXTEME_VALUE) && (child->score != -EXTEME_VALUE)) {
+			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE)) {
 				// Recursively perform for children too
 				extend(child, board, depth - 1);
 			}
