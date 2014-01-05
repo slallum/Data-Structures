@@ -35,6 +35,7 @@
 #define MESSAGE_GAME_RESTARTED "Game restarted\n"
 #define MESSAGE_GAME_COMPUTER_MOVE "Computer move: add disc to column %d\n"
 #define MESSAGE_GAME_SUGGESTED_MOVE "Suggested move: add disc to column %d\n"
+#define MESSAGE_GAME_BOARD_FULL "Game over: board is full\n"
 
 // structs
 typedef struct Command {

@@ -49,3 +49,16 @@ int get_score(board_t *board) {
 int execute_move(board_t* board, int n, int i, int value) {
 	return (*board->make_move)(board->cells, n, i, value);
 }
+
+/*
+ * checks weather board is full or not
+ */
+int board_is_full(board_t board, int m) {
+	int i;
+	for (i=0; i<m; i++) {
+		if (board.cells[0][i] == 0) {
+			return 0;
+		}
+	}
+	return 1;
+}

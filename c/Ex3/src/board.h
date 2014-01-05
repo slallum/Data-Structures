@@ -31,4 +31,6 @@ int get_score(board_t* board);
 
 int execute_move(board_t* board, int n, int i, int value);
 
+int board_is_full(board_t board, int m);
+
 #endif /* BOARD_H_ */

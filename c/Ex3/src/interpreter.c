@@ -166,6 +166,15 @@ int execute_command(command_t command, game *current_game) {
             return 1;
         }
 
+        // checks if board is full (and nobody won)
+        if (board_is_full(current_game->current_board, BOARD_WIDTH)) {
+            // print the board, board is full message, and bring the game to game over state
+            print_board(&(current_game->current_board));
+            printf(MESSAGE_GAME_BOARD_FULL);
+            current_game->game_over = 1;
+            return 1;
+        }
+
         // now it's computer turn
         current_game->is_comp_turn = 1;
         // tree isn't initialized yet?
@@ -197,6 +206,16 @@ int execute_command(command_t command, game *current_game) {
             current_game->game_over = 1;
             return 1;
         }
+
+        // checks if board is full (and nobody won)
+        if (board_is_full(current_game->current_board, BOARD_WIDTH)) {
+            // print the board, board is full message, and bring the game to game over state
+            print_board(&(current_game->current_board));
+            printf(MESSAGE_GAME_BOARD_FULL);
+            current_game->game_over = 1;
+            return 1;
+        }
+
         current_game->is_comp_turn = 0;
 
         // if the computer didn't win - we'll update the tree
