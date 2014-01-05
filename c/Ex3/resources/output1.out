@@ -16,13 +16,13 @@ Computer move: add disc to column 4
 |       O       |
 -----------------
   1 2 3 4 5 6 7  
-Computer move: add disc to column 2
+Computer move: add disc to column 5
 |               |
 |               |
 |               |
 |               |
 |       X       |
-|   X O O       |
+|     O O X     |
 -----------------
   1 2 3 4 5 6 7  
 Computer move: add disc to column 4
@@ -31,67 +31,66 @@ Computer move: add disc to column 4
 |       X       |
 |       O       |
 |       X       |
-|   X O O       |
+|     O O X     |
 -----------------
   1 2 3 4 5 6 7  
-Computer move: add disc to column 6
+Computer move: add disc to column 4
 |               |
-|               |
+|       X       |
 |       X       |
 |       O       |
-|       X       |
-|   X O O O X   |
+|       X O     |
+|     O O X     |
 -----------------
   1 2 3 4 5 6 7  
-Suggested move: add disc to column 4
+Suggested move: add disc to column 3
 Computer move: add disc to column 3
-|               |
 |       O       |
 |       X       |
-|       O       |
-|     X X       |
-|   X O O O X   |
------------------
-  1 2 3 4 5 6 7  
-Suggested move: add disc to column 5
-Computer move: add disc to column 5
-|               |
-|       O       |
 |       X       |
-|       O X     |
+|       O       |
 |     X X O     |
-|   X O O O X   |
+|     O O X     |
+-----------------
+  1 2 3 4 5 6 7  
+Suggested move: add disc to column 2
+Computer move: add disc to column 5
+|       O       |
+|       X       |
+|       X X     |
+|       O O     |
+|     X X O     |
+|     O O X     |
+-----------------
+  1 2 3 4 5 6 7  
+Computer move: add disc to column 5
+|       O       |
+|       X X     |
+|       X X     |
+|       O O     |
+|     X X O     |
+|     O O X O   |
 -----------------
   1 2 3 4 5 6 7  
 Computer move: add disc to column 3
-|               |
 |       O       |
-|       X       |
-|     X O X     |
-|     X X O O   |
-|   X O O O X   |
+|       X X     |
+|     X X X     |
+|     O O O     |
+|     X X O     |
+|     O O X O   |
 -----------------
   1 2 3 4 5 6 7  
 Computer move: add disc to column 2
-|               |
 |       O       |
-|     O X       |
-|     X O X     |
-|   X X X O O   |
-|   X O O O X   |
+|       X X     |
+|     X X X     |
+|     O O O     |
+|     X X O     |
+| O X O O X O   |
 -----------------
   1 2 3 4 5 6 7  
-Computer move: add disc to column 1
-|               |
-|       O       |
-|     O X       |
-|     X O X     |
-| X X X X O O   |
-| O X O O O X   |
------------------
-  1 2 3 4 5 6 7  
-Game over: computer wins
-Error: game is over
+Suggested move: add disc to column 1
 Game restarted
 |               |
 |               |

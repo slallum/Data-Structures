@@ -15,20 +15,18 @@
 static int get_first_empty_row(board_t board, int column);
 
 
-game *new_game(int depth) {
+int new_game(game *current_game, int depth) {
     int **cells;
     int i, j;
-    game* result = (game*)malloc(sizeof(game));
-
     // allocate all the cells
     if ((cells = (int**)malloc(BOARD_HEIGHT * sizeof(int*))) == NULL) {
         perror("Error: standard function malloc has failed");
-        return NULL;
+        return 0;
     }
     for (i=0; i<BOARD_HEIGHT; i++) {
         if ((cells[i] = (int*)malloc(BOARD_WIDTH * sizeof(int*))) == NULL) {
             perror("Error: standard function malloc has failed");
-            return NULL;
+            return 0;
         }
     }
     // init cells with zeros
@@ -40,20 +38,20 @@ game *new_game(int depth) {
     // create  the board
     board_t current_board = { cells, BOARD_HEIGHT, BOARD_WIDTH, &connect4_scoring, &make_connect4_move };
 
-    result->current_board = current_board;
-    result->is_comp_turn = 0;
+    current_game->current_board = current_board;
+    current_game->is_comp_turn = 0;
     if (depth == -1) {
-    	if ((result->tree = create_tree(&(result->current_board), 1)) == NULL) {
-			return NULL;
+    	if ((current_game->tree = create_tree(&(current_game->current_board), 1)) == NULL) {
+			return 0;
 		}
     } else {
-    	if ((result->tree = create_tree(&(result->current_board), depth)) == NULL) {
-			return NULL;
+    	if ((current_game->tree = create_tree(&(current_game->current_board), depth)) == NULL) {
+			return 0;
 		}
     }
-    result->depth=depth;
-    result->game_over=0;
-    return result;
+    current_game->depth=depth;
+    current_game->game_over=0;
+    return 1;
 }
 
 

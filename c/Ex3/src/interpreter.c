@@ -21,7 +21,14 @@ void run_interpreter() {
     int depth;
     game *current_game;
 
-    current_game = new_game(-1);
+    if ((current_game = (game*)malloc(sizeof(game))) == NULL){
+        perror("Error: standard function malloc has failed");
+        return;
+    }
+
+    if (new_game(current_game, -1) == 0) {
+        return;
+    }
     if (current_game == NULL) {
         return;
     }
@@ -107,7 +114,7 @@ int execute_command(command_t command, game *current_game) {
     // restart_game
     if (command.command_code == COMMAND_CODE_RESTART) {
         // creating new game
-        if ((current_game = new_game(current_game->depth)) == NULL) {
+        if ((new_game(current_game, current_game->depth)) == 0) {
             return 0;
         }
         printf(MESSAGE_GAME_RESTARTED);
@@ -183,7 +190,7 @@ int execute_command(command_t command, game *current_game) {
             current_game->tree->make_move = &make_connect4_move;
             current_game->tree->scoring_func = &connect4_scoring;
         }
-        extend_leafs(current_game->tree->root, &(current_game->current_board), current_game->depth);
+
         // now - get the best move
         if ((preferred_move = get_best_move_for_player(current_game)) == NULL) {
             return 0;
@@ -251,12 +258,6 @@ void suggest_move(game current_game){
 void add_disc(game current_game, int column_num){
     current_game.current_board.make_move(current_game.current_board.cells, current_game.current_board.n, column_num, 1);
     update_tree(current_game.tree, &current_game.current_board, column_num, current_game.depth);
-}
-
-void restart_game(game *current_game){
-    free(current_game->current_board.cells);
-    free(current_game->tree);
-    current_game = new_game(current_game->depth);
 }
 
 void quit() {

@@ -15,7 +15,7 @@ typedef struct game_s {
     int game_over;
 } game;
 
-game *new_game(int depth);
+int new_game(game *current_game, int depth);
 
 vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn);
 
