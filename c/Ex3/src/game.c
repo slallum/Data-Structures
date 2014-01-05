@@ -17,22 +17,16 @@ static int get_first_empty_row(board_t board, int column);
 
 int new_game(game *current_game, int depth) {
     int **cells;
-    int i, j;
+    int i;
     // allocate all the cells
-    if ((cells = (int**)malloc(BOARD_HEIGHT * sizeof(int*))) == NULL) {
+    if ((cells = (int**)calloc(BOARD_HEIGHT, sizeof(int*))) == NULL) {
         perror("Error: standard function malloc has failed");
         return 0;
     }
     for (i=0; i<BOARD_HEIGHT; i++) {
-        if ((cells[i] = (int*)malloc(BOARD_WIDTH * sizeof(int*))) == NULL) {
+        if ((cells[i] = (int*)calloc(BOARD_WIDTH, sizeof(int*))) == NULL) {
             perror("Error: standard function malloc has failed");
             return 0;
-        }
-    }
-    // init cells with zeros
-    for (i=0; i<BOARD_HEIGHT; i++) {
-        for (j=0; j<BOARD_WIDTH; j++) {
-            cells[i][j] = 0;
         }
     }
     // create  the board

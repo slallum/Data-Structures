@@ -21,7 +21,7 @@ void run_interpreter() {
     int depth;
     game *current_game;
 
-    if ((current_game = (game*)malloc(sizeof(game))) == NULL){
+    if ((current_game = (game*)calloc(1, sizeof(game))) == NULL){
         perror("Error: standard function malloc has failed");
         return;
     }
@@ -42,15 +42,16 @@ void run_interpreter() {
     }
     current_game->depth = depth;
     play_game_forever(current_game);
+    free(current_game);
     return;
 }
 
 
 void play_game_forever(game *current_game) {
     char *command_line;
-
     command_t *command;
-    while (1) {
+    int playing = 1;
+    while (playing) {
         if ((command_line = get_command_line()) == NULL) {
             return;
         }
@@ -59,9 +60,10 @@ void play_game_forever(game *current_game) {
         }
         if (validate_command(*command, current_game)) {
             if (execute_command(*command, current_game) == 0) {
-                return;
+                playing = 0;
             }
         }
+		free(command);
     }
 
 }
@@ -124,7 +126,6 @@ int execute_command(command_t command, game *current_game) {
 
     // quit
     if (command.command_code == COMMAND_CODE_QUIT) {
-        free(current_game);
         return 0;
     }
 
