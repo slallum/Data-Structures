@@ -125,7 +125,7 @@ int get_best_coloumn(vertex* current_node, int depth, int max) {
 		}
 		iterator = iterator->next;
 	}
-	return best_coloumn;
+	return best_coloumn % BOARD_WIDTH;
 }
 
 int calculate_minmax(vertex* current_node, int depth, int max) {
@@ -133,7 +133,6 @@ int calculate_minmax(vertex* current_node, int depth, int max) {
 	element* iterator;
 	int decsendent_score;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
-
 	if ((current_node->children == NULL) || (depth == 0)
 			|| (current_node->score == EXTREME_VALUE)
 			|| (current_node->score == -EXTREME_VALUE)) {
