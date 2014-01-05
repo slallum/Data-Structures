@@ -1,4 +1,4 @@
-#include "connect4.h"
+#include "Connect4.h"
 
 int main()
 {
