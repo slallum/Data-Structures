@@ -42,7 +42,15 @@ game *new_game(int depth) {
 
     result->current_board = current_board;
     result->is_comp_turn = 0;
-    result->tree=NULL;
+    if (depth == -1) {
+    	if ((result->tree = create_tree(&(result->current_board), 1)) == NULL) {
+			return NULL;
+		}
+    } else {
+    	if ((result->tree = create_tree(&(result->current_board), depth)) == NULL) {
+			return NULL;
+		}
+    }
     result->depth=depth;
     result->game_over=0;
     return result;
@@ -54,7 +62,9 @@ int make_connect4_move(int** cells, int n, int i, int value) {
 	while ((j < n) && (cells[j][i] == 0)) {
 		j++;
 	}
-	cells[j - 1][i] = value;
+	if (j != 0) {
+		cells[j - 1][i] = value;
+	}
 	return j - 1;
 }
 
@@ -122,7 +132,7 @@ vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
     iterator = v->children->head;
     if (is_comp_turn) {
         do {
-            if (iterator->node->score < min) {
+            if (run_minmax_on_vertex(iterator->node, !is_comp_turn)->score < min) {
                 min = iterator->node->score;
                 chosen_vertex = iterator->node;
             }
@@ -131,8 +141,8 @@ vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
         while (iterator->next != NULL);
     } else {
         do {
-            if (iterator->node->score < max) {
-                max = iterator->node->score;
+            if (run_minmax_on_vertex(iterator->node, !is_comp_turn)->score > max) {
+            	max = iterator->node->score;
                 chosen_vertex = iterator->node;
             }
             iterator = iterator->next;

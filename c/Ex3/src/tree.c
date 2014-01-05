@@ -32,7 +32,6 @@ minmax_tree *create_tree(board_t* board, int depth) {
 	current_root->score = 0;
 	current_root->column_num = 0;
 	current_root->value = 1;
-	printf("ok cool\n");
 	extend(current_root, board, depth);
 
 	tree->root = current_root;
@@ -89,8 +88,10 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
 		iterator = node->children->head;
 		while (iterator != NULL) {
 			move = execute_move(board, board->n, iterator->node->column_num, iterator->node->value);
-			extend_leafs(iterator->node, board, depth - 1);
-			board->cells[move][iterator->node->column_num] = 0;
+			if (move != -1) {
+				extend_leafs(iterator->node, board, depth - 1);
+				board->cells[move][iterator->node->column_num] = 0;
+			}
 			iterator = iterator->next;
 		}
 	}
@@ -113,7 +114,7 @@ void extend(vertex* node, board_t* board, int depth) {
 	for (i = 0; i < board->m; i++) {
 		move = execute_move(board, board->n, i, node->value);
 		// Unless this coloumn is full
-		if (move != 0) {
+		if (move != -1) {
 			child = (vertex*) malloc(sizeof(vertex));
 			child->column_num = i;
 			child->value = (-1)*(node->value);

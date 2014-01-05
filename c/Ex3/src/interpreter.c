@@ -130,7 +130,6 @@ int execute_command(command_t command, game *current_game) {
     // add_disc
     if (command.command_code == COMMAND_CODE_ADD_DISC) {
         execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg - 1, 1);
-        print_board(&(current_game->current_board));
         // check if the user just won
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_USER_WINS);
@@ -184,7 +183,7 @@ int execute_command(command_t command, game *current_game) {
             current_game->tree->make_move = &make_connect4_move;
             current_game->tree->scoring_func = &connect4_scoring;
         }
-
+        extend_leafs(current_game->tree->root, &(current_game->current_board), current_game->depth);
         // now - get the best move
         if ((preferred_move = get_best_move_for_player(current_game)) == NULL) {
             return 0;
