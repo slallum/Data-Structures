@@ -83,7 +83,7 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
 	element* iterator;
 	int move;
 	if (node->children == NULL) {
-		extend(node, board, depth - 1);
+		extend(node, board, depth);
 	} else {
 		iterator = node->children->head;
 		while (iterator != NULL) {
