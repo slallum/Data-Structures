@@ -53,7 +53,10 @@ int new_game(game *current_game, int depth) {
     return 1;
 }
 
-
+/**
+ * Performs move for the connect4 game -
+ * finds first available row, from top, for requested coloumn
+ */
 int make_connect4_move(int** cells, int n, int i, int value) {
 	int j = 0;
 	while ((j < n) && (cells[j][i] == 0)) {
@@ -92,10 +95,17 @@ int get_best_move_for_player(game *current_game) {
 	return get_best_coloumn(current_game->tree->root, current_game->depth, 1);
 }
 
+/**
+ * Performs the min-max algorithm on each of the children of given vertex
+ * and returns coherent with the first child that gives the extreme value,
+ * (either max or min, as required) between all the children.
+ */
 static int get_best_coloumn(vertex* current_node, int depth, int max) {
 	element* iterator;
 	int decsendent_score, best_coloumn;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
+
+	// Nothing to check
 	if ((current_node->children == NULL) || (depth == 0)
 			|| (current_node->score == EXTREME_VALUE)
 			|| (current_node->score == -EXTREME_VALUE)) {
@@ -104,6 +114,7 @@ static int get_best_coloumn(vertex* current_node, int depth, int max) {
 	iterator = current_node->children->head;
 	while (iterator != NULL) {
 		decsendent_score = calculate_minmax(iterator->node, depth - 1, !max);
+		// If score more extreme than what we have up to now
 		if ((max && decsendent_score > extreme_score)
 				|| (!max && decsendent_score < extreme_score)) {
 			extreme_score = decsendent_score;
@@ -114,11 +125,20 @@ static int get_best_coloumn(vertex* current_node, int depth, int max) {
 	return best_coloumn % BOARD_WIDTH;
 }
 
+/**
+ *	Calculates optimal value according to algorithm we learned
+ *	Goes recursively down to leafs of given root, takes best value
+ *	between all leaves,
+ *	[where best is according to given parameter - either min or max]
+ *	then 'pumps' it up until root, while jumping between min \ max in each level.
+ */
 static int calculate_minmax(vertex* current_node, int depth, int max) {
 
 	element* iterator;
 	int decsendent_score;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
+
+	// End of recursion, just give score
 	if ((current_node->children == NULL) || (depth == 0)
 			|| (current_node->score == EXTREME_VALUE)
 			|| (current_node->score == -EXTREME_VALUE)) {
