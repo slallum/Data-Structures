@@ -5,6 +5,7 @@
 #include "io.h"
 
 #define MAX_STEPS_NUMBER 7
+#define DEPTH_NOT_SET -1
 
 void run_interpreter();
 

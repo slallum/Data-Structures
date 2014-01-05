@@ -7,6 +7,8 @@
 #define BOARD_HEIGHT 6
 #define BOARD_WIDTH 7
 
+#define DEPTH_NOT_SET -1
+
 typedef struct game_s {
     board_t current_board;
     int is_comp_turn;

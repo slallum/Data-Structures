@@ -27,7 +27,7 @@ void run_interpreter() {
     }
 
     // create a new game (and check if we had an error creating it)
-    if (new_game(current_game, -1) == 0) {
+    if (new_game(current_game, DEPTH_NOT_SET) == 0) {
         return;
     }
 
