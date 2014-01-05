@@ -190,7 +190,7 @@ int execute_command(command_t command, game *current_game) {
         printf(MESSAGE_GAME_COMPUTER_MOVE, preferred_move + 1);
         execute_move(&(current_game->current_board), BOARD_HEIGHT, preferred_move, -1);
         print_board(&(current_game->current_board));
-        
+
         // check if the computer just won
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_COMP_WINS);
@@ -252,10 +252,13 @@ int get_first_depth() {
         }
         // cmd is indeed `set number of steps`
         else {
+            // but now we need to see if the depth number is ok
             depth = get_depth(command_line);
+            // no 0 is not acceptible
             if (depth == 0) {
                 printf(ERROR_MESSAGE_STEPS_NON_ZERO);
             }
+            // also more than MAX_STEPS_NUMBER is not acceptible
             else if (depth > MAX_STEPS_NUMBER) {
                 printf(ERROR_MESSAGE_STEPS_OVER_LIMIT);
             }
@@ -268,6 +271,9 @@ int get_first_depth() {
         
 }
 
+/*
+ * checks if the command line has set_number_steps command in it
+ */
 static int is_set_depth_command(char* command_line) {
     int i;
     for (i=0; i<strlen(COMMAND_SET_STEPS); i++){
@@ -281,8 +287,9 @@ static int is_set_depth_command(char* command_line) {
 
 
 /* 
-* assumes that command_line is a valid command line of `set number of steps`
-*/
+ * gets the depth of the command `set_number_steps`
+ * assumes that command_line is a valid command line of `set number of steps`
+ */
 static int get_depth(char *command_line) {
     return str_to_int(command_line, strlen(COMMAND_SET_STEPS) + 1);
 }

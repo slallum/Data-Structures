@@ -27,11 +27,5 @@ interpreter.o: interpreter.c interpreter.h io.h game.h
 scoring.o: scoring.c scoring.h
 	gcc $(CFLAGS) -c scoring.c -o scoring.o
 
-scoring.test.o: scoring.test.c scoring.h board.h
-	gcc $(CFLAGS) -c scoring.test.c -o scoring.test.o
-	
-scoring.test: scoring.test.o scoring.o board.o
-	gcc $(CFLAGS) -o $@ $^
-
 connect4: $(O_FILES)
 	gcc $(CFLAGS) -o $@ $^

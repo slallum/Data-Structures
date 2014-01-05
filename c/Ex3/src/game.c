@@ -106,7 +106,6 @@ int get_best_move_for_player(game *current_game) {
 }
 
 int get_best_coloumn(vertex* current_node, int depth, int max) {
-
 	element* iterator;
 	int decsendent_score, best_coloumn;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
