@@ -15,6 +15,11 @@
 static int get_best_coloumn(vertex* current_node, int depth, int max);
 static int calculate_minmax(vertex* current_node, int depth, int max);
 
+
+/*
+ * creating a new game and putting it in the pointer current_game
+ * returns 0 if a command has failed
+ */
 int new_game(game *current_game, int depth) {
     int **cells;
     int i;
