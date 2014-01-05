@@ -102,38 +102,38 @@ void extend_leafs(vertex* node, board_t* board, int depth) {
  * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
  *
  */
-void extend(vertex* node, board_t* board, int depth) {
+void extend(vertex* current_node, board_t* board, int depth) {
 	int i, move;
-	linked_list* children = (linked_list*) malloc(sizeof(linked_list));
-	element* previous = (element*) malloc(sizeof(element));
-	element* next;
+	element* current;
 	vertex* child;
-	children->head = previous;
-	node->children = children;
+	linked_list* current_children = (linked_list*) malloc(sizeof(linked_list));
+	element* previous = (element*) malloc(sizeof(element));
+	current_children->head = previous;
+	current_node->children = current_children;
 	// Extends per each possible move
 	for (i = 0; i < board->m; i++) {
-		move = execute_move(board, board->n, i, node->value);
+		move = execute_move(board, board->n, i, current_node->value);
 		// Unless this coloumn is full
 		if (move != -1) {
 			child = (vertex*) malloc(sizeof(vertex));
 			child->column_num = i;
-			child->value = (-1)*(node->value);
-			child->score = get_score(board);
-			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE) && (depth -1 > 0)) {
+			child->score = current_node->value * get_score(board);
+			child->value = (-1)*(current_node->value);
+			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE) && (depth-1 > 0)) {
 				// Recursively perform for children too
 				extend(child, board, depth - 1);
 			}
 			previous->node = child;
 			// Place element in list and link to next element
-			next = (element*) malloc(sizeof(element));
-			previous->next = next;
-			next->prev = previous;
-			previous = next;
+			current = (element*) malloc(sizeof(element));
+			previous->next = current;
+			current->prev = previous;
+			previous = current;
 			board->cells[move][i] = 0;
 		}
 	}
-	children->tail = previous->prev;
-	children->tail->next = NULL;
+	current_children->tail = previous->prev;
+	current_children->tail->next = NULL;
 }
 
 /**

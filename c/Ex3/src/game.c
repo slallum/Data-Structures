@@ -100,19 +100,67 @@ int won_board(board_t board) {
  * returns pointer to the column that the computer will add disc to
  * returns NULL if there was an error while executing some allocationg command
  */
-int *get_computer_move(game *current_game) {
-    vertex *next_vertex;
-    next_vertex = run_minmax_on_vertex(current_game->tree->root, 1);
-    return &(next_vertex->column_num);
+int get_computer_move(game *current_game) {
+//    vertex *next_vertex;
+//    next_vertex = run_minmax_on_vertex(current_game->tree->root, 1);
+//    return &(next_vertex->column_num);
+    return get_best_coloumn(current_game->tree->root, current_game->depth, 1);
 }
 
 /*
  * gets the best column to insert a disc if the current player is the user
  */
-int* get_best_move_for_player(game *current_game) {
-    vertex *next_vertex;
-    next_vertex = run_minmax_on_vertex(current_game->tree->root, 0);
-    return &(next_vertex->column_num);
+int get_best_move_for_player(game *current_game) {
+//    vertex *next_vertex;
+//    next_vertex = run_minmax_on_vertex(current_game->tree->root, 0);
+//    return &(next_vertex->column_num);
+	return get_best_coloumn(current_game->tree->root, current_game->depth, 1);
+}
+
+int get_best_coloumn(vertex* current_node, int depth, int max) {
+
+	element* iterator;
+	int decsendent_score, best_coloumn;
+	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
+	if ((current_node->children == NULL) || (depth == 0)
+			|| (current_node->score == EXTREME_VALUE)
+			|| (current_node->score == -EXTREME_VALUE)) {
+		return -1;
+	}
+	iterator = current_node->children->head;
+	while (iterator != NULL) {
+		decsendent_score = calculate_minmax(iterator->node, depth - 1, !max);
+		if ((max && decsendent_score > extreme_score)
+				|| (!max && decsendent_score < extreme_score)) {
+			extreme_score = decsendent_score;
+			best_coloumn = iterator->node->column_num;
+		}
+		iterator = iterator->next;
+	}
+	return best_coloumn;
+}
+
+int calculate_minmax(vertex* current_node, int depth, int max) {
+
+	element* iterator;
+	int decsendent_score;
+	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
+
+	if ((current_node->children == NULL) || (depth == 0)
+			|| (current_node->score == EXTREME_VALUE)
+			|| (current_node->score == -EXTREME_VALUE)) {
+		return current_node->score;
+	}
+	iterator = current_node->children->head;
+	while (iterator != NULL) {
+		decsendent_score = calculate_minmax(iterator->node, depth - 1, !max);
+		if ((max && decsendent_score > extreme_score)
+				|| (!max && decsendent_score < extreme_score)) {
+			extreme_score = decsendent_score;
+		}
+		iterator = iterator->next;
+	}
+	return extreme_score;
 }
 
 vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
@@ -130,7 +178,7 @@ vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
     iterator = v->children->head;
     if (is_comp_turn) {
         do {
-            if (run_minmax_on_vertex(iterator->node, !is_comp_turn)->score < min) {
+            if (run_minmax_on_vertex(iterator->node, is_comp_turn)->score < min) {
                 min = iterator->node->score;
                 chosen_vertex = iterator->node;
             }
@@ -139,7 +187,7 @@ vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn) {
         while (iterator->next != NULL);
     } else {
         do {
-            if (run_minmax_on_vertex(iterator->node, !is_comp_turn)->score > max) {
+            if (run_minmax_on_vertex(iterator->node, is_comp_turn)->score > max) {
             	max = iterator->node->score;
                 chosen_vertex = iterator->node;
             }

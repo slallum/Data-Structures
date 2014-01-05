@@ -19,9 +19,13 @@ int new_game(game *current_game, int depth);
 
 vertex *run_minmax_on_vertex(vertex *v, int is_comp_turn);
 
-int *get_computer_move(game *current_game);
+int get_computer_move(game *current_game);
 
-int* get_best_move_for_player(game *current_game);
+int get_best_move_for_player(game *current_game);
+
+int get_best_coloumn(vertex* current_node, int depth, int max);
+
+int calculate_minmax(vertex* current_node, int depth, int max);
 
 int won_board(board_t board);
 
