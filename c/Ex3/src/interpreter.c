@@ -77,7 +77,7 @@ int validate_command(command_t command, game *current_game){
             return 0;
         }
         // check if chosen column is full
-        if (current_game->current_board.cells[0][command.arg] != 0) {
+        if (current_game->current_board.cells[0][command.arg - 1] != 0) {
             printf(ERROR_MESSAGE_COLUMN_FULL, command.arg);
             return 0;
         }

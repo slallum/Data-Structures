@@ -113,12 +113,11 @@ void extend(vertex* current_node, board_t* board, int depth) {
 	// Extends per each possible move
 	for (i = 0; i < board->m; i++) {
 		move = execute_move(board, board->n, i, current_node->value);
-		print_board(board);
 		// Unless this coloumn is full
 		if (move != -1) {
 			child = (vertex*) malloc(sizeof(vertex));
 			child->column_num = i;
-			child->score = current_node->value * get_score(board);
+			child->score = get_score(board);
 			child->value = (-1)*(current_node->value);
 			if ((child->score != EXTREME_VALUE) && (child->score != -EXTREME_VALUE) && (depth-1 > 0)) {
 				// Recursively perform for children too
