@@ -79,15 +79,15 @@ void update_tree(minmax_tree *tree, board_t* board, int col, int depth) {
  * Goes recursively down tree, while building the appropriate boards.
  * When reaching a leaf, performs extension of the tree.
  */
-void extend_leafs(vertex* node, board_t* board, int depth) {
+void extend_leafs(vertex* current_node, board_t* board, int depth) {
 	element* iterator;
 	int move;
-	if (node->children == NULL) {
-		extend(node, board, depth);
+	if (current_node->children == NULL) {
+		extend(current_node, board, depth);
 	} else {
-		iterator = node->children->head;
+		iterator = current_node->children->head;
 		while (iterator != NULL) {
-			move = execute_move(board, board->n, iterator->node->column_num, iterator->node->value);
+			move = execute_move(board, board->n, iterator->node->column_num, current_node->value);
 			if (move != -1) {
 				extend_leafs(iterator->node, board, depth - 1);
 				board->cells[move][iterator->node->column_num] = 0;
@@ -113,6 +113,7 @@ void extend(vertex* current_node, board_t* board, int depth) {
 	// Extends per each possible move
 	for (i = 0; i < board->m; i++) {
 		move = execute_move(board, board->n, i, current_node->value);
+		print_board(board);
 		// Unless this coloumn is full
 		if (move != -1) {
 			child = (vertex*) malloc(sizeof(vertex));
