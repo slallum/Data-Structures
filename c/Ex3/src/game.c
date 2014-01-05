@@ -29,7 +29,7 @@ int new_game(game *current_game, int depth) {
         return 0;
     }
     for (i=0; i<BOARD_HEIGHT; i++) {
-        if ((cells[i] = (int*)calloc(BOARD_WIDTH, sizeof(int*))) == NULL) {
+        if ((cells[i] = (int*)calloc(BOARD_WIDTH, sizeof(int))) == NULL) {
             perror("Error: standard function malloc has failed");
             return 0;
         }
@@ -51,7 +51,6 @@ int new_game(game *current_game, int depth) {
 			return 0;
 		}
     }
-
     current_game->depth=depth;
     current_game->game_over=0;
     return 1;
@@ -104,6 +103,7 @@ int get_best_move_for_player(game *current_game) {
 	return get_best_coloumn(current_game->tree->root, current_game->depth, 1);
 }
 
+
 /*
  * returns the best column to insert in the board accoring to its parameters and the tree
  * param tree_root: the root of the minmax tree
@@ -114,7 +114,6 @@ static int get_best_coloumn(vertex* tree_root, int depth, int max) {
 	element* iterator;
 	int decsendent_score, best_coloumn;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
-
     // if it's already a leaf or we reached the max depth or the score indicates there's already a winner - we can return
 	if ((tree_root->children == NULL) || (depth == 0)
 			|| (tree_root->score == EXTREME_VALUE)
@@ -126,6 +125,7 @@ static int get_best_coloumn(vertex* tree_root, int depth, int max) {
 	iterator = tree_root->children->head;
 	while (iterator != NULL) {
 		decsendent_score = calculate_minmax(iterator->node, depth - 1, !max);
+		// If score more extreme than what we have up to now
 		if ((max && decsendent_score > extreme_score)
 				|| (!max && decsendent_score < extreme_score)) {
 			extreme_score = decsendent_score;
@@ -136,15 +136,19 @@ static int get_best_coloumn(vertex* tree_root, int depth, int max) {
 	return best_coloumn % BOARD_WIDTH;
 }
 
-/*
- * recursive function that runs the minmax algorithm on the tree
- * returns the best score, accoring minmax algorithm with the given depth
- */ 
+/**
+ *	Calculates optimal value according to algorithm we learned
+ *	Goes recursively down to leafs of given root, takes best value
+ *	between all leaves,
+ *	[where best is according to given parameter - either min or max]
+ *	then 'pumps' it up until root, while jumping between min \ max in each level.
+ */
 static int calculate_minmax(vertex* current_node, int depth, int max) {
 	element* iterator;
 	int decsendent_score;
     // decide the extreme score accoring to max value - 1 (user) or 0 (computer)
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
+
 
     // if it's already a leaf or we reached the max depth or the score indicates there's already a winner - we can return
 	if ((current_node->children == NULL) || (depth == 0)
@@ -164,6 +168,5 @@ static int calculate_minmax(vertex* current_node, int depth, int max) {
 		}
 		iterator = iterator->next;
 	}
-
 	return extreme_score;
 }

@@ -19,7 +19,14 @@ typedef struct game_s {
 
 int new_game(game *current_game, int depth);
 
+/*
+ * returns pointer to the column that the computer will add disc to
+ * returns NULL if there was an error while executing some allocationg command
+ */
 int get_computer_move(game *current_game);
+/*
+ * gets the best column to insert a disc if the current player is the user
+ */
 int get_best_move_for_player(game *current_game);
 
 int won_board(board_t board);
