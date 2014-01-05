@@ -24,7 +24,7 @@ int new_game(game *current_game, int depth) {
         return 0;
     }
     for (i=0; i<BOARD_HEIGHT; i++) {
-        if ((cells[i] = (int*)calloc(BOARD_WIDTH, sizeof(int*))) == NULL) {
+        if ((cells[i] = (int*)calloc(BOARD_WIDTH, sizeof(int))) == NULL) {
             perror("Error: standard function malloc has failed");
             return 0;
         }
