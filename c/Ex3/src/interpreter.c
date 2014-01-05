@@ -41,6 +41,7 @@ void run_interpreter() {
 
     // now we'll play the game until a quit accures (or until an error accures)
     play_game_forever(current_game);
+    free(current_game->tree);
     free(current_game);
     return;
 }

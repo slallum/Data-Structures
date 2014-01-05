@@ -39,6 +39,9 @@ int new_game(game *current_game, int depth) {
 
     current_game->current_board = current_board;
     current_game->is_comp_turn = 0;
+    if (current_game->tree != NULL) {
+    	remove_tree(current_game->tree->root);
+    }
     // creating the tree
     // if depth not set yet - we'll create a tree with only 1 depth
     if (depth == DEPTH_NOT_SET) {

@@ -19,7 +19,7 @@ minmax_tree *create_tree(board_t* board, int depth) {
 	minmax_tree* tree;
 	vertex* current_root;
 
-	if ((tree = (minmax_tree*) malloc(sizeof(struct minmax_tree_s))) == NULL) {
+	if ((tree = (minmax_tree*) calloc(1, sizeof(struct minmax_tree_s))) == NULL) {
 		perror("Error: standard function malloc has failed");
 		return NULL;
 	}
