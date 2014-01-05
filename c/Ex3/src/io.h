@@ -36,9 +36,6 @@
 #define MESSAGE_GAME_COMPUTER_MOVE "Computer move: add disc to column %d\n"
 #define MESSAGE_GAME_SUGGESTED_MOVE "Suggested move: add disc to column %d\n"
 
-
-// CODES
-
 // structs
 typedef struct Command {
     int command_code; 
@@ -49,7 +46,6 @@ typedef struct Command {
 char *get_command_line();
 command_t *parse_command_line(char *command_line);
 
-char *get_first_word(const char *command_line);
 int str_to_int(char *str, int start);
 
 #endif /* IO_H_ */

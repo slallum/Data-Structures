@@ -4,7 +4,7 @@ O_FILES = board.o connect4.o game.o interpreter.o tree.o scoring.o io.o
 all: connect4
 test: scoring.test
 clean:
-	-rm $(O_FILES) connect4 scoring.test scoring.test.o
+	-rm $(O_FILES) connect4
 
 connect4.o: connect4.c board.h game.h connect4.h tree.h interpreter.h scoring.h
 	gcc $(CFLAGS) -c connect4.c -o connect4.o
@@ -26,12 +26,6 @@ interpreter.o: interpreter.c interpreter.h io.h game.h
 
 scoring.o: scoring.c scoring.h
 	gcc $(CFLAGS) -c scoring.c -o scoring.o
-
-scoring.test.o: scoring.test.c scoring.h board.h
-	gcc $(CFLAGS) -c scoring.test.c -o scoring.test.o
-	
-scoring.test: scoring.test.o scoring.o board.o
-	gcc $(CFLAGS) -o $@ $^
 
 connect4: $(O_FILES)
 	gcc $(CFLAGS) -o $@ $^

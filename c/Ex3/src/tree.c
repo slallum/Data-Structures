@@ -106,8 +106,17 @@ void extend(vertex* current_node, board_t* board, int depth) {
 	int i, move;
 	element* current;
 	vertex* child;
-	linked_list* current_children = (linked_list*) calloc(1, sizeof(linked_list));
-	element* previous = (element*) calloc(1, sizeof(element));
+	linked_list* current_children;
+	element* previous;
+
+	if ((current_children = (linked_list*) calloc(1, sizeof(linked_list))) == NULL) {
+		perror("Error: standard function calloc has failed");
+		exit(1);
+	}
+	if ((previous = (element*) calloc(1, sizeof(element))) == NULL) {
+		perror("Error: standard function calloc has failed");
+		exit(1);
+	}
 	current_children->head = previous;
 	current_node->children = current_children;
 	// Extends per each possible move
@@ -115,7 +124,10 @@ void extend(vertex* current_node, board_t* board, int depth) {
 		move = execute_move(board, board->n, i, current_node->value);
 		// Unless this coloumn is full
 		if (move != -1) {
-			child = (vertex*) calloc(1, sizeof(vertex));
+			if ((child = (vertex*) calloc(1, sizeof(vertex))) == NULL) {
+				perror("Error: standard function calloc has failed");
+				exit(1);
+			}
 			child->column_num = i;
 			child->score = get_score(board);
 			child->value = (-1)*(current_node->value);
@@ -125,7 +137,10 @@ void extend(vertex* current_node, board_t* board, int depth) {
 			}
 			previous->node = child;
 			// Place element in list and link to next element
-			current = (element*) calloc(1, sizeof(element));
+			if ((current = (element*) calloc(1, sizeof(element))) == NULL) {
+				perror("Error: standard function calloc has failed");
+				exit(1);
+			}
 			previous->next = current;
 			current->prev = previous;
 			previous = current;

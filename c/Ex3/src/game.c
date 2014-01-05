@@ -12,9 +12,14 @@
 #include "scoring.h"
 #include "tree.h"
 
-static int get_first_empty_row(board_t board, int column);
+static int get_best_coloumn(vertex* current_node, int depth, int max);
+static int calculate_minmax(vertex* current_node, int depth, int max);
 
 
+/*
+ * creating a new game and putting it in the pointer current_game
+ * returns 0 if a command has failed
+ */
 int new_game(game *current_game, int depth) {
     int **cells;
     int i;
@@ -60,22 +65,6 @@ int make_connect4_move(int** cells, int n, int i, int value) {
 	return j - 1;
 }
 
-void make_user_move(game *current_game, int move_column) {
-    int row_to_insert;
-    row_to_insert = get_first_empty_row(current_game->current_board, move_column);
-    current_game->current_board.cells[row_to_insert][move_column] = 1;
-}
-
-static int get_first_empty_row(board_t board, int column) {
-    int i;
-    for (i = 1; i<BOARD_HEIGHT; i++) {
-        if (board.cells[i][column] == 0) {
-            return i-1;
-        }
-    }
-    return -1;
-}
-
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)
  */
@@ -93,7 +82,6 @@ int won_board(board_t board) {
  * returns NULL if there was an error while executing some allocationg command
  */
 int get_computer_move(game *current_game) {
-
     return get_best_coloumn(current_game->tree->root, current_game->depth, 0);
 }
 
@@ -101,12 +89,10 @@ int get_computer_move(game *current_game) {
  * gets the best column to insert a disc if the current player is the user
  */
 int get_best_move_for_player(game *current_game) {
-
 	return get_best_coloumn(current_game->tree->root, current_game->depth, 1);
 }
 
-int get_best_coloumn(vertex* current_node, int depth, int max) {
-
+static int get_best_coloumn(vertex* current_node, int depth, int max) {
 	element* iterator;
 	int decsendent_score, best_coloumn;
 	int extreme_score = (max ? -EXTREME_VALUE : EXTREME_VALUE);
@@ -128,7 +114,7 @@ int get_best_coloumn(vertex* current_node, int depth, int max) {
 	return best_coloumn % BOARD_WIDTH;
 }
 
-int calculate_minmax(vertex* current_node, int depth, int max) {
+static int calculate_minmax(vertex* current_node, int depth, int max) {
 
 	element* iterator;
 	int decsendent_score;
