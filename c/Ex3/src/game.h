@@ -23,10 +23,6 @@ int get_computer_move(game *current_game);
 
 int get_best_move_for_player(game *current_game);
 
-int get_best_coloumn(vertex* current_node, int depth, int max);
-
-int calculate_minmax(vertex* current_node, int depth, int max);
-
 int won_board(board_t board);
 
 int make_connect4_move(int** cells, int n, int i, int value);
