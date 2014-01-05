@@ -26,39 +26,45 @@ void run_interpreter() {
         return;
     }
 
+    // create a new game (and check if we had an error creating it)
     if (new_game(current_game, -1) == 0) {
-        return;
-    }
-    if (current_game == NULL) {
         return;
     }
 
     print_board(&(current_game->current_board));
 
-    depth = get_first_depth();
-    // error
-    if (depth == 0) {
+    // first we have to get a depth, and only then we start the game
+    if ((depth = get_first_depth()) == 0) {
         return;
     }
     current_game->depth = depth;
+
+    // now we'll play the game until a quit accures (or until an error accures)
     play_game_forever(current_game);
     free(current_game);
     return;
 }
 
 
+/*
+ * playing the game until a quit or error accures
+ */
 void play_game_forever(game *current_game) {
     char *command_line;
     command_t *command;
     int playing = 1;
     while (playing) {
+        // get a valid command line
         if ((command_line = get_command_line()) == NULL) {
             return;
         }
+        // parse command line (if command returns NULL it means we got an error)
         if ((command = parse_command_line(command_line)) == NULL) {
             return;
         }
+        // only if the command is valid - we'll execute it
         if (validate_command(*command, current_game)) {
+            // execute command assume that the command is valid. if it returns 0 it means an error accurd.
             if (execute_command(*command, current_game) == 0) {
                 playing = 0;
             }
@@ -68,34 +74,42 @@ void play_game_forever(game *current_game) {
 
 }
 
+/*
+ * gets a command and a game
+ * returns if the command is valid, when realted to the current game
+ */
 int validate_command(command_t command, game *current_game){
+    // steps must be non zero
     if ((command.command_code == COMMAND_CODE_SET_STEPS) && (command.arg == 0)) {
         printf(ERROR_MESSAGE_STEPS_NON_ZERO);
         return 0;
     }
     if (command.command_code == COMMAND_CODE_ADD_DISC){
+        // column number in add disc command have to be between 1 and the width of the board
         if ( !( (command.arg >= 1) && (command.arg <= BOARD_WIDTH) ) ) {
             printf(ERROR_MESSAGE_COLUMN_NUMBER_NOT_VALID);
             return 0;
         }
-        // check if chosen column is full
+        // column can't be full
         if (current_game->current_board.cells[0][command.arg - 1] != 0) {
             printf(ERROR_MESSAGE_COLUMN_FULL, command.arg);
             return 0;
         }
     }
 
+    // command not found
     if (command.command_code == COMMAND_CODE_NOT_FOUND) {
         printf(ERROR_MESSAGE_COMMAND_NOT_FOUND);
         return 0;
     }
 
-
+    // set_number_steps can't be more than MAX_STEPS_NUMBER
     if ((command.command_code == COMMAND_CODE_SET_STEPS) && (command.arg > MAX_STEPS_NUMBER)) {
         printf(ERROR_MESSAGE_STEPS_OVER_LIMIT);
         return 0;
     }
 
+    // if the game is over we don't allow the commands: add_disc, suggest_move
     if (current_game->game_over) {
         if (command.command_code == COMMAND_CODE_ADD_DISC || command.command_code == COMMAND_CODE_SUGGEST_MOVE) {
             printf(ERROR_MESSAGE_GAME_OVER);
@@ -103,12 +117,14 @@ int validate_command(command_t command, game *current_game){
         }
     }
 
-    // everything is O.K!
+    // everything is O.K! :D
     return 1;
 }
 
 /*
- * assumes the command is valid
+ * gets a command and a game, executes the command and changing game accoringly.
+ * assumes the command is valid.
+ * retuns if the execution succeeded and 0 if an error has accured
  */
 int execute_command(command_t command, game *current_game) {
     int preferred_move;
@@ -126,6 +142,8 @@ int execute_command(command_t command, game *current_game) {
 
     // quit
     if (command.command_code == COMMAND_CODE_QUIT) {
+        remove_tree(current_game->tree->root);
+        free(current_game->tree);
         return 0;
     }
 
@@ -138,13 +156,17 @@ int execute_command(command_t command, game *current_game) {
     // add_disc
     if (command.command_code == COMMAND_CODE_ADD_DISC) {
         execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg - 1, 1);
+
         // check if the user just won
         if (won_board(current_game->current_board)) {
+            // print the board, the won message, and bring the game to game over state
             print_board(&(current_game->current_board));
             printf(MESSAGE_GAME_OVER_USER_WINS);
             current_game->game_over = 1;
             return 1;
         }
+
+        // now it's computer turn
         current_game->is_comp_turn = 1;
         // tree isn't initialized yet?
         if (current_game->tree == NULL) {
@@ -168,7 +190,8 @@ int execute_command(command_t command, game *current_game) {
         printf(MESSAGE_GAME_COMPUTER_MOVE, preferred_move + 1);
         execute_move(&(current_game->current_board), BOARD_HEIGHT, preferred_move, -1);
         print_board(&(current_game->current_board));
-
+        
+        // check if the computer just won
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_COMP_WINS);
             current_game->game_over = 1;
@@ -244,28 +267,6 @@ int get_first_depth() {
     }
         
 }
-
-void run_command(char *command){
-
-}
-
-void set_number_steps(game current_game, int steps) {
-    current_game.depth = steps;
-}
-
-void suggest_move(game current_game){
-
-}
-
-void add_disc(game current_game, int column_num){
-    current_game.current_board.make_move(current_game.current_board.cells, current_game.current_board.n, column_num, 1);
-    update_tree(current_game.tree, &current_game.current_board, column_num, current_game.depth);
-}
-
-void quit() {
-
-}
-
 
 static int is_set_depth_command(char* command_line) {
     int i;
