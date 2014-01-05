@@ -1,4 +1,5 @@
+#! /bin/bash
 for i in 1 2 3 4
 do
-    src/connect4 < resources/input${i}.in | diff - resources/output${i}
+    src/Connect4 < resources/input${i}.in | diff - resources/output${i}.out
 done
