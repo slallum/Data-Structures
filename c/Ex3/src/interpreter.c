@@ -54,6 +54,7 @@ void play_game_forever(game *current_game) {
     command_t *command;
     int playing = 1;
     while (playing) {
+        // get a valid command line
         if ((command_line = get_command_line()) == NULL) {
             return;
         }
@@ -123,6 +124,7 @@ int validate_command(command_t command, game *current_game){
 /*
  * gets a command and a game, executes the command and changing game accoringly.
  * assumes the command is valid.
+ * retuns if the execution succeeded and 0 if an error has accured
  */
 int execute_command(command_t command, game *current_game) {
     int preferred_move;
@@ -154,13 +156,17 @@ int execute_command(command_t command, game *current_game) {
     // add_disc
     if (command.command_code == COMMAND_CODE_ADD_DISC) {
         execute_move(&(current_game->current_board), BOARD_HEIGHT, command.arg - 1, 1);
+
         // check if the user just won
         if (won_board(current_game->current_board)) {
+            // print the board, the won message, and bring the game to game over state
             print_board(&(current_game->current_board));
             printf(MESSAGE_GAME_OVER_USER_WINS);
             current_game->game_over = 1;
             return 1;
         }
+
+        // now it's computer turn
         current_game->is_comp_turn = 1;
         // tree isn't initialized yet?
         if (current_game->tree == NULL) {
@@ -184,7 +190,8 @@ int execute_command(command_t command, game *current_game) {
         printf(MESSAGE_GAME_COMPUTER_MOVE, preferred_move + 1);
         execute_move(&(current_game->current_board), BOARD_HEIGHT, preferred_move, -1);
         print_board(&(current_game->current_board));
-
+        
+        // check if the computer just won
         if (won_board(current_game->current_board)) {
             printf(MESSAGE_GAME_OVER_COMP_WINS);
             current_game->game_over = 1;
