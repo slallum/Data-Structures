@@ -21,7 +21,7 @@ void run_interpreter() {
     int depth;
     game *current_game;
 
-    if ((current_game = (game*)malloc(sizeof(game))) == NULL){
+    if ((current_game = (game*)calloc(1, sizeof(game))) == NULL){
         perror("Error: standard function malloc has failed");
         return;
     }
@@ -41,6 +41,7 @@ void run_interpreter() {
 
     // now we'll play the game until a quit accures (or until an error accures)
     play_game_forever(current_game);
+    free(current_game);
     return;
 }
 
@@ -51,9 +52,8 @@ void run_interpreter() {
 void play_game_forever(game *current_game) {
     char *command_line;
     command_t *command;
-
-    while (1) {
-        // get a valid command line (if command_line returns NULL it means we got an error)
+    int playing = 1;
+    while (playing) {
         if ((command_line = get_command_line()) == NULL) {
             return;
         }
@@ -65,9 +65,10 @@ void play_game_forever(game *current_game) {
         if (validate_command(*command, current_game)) {
             // execute command assume that the command is valid. if it returns 0 it means an error accurd.
             if (execute_command(*command, current_game) == 0) {
-                return;
+                playing = 0;
             }
         }
+		free(command);
     }
 
 }
@@ -141,7 +142,6 @@ int execute_command(command_t command, game *current_game) {
     if (command.command_code == COMMAND_CODE_QUIT) {
         remove_tree(current_game->tree->root);
         free(current_game->tree);
-        free(current_game);
         return 0;
     }
 
@@ -260,28 +260,6 @@ int get_first_depth() {
     }
         
 }
-
-void run_command(char *command){
-
-}
-
-void set_number_steps(game current_game, int steps) {
-    current_game.depth = steps;
-}
-
-void suggest_move(game current_game){
-
-}
-
-void add_disc(game current_game, int column_num){
-    current_game.current_board.make_move(current_game.current_board.cells, current_game.current_board.n, column_num, 1);
-    update_tree(current_game.tree, &current_game.current_board, column_num, current_game.depth);
-}
-
-void quit() {
-
-}
-
 
 static int is_set_depth_command(char* command_line) {
     int i;

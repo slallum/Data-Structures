@@ -24,7 +24,7 @@ minmax_tree *create_tree(board_t* board, int depth) {
 		return NULL;
 	}
 
-	if ((current_root = (vertex*) malloc(sizeof(struct vertex_s))) == NULL) {
+	if ((current_root = (vertex*) calloc(1, sizeof(struct vertex_s))) == NULL) {
 	 	perror("Error: standard function malloc has failed");
 	 	return NULL;
 	}
@@ -68,7 +68,7 @@ void update_tree(minmax_tree *tree, board_t* board, int col, int depth) {
 			} else {
 				current_root->children->tail = iterator->prev;
 			}
-//			remove_tree(current_root);
+			remove_tree(current_root);
 		}
 	}
 	extend_leafs(tree->root, board, depth);
@@ -88,7 +88,7 @@ void extend_leafs(vertex* current_node, board_t* board, int depth) {
 		iterator = current_node->children->head;
 		while (iterator != NULL) {
 			move = execute_move(board, board->n, iterator->node->column_num, current_node->value);
-			if (move != -1) {
+			if ((move != -1) && (depth - 1 > 0)) {
 				extend_leafs(iterator->node, board, depth - 1);
 				board->cells[move][iterator->node->column_num] = 0;
 			}
@@ -106,8 +106,8 @@ void extend(vertex* current_node, board_t* board, int depth) {
 	int i, move;
 	element* current;
 	vertex* child;
-	linked_list* current_children = (linked_list*) malloc(sizeof(linked_list));
-	element* previous = (element*) malloc(sizeof(element));
+	linked_list* current_children = (linked_list*) calloc(1, sizeof(linked_list));
+	element* previous = (element*) calloc(1, sizeof(element));
 	current_children->head = previous;
 	current_node->children = current_children;
 	// Extends per each possible move
@@ -115,7 +115,7 @@ void extend(vertex* current_node, board_t* board, int depth) {
 		move = execute_move(board, board->n, i, current_node->value);
 		// Unless this coloumn is full
 		if (move != -1) {
-			child = (vertex*) malloc(sizeof(vertex));
+			child = (vertex*) calloc(1, sizeof(vertex));
 			child->column_num = i;
 			child->score = get_score(board);
 			child->value = (-1)*(current_node->value);
@@ -125,7 +125,7 @@ void extend(vertex* current_node, board_t* board, int depth) {
 			}
 			previous->node = child;
 			// Place element in list and link to next element
-			current = (element*) malloc(sizeof(element));
+			current = (element*) calloc(1, sizeof(element));
 			previous->next = current;
 			current->prev = previous;
 			previous = current;
