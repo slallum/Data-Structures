@@ -52,7 +52,7 @@ Control* create_window(Control* children);
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(int x, int y, int width, int height, Control* new_parent,
+Control* create_panel(Control* window, int x, int y, int width, int height, Control* new_parent,
 		Control** new_children, int R, int G, int B);
 
 /**

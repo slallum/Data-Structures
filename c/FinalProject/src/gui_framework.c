@@ -12,8 +12,6 @@
 
 #define HEADING "Play it!"
 
-extern Control* window;
-
 /**
  * Creates control with elements that all the types need.
  */
@@ -40,9 +38,8 @@ Control* create_window(Control* children) {
 	SDL_WM_SetCaption(HEADING, HEADING);
 	SDL_Surface* view = SDL_SetVideoMode(WIN_W, WIN_H, 0,
 			SDL_HWSURFACE | SDL_DOUBLEBUF);
-	window = create_control(0, 0, WIN_W, WIN_H, NULL, children, view, NULL,
+	return create_control(0, 0, WIN_W, WIN_H, NULL, children, view, NULL,
 			draw_node);
-	return window;
 }
 
 /**
@@ -52,7 +49,7 @@ Control* create_window(Control* children) {
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(int x, int y, int width, int height, Control* parent,
+Control* create_panel(Control* window, int x, int y, int width, int height, Control* parent,
 		Control** children, int R, int G, int B) {
 	SDL_Surface* view = &(SDL_Rect ) { 0, 0, width, height };
 	SDL_fillRect(view, NULL, SDL_MapRGB(window->view->format, R, G, B));
@@ -114,5 +111,5 @@ void draw_node(Control* node) {
  * ignoring any children that might be
  */
 void draw_leaf(Control* leaf) {
-	SDL_BlitSurface(leaf->view, NULL, leaf->parent, NULL);
+	SDL_BlitSurface(leaf->view, NULL, leaf->parent, NULL );
 }
