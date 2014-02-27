@@ -70,7 +70,7 @@ Control* create_label(int x, int y, int width, int height, char* label_path,
 		Control* parent) {
 
 	return create_control(x, y, width, height, parent, NULL,
-			SDL_LoadIMG(label_path), NULL, draw_leaf);
+			SDL_LoadIMG(label_path), empty_select, draw_leaf);
 }
 
 /**
@@ -82,10 +82,17 @@ Control* create_label(int x, int y, int width, int height, char* label_path,
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		Control* parent, Control** children, void (*on_select)(struct Control*)) {
+		Control* parent, void (*on_select)(struct Control*)) {
 
-	return create_control(x, y, width, height, parent, children,
+	return create_control(x, y, width, height, parent, NULL,
 			SDL_LoadIMG(label_path), on_select, draw_leaf);
+}
+
+/**
+ * Nothing happens on select
+ */
+void empty_select(Control* control) {
+
 }
 
 /**

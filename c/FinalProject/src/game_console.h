@@ -1,6 +1,9 @@
 #ifndef GAME_CONSOLE_H_
 #define GAME_CONSOLE_H_
 
+#include "gui_framework.h"
+
+
 /**
  * Opens the game console's main page, asking user to select:
  * New Game \ Load Game \ Quit
@@ -10,17 +13,8 @@
 void start_game_console();
 
 /**
- * Triggered by user choosing the 'New Game'
- * Changes window appearance to the game selection panel
+ * Go over all tree and find which control is ranged around the clicked spot
  */
-void start_select_game();
-
-void start_tic_tac_toe();
-
-void start_connect4();
-
-void start_reversi();
-
-void start_game_arena();
+Control* find_clicked(int x, int y, Control* root);
 
 #endif /* GAME_CONSOLE_H_ */

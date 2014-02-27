@@ -8,14 +8,14 @@
 #ifndef GUI_FRAMEWORK_H_
 #define GUI_FRAMEWORK_H_
 
-#include <stdio.h>
 #include <SDL.h>
 #include <SDL_video.h>
+#include <stdio.h>
 
 /**
  * Generic control differentiated by content:
  * 1. Label		- view only
- * 2. Button	- view, children, on_select
+ * 2. Button	- view, on_select (holds logic for creating next view)
  * 3. Panel		- view (serving as background), children
  * 4. Window	- view, children
  */
@@ -73,7 +73,12 @@ Control* create_label(int x, int y, int width, int height, char* label_path,
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		Control* parent, Control** children, void (*on_select)(struct Control*));
+		Control* parent, void (*on_select)(struct Control*));
+
+/**
+ * Nothing happens on select
+ */
+void empty_select(Control* control);
 
 /**
  * Draws given node as a node in a tree - first draws element,
