@@ -12,6 +12,10 @@
 #include <SDL_video.h>
 #include <stdio.h>
 
+#define WIN_W 640
+#define WIN_H 480
+#define HEADING "Play it!"
+
 /**
  * Generic control differentiated by content:
  * 1. Label		- view only
@@ -34,16 +38,24 @@ struct Control {
 typedef struct Control Control;
 
 /**
+ * Perform operations needed for the SDL framework to work
+ * returns 1 if went smoothly, 0 o\w
+ */
+int init_fw();
+
+/**
  * Creates control with elements that all the types need.
  */
-Control* create_control(int x, int y, int width, int height, Control* parent);
+Control* create_control(int x, int y, int width, int height, Control* parent,
+		Control** children, SDL_Surface* view,
+		void (*on_select)(struct Control*), void (*draw)(struct Control*));
 
 /**
  * Creates the window component - should be one as root of UI Tree
  *
  * @param children	component's children
  */
-Control* create_window(Control* children);
+Control* create_window(Control** children);
 
 /**
  * Create a panel control
@@ -52,8 +64,17 @@ Control* create_window(Control* children);
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(Control* window, int x, int y, int width, int height, Control* new_parent,
-		Control** new_children, int R, int G, int B);
+Control* create_panel(Control* window, int x, int y, int width, int height,
+		char* bg_path, Control* new_parent, Control** new_children);
+
+/**
+ * Create a full screen panel control
+ *
+ * @param children	Children controls to appear in the panel
+ * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
+ */
+Control* create_fs_panel(Control* window, char* bg_path, Control* new_parent,
+		Control** new_children);
 
 /**
  * Creates a label control
@@ -87,9 +108,23 @@ void empty_select(Control* control);
 void draw_node(Control* node);
 
 /**
+ * Draws given node's children -
+ * calls the draw function of all children
+ */
+void draw_children(Control* node);
+
+
+/**
  * Draws given leaf - just draws element,
  * ignoring any children that might be
  */
 void draw_leaf(Control* leaf);
+
+/**
+ * Recursively reads UI tree until reaching the leaves,
+ * then begins freeing their surfaces and themselves,
+ * bottom up
+ */
+void free_tree(Control* root);
 
 #endif /* GUI_FRAMEWORK_H_ */
