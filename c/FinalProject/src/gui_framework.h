@@ -64,8 +64,8 @@ Control* create_window(Control** children);
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(Control* window, int x, int y, int width, int height,
-		char* bg_path, Control* new_parent, Control** new_children);
+Control* create_panel(int x, int y, int width, int height, char* bg_path,
+		Control* new_parent, Control** new_children);
 
 /**
  * Create a full screen panel control
@@ -73,7 +73,7 @@ Control* create_panel(Control* window, int x, int y, int width, int height,
  * @param children	Children controls to appear in the panel
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_fs_panel(Control* window, char* bg_path, Control* new_parent,
+Control* create_fs_panel(char* bg_path, Control* new_parent,
 		Control** new_children);
 
 /**
@@ -112,7 +112,6 @@ void draw_node(Control* node);
  * calls the draw function of all children
  */
 void draw_children(Control* node);
-
 
 /**
  * Draws given leaf - just draws element,

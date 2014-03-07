@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "gui_framework.h"
+#include "playit_conf.h"
 
 /**
  * Builds the start menu screen, including 3 buttons for selection:
