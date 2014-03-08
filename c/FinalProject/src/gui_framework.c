@@ -24,25 +24,18 @@ int init_fw() {
 /**
  * Creates control with elements that all the types need.
  */
-Control* create_control(int x, int y, int width, int height, Control* parent,
-		Control** children, SDL_Surface* view,
-		void (*on_select)(struct Control*), void (*draw)(struct Control*)) {
-	int i;
+Control* create_control(int x, int y, int width, int height,
+		Link* children_head, SDL_Surface* view,
+		void (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
 	new_control->x = x;
-	new_control->y = x;
+	new_control->y = y;
 	new_control->width = width;
 	new_control->height = height;
-	new_control->parent = parent;
-	new_control->children = children;
+	new_control->children_head = children_head;
 	new_control->view = view;
 	new_control->on_select = on_select;
 	new_control->draw = draw;
-	if (children != NULL) {
-		for (i = 0; i < sizeof(children) / sizeof(Control*); i++) {
-			new_control->children[i]->parent = new_control;
-		}
-	}
 	return new_control;
 }
 
@@ -51,7 +44,7 @@ Control* create_control(int x, int y, int width, int height, Control* parent,
  *
  * @param children	component's children
  */
-Control* create_window(Control** children) {
+Control* create_window(Link* children_head) {
 	SDL_WM_SetCaption(HEADING, HEADING);
 	SDL_Surface* view = SDL_SetVideoMode(WIN_W, WIN_H, 0,
 			SDL_HWSURFACE | SDL_DOUBLEBUF);
@@ -59,7 +52,7 @@ Control* create_window(Control** children) {
 		printf("Error: Failed to set video mode: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	return create_control(0, 0, WIN_W, WIN_H, NULL, children, view, NULL,
+	return create_control(0, 0, WIN_W, WIN_H, children_head, view, NULL,
 			draw_children);
 }
 
@@ -70,10 +63,16 @@ Control* create_window(Control** children) {
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(int x, int y, int width, int height,
-		char* bg_path, Control* parent, Control** children) {
-	return create_control(x, y, width, height, parent, children,
-			SDL_LoadBMP(bg_path), NULL, draw_node);
+Control* create_panel(int x, int y, int width, int height, char* bg_path,
+		Link* children_head) {
+	SDL_Surface *img = SDL_LoadBMP(bg_path);
+	if (img == NULL ) {
+		printf("Error: failed to load image: %s\n", SDL_GetError());
+		return NULL ;
+	}
+	img = SDL_DisplayFormat(img);
+	return create_control(x, y, width, height, children_head, img, NULL,
+			draw_node);
 }
 
 /**
@@ -82,9 +81,8 @@ Control* create_panel(int x, int y, int width, int height,
  * @param children	Children controls to appear in the panel
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_fs_panel(char* bg_path, Control* new_parent,
-		Control** new_children) {
-	return create_panel(0, 0, WIN_W, WIN_H, bg_path, new_parent, new_children);
+Control* create_fs_panel(char* bg_path, Link* children_head) {
+	return create_panel(0, 0, WIN_W, WIN_H, bg_path, children_head);
 }
 
 /**
@@ -93,11 +91,15 @@ Control* create_fs_panel(char* bg_path, Control* new_parent,
  * @param label_path	Path to find pic representing the label.
  * 						Loads the pic and draws it.
  */
-Control* create_label(int x, int y, int width, int height, char* label_path,
-		Control* parent) {
-
-	return create_control(x, y, width, height, parent, NULL,
-			SDL_LoadBMP(label_path), empty_select, draw_leaf);
+Control* create_label(int x, int y, int width, int height, char* label_path) {
+	SDL_Surface *img = SDL_LoadBMP(label_path);
+	if (img == NULL ) {
+		printf("Error: failed to load image: %s\n", SDL_GetError());
+		return NULL ;
+	}
+	img = SDL_DisplayFormat(img);
+	return create_control(x, y, width, height, NULL, img, empty_select,
+			draw_leaf);
 }
 
 /**
@@ -109,10 +111,15 @@ Control* create_label(int x, int y, int width, int height, char* label_path,
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		Control* parent, void (*on_select)(struct Control*)) {
-
-	return create_control(x, y, width, height, parent, NULL,
-			SDL_LoadBMP(label_path), on_select, draw_leaf);
+		void (*on_select)(struct Control*)) {
+	SDL_Surface *img = SDL_LoadBMP(label_path);
+	if (img == NULL ) {
+		printf("Error: Failed to load image: %s\n", SDL_GetError());
+		return NULL;
+	}
+	img = SDL_DisplayFormat(img);
+	return create_control(x, y, width, height, NULL, img, on_select,
+			draw_leaf);
 }
 
 /**
@@ -126,31 +133,43 @@ void empty_select(Control* control) {
  * Draws given node as a node in a tree - first draws element,
  * then calls the draw function of all children
  */
-void draw_node(Control* node) {
-	draw_children(node);
-	draw_leaf(node);
+int draw_node(Control* node, Control* parent) {
+	if (draw_children(node, NULL)) {
+		return draw_leaf(node, parent);
+	}
+	return 0;
 }
 
 /**
  * Draws given node's children -
  * calls the draw function of all children
  */
-void draw_children(Control* node) {
+int draw_children(Control* node, Control* parent) {
 
-	int i;
-	int children_num = sizeof(node->children) / sizeof(Control*);
-
-	for (i = 0; i < children_num; i++) {
-		node->children[i]->draw(node->children[i]);
+	int orderly = 1;
+	Link* head = node->children_head;
+	while (orderly && (head != NULL)) {
+		if (head->value == NULL) {
+			orderly = 0;
+		} else {
+			orderly = head->value->draw(head->value, node);
+		}
+		head = head->next;
 	}
+	return orderly;
 }
 
 /**
  * Draws given leaf - just draws element,
  * ignoring any children that might be
  */
-void draw_leaf(Control* leaf) {
-	SDL_BlitSurface(leaf->view, NULL, leaf->parent->view, NULL );
+int draw_leaf(Control* leaf, Control* parent) {
+	SDL_Rect to_place = { leaf->x, leaf->y, leaf->width, leaf->height };
+	if (SDL_BlitSurface(leaf->view, 0, parent->view, &to_place) != 0) {
+		printf("Error: Failed to blit image: %s\n", SDL_GetError());
+		return 0;
+	}
+	return 1;
 }
 
 /**
@@ -159,11 +178,29 @@ void draw_leaf(Control* leaf) {
  * bottom up
  */
 void free_tree(Control* root) {
-	int i;
-	int children_num = sizeof(root->children) / sizeof(Control*);
-	for (i = 0; i < children_num; i++) {
-		free_tree(root->children[i]);
+	Link* prev;
+	Link* next = root->children_head;
+	while (next != NULL ) {
+		free_tree(next->value);
+		prev = next;
+		next = prev->next;
+		free(next);
 	}
 	SDL_FreeSurface(root->view);
 	free(root);
+}
+
+int poll_event(Control* ui_tree) {
+
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0) {
+		switch (e.type) {
+		case (SDL_QUIT):
+			return 1;
+		default:
+			break;
+		}
+	}
+	SDL_Delay(15);
+	return 0;
 }

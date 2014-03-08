@@ -8,13 +8,22 @@
 #ifndef GUI_FRAMEWORK_H_
 #define GUI_FRAMEWORK_H_
 
+#include <stdio.h>
 #include <SDL.h>
 #include <SDL_video.h>
-#include <stdio.h>
 
 #define WIN_W 640
 #define WIN_H 480
 #define HEADING "Play it!"
+
+/**
+ * Representing a structure of a link in a linked list,
+ * holding as a content a Control
+ */
+struct Link {
+	struct Control* value;
+	struct Link* next;
+};
 
 /**
  * Generic control differentiated by content:
@@ -28,14 +37,14 @@ struct Control {
 	int y;
 	int width;
 	int height;
-	struct Control* parent;
-	struct Control** children;
+	struct Link* children_head;
 	SDL_Surface* view;
 	void (*on_select)(struct Control*);
-	void (*draw)(struct Control*);
+	int (*draw)(struct Control*, struct Control*);
 };
 
 typedef struct Control Control;
+typedef struct Link Link;
 
 /**
  * Perform operations needed for the SDL framework to work
@@ -46,16 +55,16 @@ int init_fw();
 /**
  * Creates control with elements that all the types need.
  */
-Control* create_control(int x, int y, int width, int height, Control* parent,
-		Control** children, SDL_Surface* view,
-		void (*on_select)(struct Control*), void (*draw)(struct Control*));
+Control* create_control(int x, int y, int width, int height,
+		Link* children_head, SDL_Surface* view,
+		void (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*));
 
 /**
  * Creates the window component - should be one as root of UI Tree
  *
  * @param children	component's children
  */
-Control* create_window(Control** children);
+Control* create_window(Link* children_head);
 
 /**
  * Create a panel control
@@ -65,16 +74,15 @@ Control* create_window(Control** children);
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
 Control* create_panel(int x, int y, int width, int height, char* bg_path,
-		Control* new_parent, Control** new_children);
+		Link* children_head);
 
 /**
  * Create a full screen panel control
  *
  * @param children	Children controls to appear in the panel
- * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
+ * @param R, G, B	Background colour numbers parent(RGB) for the parts of the panel shown
  */
-Control* create_fs_panel(char* bg_path, Control* new_parent,
-		Control** new_children);
+Control* create_fs_panel(char* bg_path, Link* children_head);
 
 /**
  * Creates a label control
@@ -82,8 +90,7 @@ Control* create_fs_panel(char* bg_path, Control* new_parent,
  * @param label_path	Path to find pic representing the label.
  * 						Loads the pic and draws it.
  */
-Control* create_label(int x, int y, int width, int height, char* label_path,
-		Control* parent);
+Control* create_label(int x, int y, int width, int height, char* label_path);
 
 /**
  * Creates a button control
@@ -94,7 +101,7 @@ Control* create_label(int x, int y, int width, int height, char* label_path,
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		Control* parent, void (*on_select)(struct Control*));
+		void (*on_select)(struct Control*));
 
 /**
  * Nothing happens on select
@@ -105,19 +112,19 @@ void empty_select(Control* control);
  * Draws given node as a node in a tree - first draws element,
  * then calls the draw function of all children
  */
-void draw_node(Control* node);
+int draw_node(Control* node, Control* parent);
 
 /**
  * Draws given node's children -
  * calls the draw function of all children
  */
-void draw_children(Control* node);
+int draw_children(Control* node, Control* parent);
 
 /**
  * Draws given leaf - just draws element,
  * ignoring any children that might be
  */
-void draw_leaf(Control* leaf);
+int draw_leaf(Control* leaf, Control* parent);
 
 /**
  * Recursively reads UI tree until reaching the leaves,
@@ -125,5 +132,10 @@ void draw_leaf(Control* leaf);
  * bottom up
  */
 void free_tree(Control* root);
+
+/**
+ * Event handler
+ */
+int poll_event(Control* ui_tree);
 
 #endif /* GUI_FRAMEWORK_H_ */

@@ -12,18 +12,28 @@
  * Start Game, Load Game, Quit
  */
 int show_start_screen(Control* window) {
-	Control **start_screen, **start_screen_buttons;
-	start_screen_buttons = (Control**) malloc(sizeof(Control*) * 3);
-	start_screen_buttons[0] = create_button(10, 10, 200, 50, NEW_GAME_IMG, NULL,
+	Link* start_screen = (Link*) malloc(sizeof(Link));
+	Link* buttons_head = (Link*) malloc(sizeof(Link));
+	Link* buttons_next = (Link*) malloc(sizeof(Link));
+
+	buttons_head->value = create_button(220, 180, 200, 50, NEW_GAME_IMG,
 			on_new_game);
-	start_screen_buttons[1] = create_button(10, 70, 200, 50, LOAD_GAME_IMG,
-			NULL, on_load_game);
-	start_screen_buttons[2] = create_button(10, 140, 200, 50, QUIT_IMG, NULL,
-			on_quit);
-	start_screen = (Control**) malloc(sizeof(Control*) * 1);
-	start_screen[0] = create_fs_panel(BG_IMG, window, start_screen_buttons);
-	window->children = start_screen;
-	window->draw(window);
+	buttons_head->next = NULL;
+	buttons_next->value = create_button(220, 250, 200, 50, LOAD_GAME_IMG,
+			on_load_game);
+	buttons_head->next = buttons_next;
+	buttons_next->next = (Link*) malloc(sizeof(Link));
+	buttons_next = buttons_next->next;
+	buttons_next->value = create_button(220, 320, 200, 50, QUIT_IMG, on_quit);
+	buttons_next->next = NULL;
+
+	start_screen->value = create_fs_panel(BG_IMG, buttons_head);
+	start_screen->next = NULL;
+	window->children_head = start_screen;
+	if (!window->draw(window, NULL )) {
+		printf("Error: Failed to draw start screen\n");
+		return 0;
+	}
 	if (SDL_Flip(window->view) != 0) {
 		printf("Error: Failed to flip buffer: %s\n", SDL_GetError());
 		return 0;

@@ -24,20 +24,13 @@ int start_game_console() {
 	if (window == NULL) {
 		return 1;
 	}
-	if (!show_start_screen(window)) {
-		return 1;
-	}
-
 	while (!quit) {
-		// Poll for keyboard & mouse events
-		SDL_Event e;
-		while (SDL_PollEvent(&e) != 0) {
-			switch (e.type) {
-				case (SDL_QUIT):
-					quit = 1;
-					break;
-			}
+
+		if (!show_start_screen(window)) {
+			quit = 1;
+			continue;
 		}
+		quit = poll_event(window);
 	}
 	free_tree(window);
 	return 0;
