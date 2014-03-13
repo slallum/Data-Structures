@@ -1,5 +1,5 @@
 
-#include "PlayIt.h"
+#include "playit.h"
 
 /**
  * Here it all begins...
