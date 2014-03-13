@@ -138,4 +138,10 @@ void free_tree(Control* root);
  */
 int poll_event(Control* ui_tree);
 
+/**
+ * Find the element in the ui_tree containing the point x, y
+ */
+void clickElement(Control* ui_tree, int x, int y);
+
+
 #endif /* GUI_FRAMEWORK_H_ */

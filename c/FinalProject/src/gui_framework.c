@@ -26,7 +26,8 @@ int init_fw() {
  */
 Control* create_control(int x, int y, int width, int height,
 		Link* children_head, SDL_Surface* view,
-		void (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*)) {
+		void (*on_select)(struct Control*),
+		int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
 	new_control->x = x;
 	new_control->y = y;
@@ -115,11 +116,10 @@ Control* create_button(int x, int y, int width, int height, char* label_path,
 	SDL_Surface *img = SDL_LoadBMP(label_path);
 	if (img == NULL ) {
 		printf("Error: Failed to load image: %s\n", SDL_GetError());
-		return NULL;
+		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, width, height, NULL, img, on_select,
-			draw_leaf);
+	return create_control(x, y, width, height, NULL, img, on_select, draw_leaf);
 }
 
 /**
@@ -134,7 +134,7 @@ void empty_select(Control* control) {
  * then calls the draw function of all children
  */
 int draw_node(Control* node, Control* parent) {
-	if (draw_children(node, NULL)) {
+	if (draw_children(node, NULL )) {
 		return draw_leaf(node, parent);
 	}
 	return 0;
@@ -148,8 +148,8 @@ int draw_children(Control* node, Control* parent) {
 
 	int orderly = 1;
 	Link* head = node->children_head;
-	while (orderly && (head != NULL)) {
-		if (head->value == NULL) {
+	while (orderly && (head != NULL )) {
+		if (head->value == NULL ) {
 			orderly = 0;
 		} else {
 			orderly = head->value->draw(head->value, node);
@@ -197,6 +197,9 @@ int poll_event(Control* ui_tree) {
 		switch (e.type) {
 		case (SDL_QUIT):
 			return 1;
+		case (SDL_MOUSEBUTTONUP):
+			clickElement(ui_tree, e.button.x, e.button.y);
+			break;
 		default:
 			break;
 		}
@@ -204,3 +207,23 @@ int poll_event(Control* ui_tree) {
 	SDL_Delay(15);
 	return 0;
 }
+
+/**
+ * Find the element in the ui_tree containing the point x, y
+ */
+void clickElement(Control* ui_tree, int x, int y) {
+
+	Link* head = ui_tree->children_head;
+	if (head == NULL ) {
+		if ((head->value->x <= x) && (head->value->x + head->value->width >= x)
+				&& (head->value->y <= y)
+				&& (head->value->y + head->value->height >= y)) {
+			head->value->on_select(head->value);
+		}
+	}
+	while (head != NULL ) {
+		clickElement(head->value, x, y);
+		head = head->next;
+	}
+}
+

@@ -17,3 +17,8 @@ gui_framework.o:	gui_framework.c gui_framework.h
 playit_gui.o:		playit_gui.c playit_gui.h playit_conf.h
 	gcc $(C_FLAGS) -c playit_gui.c `sdl-config --cflags`
 
+playit_manager.o:	playit_manager.c playit_manager.h playit_gui.h playit_brain.h playit_conf.h
+	gcc $(C_FLAGS) -c playit_manager.c `sdl-config --cflags`
+
+playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h
+	gcc $(C_FLAGS) -c playit_brain.c `sdl-config --cflags`

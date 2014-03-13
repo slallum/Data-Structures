@@ -48,7 +48,3 @@ void on_new_game(Control* btn_new_game) {
 void on_load_game(Control* btn_load_game) {
 
 }
-
-void on_quit(Control* btn_quit) {
-
-}
