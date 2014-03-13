@@ -1,5 +1,5 @@
 C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm
-O_FILES = PlayIt.o gui_framework.o playit_gui.o
+O_FILES = playit.o gui_framework.o playit_gui.o
 
 all: PlayIt
 clean:
@@ -8,8 +8,8 @@ clean:
 PlayIt: $(O_FILES)
 	gcc -o PlayIt $(O_FILES) $(C_FLAGS) `sdl-config --libs`
 	
-PlayIt.o:			PlayIt.c PlayIt.h gui_framework.h playit_gui.h
-	gcc $(C_FLAGS) -c PlayIt.c -o PlayIt.o `sdl-config --cflags`
+playit.o:			playit.c playit.h gui_framework.h playit_gui.h
+	gcc $(C_FLAGS) -c playit.c -o playit.o `sdl-config --cflags`
 	
 gui_framework.o:	gui_framework.c gui_framework.h
 	gcc $(C_FLAGS) -c gui_framework.c `sdl-config --cflags` 
