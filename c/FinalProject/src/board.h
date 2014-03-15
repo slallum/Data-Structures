@@ -11,6 +11,6 @@ typedef struct board_s {
 	int (*make_move)(int**, int, int, int);
 } Board;
 
-int board_is_full(board_t board, int m);
+int board_is_full(Board board, int m);
 
 #endif /* BOARD_H_ */

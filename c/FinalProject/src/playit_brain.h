@@ -10,13 +10,7 @@
 
 #include "playit_manager.h"
 #include "board.h"
-
-typedef struct game_rules_s
-{
-	int[][] *available_moves(*Game);
-	int *won_board(*Game);
-	Game *new_game();
-} GameRules;
+#include "tree.h"
 
 typedef struct game_s {
     Board board;
@@ -30,6 +24,13 @@ typedef struct game_s {
     minmax_tree *tree;
     int difficulties[];
 } Game;
+
+
+typedef struct game_rules_s {
+	int (*available_moves)(Game*);
+	int (*won_board)(Game*);
+	Game (*new_game)();
+} GameRules;
 
 void start_new_game();
 
