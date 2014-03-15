@@ -24,11 +24,13 @@ int start_game_console() {
 	if (window == NULL) {
 		return 1;
 	}
+	if (!show_main_menu(window)) {
+		return 1;
+	}
 	while (!quit) {
 
-		if (!show_start_screen(window)) {
-			quit = 1;
-			continue;
+		if (!flip(window)) {
+			return 1;
 		}
 		quit = poll_event(window);
 	}

@@ -1,5 +1,5 @@
 C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm
-O_FILES = playit.o gui_framework.o playit_gui.o
+O_FILES = playit.o gui_framework.o playit_gui.o playit_brain.o playit_manager.o playit_brain.o
 
 all: PlayIt
 clean:

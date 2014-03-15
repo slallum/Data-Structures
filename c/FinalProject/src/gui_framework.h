@@ -11,10 +11,7 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_video.h>
-
-#define WIN_W 640
-#define WIN_H 480
-#define HEADING "Play it!"
+#include "playit_conf.h"
 
 /**
  * Representing a structure of a link in a linked list,
@@ -38,8 +35,9 @@ struct Control {
 	int width;
 	int height;
 	struct Link* children_head;
+	struct Control* parent;
 	SDL_Surface* view;
-	void (*on_select)(struct Control*);
+	int (*on_select)(struct Control*);
 	int (*draw)(struct Control*, struct Control*);
 };
 
@@ -57,7 +55,7 @@ int init_fw();
  */
 Control* create_control(int x, int y, int width, int height,
 		Link* children_head, SDL_Surface* view,
-		void (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*));
+		int (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*));
 
 /**
  * Creates the window component - should be one as root of UI Tree
@@ -101,12 +99,12 @@ Control* create_label(int x, int y, int width, int height, char* label_path);
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		void (*on_select)(struct Control*));
+		int (*on_select)(struct Control*));
 
 /**
  * Nothing happens on select
  */
-void empty_select(Control* control);
+int empty_select(Control* control);
 
 /**
  * Draws given node as a node in a tree - first draws element,
@@ -141,7 +139,17 @@ int poll_event(Control* ui_tree);
 /**
  * Find the element in the ui_tree containing the point x, y
  */
-void clickElement(Control* ui_tree, int x, int y);
+int clickElement(Control* ui_tree, int x, int y);
+
+/**
+ * Calls for window flip and checks for errors
+ */
+int flip(Control* window);
+
+/**
+ * Calls for window draw and checks for errors
+ */
+int draw(Control* window);
 
 
 #endif /* GUI_FRAMEWORK_H_ */

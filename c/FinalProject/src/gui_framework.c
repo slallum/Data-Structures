@@ -26,7 +26,7 @@ int init_fw() {
  */
 Control* create_control(int x, int y, int width, int height,
 		Link* children_head, SDL_Surface* view,
-		void (*on_select)(struct Control*),
+		int (*on_select)(struct Control*),
 		int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
 	new_control->x = x;
@@ -34,9 +34,14 @@ Control* create_control(int x, int y, int width, int height,
 	new_control->width = width;
 	new_control->height = height;
 	new_control->children_head = children_head;
+	new_control->parent = NULL;
 	new_control->view = view;
 	new_control->on_select = on_select;
 	new_control->draw = draw;
+	while (children_head != NULL) {
+		children_head->value->parent = new_control;
+		children_head = children_head->next;
+	}
 	return new_control;
 }
 
@@ -53,7 +58,7 @@ Control* create_window(Link* children_head) {
 		printf("Error: Failed to set video mode: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	return create_control(0, 0, WIN_W, WIN_H, children_head, view, NULL,
+	return create_control(0, 0, WIN_W, WIN_H, children_head, view, empty_select,
 			draw_children);
 }
 
@@ -72,7 +77,7 @@ Control* create_panel(int x, int y, int width, int height, char* bg_path,
 		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, width, height, children_head, img, NULL,
+	return create_control(x, y, width, height, children_head, img, empty_select,
 			draw_node);
 }
 
@@ -112,7 +117,7 @@ Control* create_label(int x, int y, int width, int height, char* label_path) {
  * @param on_select		Function to be called when the button is selected
  */
 Control* create_button(int x, int y, int width, int height, char* label_path,
-		void (*on_select)(struct Control*)) {
+		int (*on_select)(struct Control*)) {
 	SDL_Surface *img = SDL_LoadBMP(label_path);
 	if (img == NULL ) {
 		printf("Error: Failed to load image: %s\n", SDL_GetError());
@@ -125,8 +130,8 @@ Control* create_button(int x, int y, int width, int height, char* label_path,
 /**
  * Nothing happens on select
  */
-void empty_select(Control* control) {
-
+int empty_select(Control* control) {
+	return 0;
 }
 
 /**
@@ -178,15 +183,17 @@ int draw_leaf(Control* leaf, Control* parent) {
  * bottom up
  */
 void free_tree(Control* root) {
-	Link* prev;
-	Link* next = root->children_head;
-	while (next != NULL ) {
-		free_tree(next->value);
-		prev = next;
-		next = prev->next;
-		free(next);
+	Link *prev;
+	Link *current = root->children_head;
+	while ((current != NULL) && (current->value != NULL)) {
+		free_tree(current->value);
+		prev = current;
+		current = prev->next;
+		prev->next = NULL;
+		free(prev);
 	}
 	SDL_FreeSurface(root->view);
+	root->parent = NULL;
 	free(root);
 }
 
@@ -198,7 +205,7 @@ int poll_event(Control* ui_tree) {
 		case (SDL_QUIT):
 			return 1;
 		case (SDL_MOUSEBUTTONUP):
-			clickElement(ui_tree, e.button.x, e.button.y);
+			return clickElement(ui_tree, e.button.x, e.button.y);
 			break;
 		default:
 			break;
@@ -211,19 +218,44 @@ int poll_event(Control* ui_tree) {
 /**
  * Find the element in the ui_tree containing the point x, y
  */
-void clickElement(Control* ui_tree, int x, int y) {
+int clickElement(Control* ui_tree, int x, int y) {
 
 	Link* head = ui_tree->children_head;
 	if (head == NULL ) {
-		if ((head->value->x <= x) && (head->value->x + head->value->width >= x)
-				&& (head->value->y <= y)
-				&& (head->value->y + head->value->height >= y)) {
-			head->value->on_select(head->value);
+		if ((ui_tree->x <= x) && (ui_tree->x + ui_tree->width >= x)
+				&& (ui_tree->y <= y)
+				&& (ui_tree->y + ui_tree->height >= y)) {
+			return ui_tree->on_select(ui_tree);
 		}
+		return 0;
 	}
-	while (head != NULL ) {
-		clickElement(head->value, x, y);
+	int ret = 0;
+	while (head != NULL) {
+		ret = ret || clickElement(head->value, x, y);
 		head = head->next;
 	}
+	return ret;
+}
+
+/**
+ * Calls for window flip and checks for errors
+ */
+int flip(Control* window) {
+	if (SDL_Flip(window->view) != 0) {
+		printf("Error: Failed to flip buffer: %s\n", SDL_GetError());
+		return 0;
+	}
+	return 1;
+}
+
+/**
+ * Calls for window draw and checks for errors
+ */
+int draw(Control* window) {
+	if (!window->draw(window, NULL)) {
+		printf("Error: Failed to draw start screen\n");
+		return 0;
+	}
+	return 1;
 }
 
