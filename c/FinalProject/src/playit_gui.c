@@ -11,40 +11,65 @@
  * Builds the start menu screen, including 3 buttons for selection:
  * Start Game, Load Game, Quit
  */
-int show_start_screen(Control* window) {
-	Link* start_screen = (Link*) malloc(sizeof(Link));
-	Link* buttons_head = (Link*) malloc(sizeof(Link));
-	Link* buttons_next = (Link*) malloc(sizeof(Link));
+int show_main_menu(Control* window) {
+	Link* label = (Link*) malloc(sizeof(Link));
+	Link* button1 = (Link*) malloc(sizeof(Link));
+	Link* button2 = (Link*) malloc(sizeof(Link));
+	Link* button3 = (Link*) malloc(sizeof(Link));
+	window->children_head = (Link*) malloc(sizeof(Link));
 
-	buttons_head->value = create_button(220, 180, 200, 50, NEW_GAME_IMG,
+	label->value = create_label((WIN_W - LOGO_DIM) / 2, 30, LOGO_DIM, LOGO_DIM,
+			PLAYIT_IMG);
+	button1->value = create_button((WIN_W - BUT_W) / 2, 180, BUT_W, BUT_H, NEW_GAME_IMG,
 			on_new_game);
-	buttons_head->next = NULL;
-	buttons_next->value = create_button(220, 250, 200, 50, LOAD_GAME_IMG,
+	button2->value = create_button((WIN_W - BUT_W) / 2, 250, BUT_W, BUT_H, LOAD_GAME_IMG,
 			on_load_game);
-	buttons_head->next = buttons_next;
-	buttons_next->next = (Link*) malloc(sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_button(220, 320, 200, 50, QUIT_IMG, on_quit);
+	button3->value = create_button((WIN_W - BUT_W) / 2, 320, BUT_W, BUT_H, QUIT_IMG, on_quit);
+
+	label->next = button1;
+	button1->next = button2;
+	button2->next = button3;
+	button3->next = NULL;
+
+	window->children_head->value = create_fs_panel(BG_IMG, label);
+	window->children_head->value->parent = window;
+	window->children_head->next = NULL;
+
+	return draw(window);
+}
+
+int show_game_menu(Control* window) {
+	char* games[NUM_GAMES] = { TIC_TAC_TOE_IMG, CONNECT4_IMG, REVERSI_IMG };
+	int (*handles[NUM_GAMES])(Control*) = { TIC_TAC_TOE_HAN, CONNECT4_HAN, REVERSI_HAN };
+	int i, current, spacing;
+	Link *buttons_next;
+	Link *label = (Link*) malloc(sizeof(Link));
+
+	label->value = create_label((WIN_W - TITLE_W) / 2, MARGIN_H, TITLE_W,
+			TITLE_H, SELECT_G_IMG);
+	label->next = (Link*) malloc(sizeof(Link));
+	buttons_next = label->next;
+	current = MARGIN_H + TITLE_H;
+	spacing = ((window->height - current - MARGIN_H - BUT_H * NUM_GAMES)
+			/ NUM_GAMES) / 2;
+	for (i = 0; i < NUM_GAMES; i++) {
+		buttons_next->value = create_button((WIN_W - BUT_W) / 2,
+				current + spacing, BUT_W, BUT_H, games[i], handles[i]);
+		current += BUT_H + spacing;
+		buttons_next->next = (Link*) malloc(sizeof(Link));
+		buttons_next = buttons_next->next;
+	}
+	buttons_next->value = create_button((WIN_W - BUT_W) / 2, current + spacing,
+			BUT_W, BUT_H, CANCEL_IMG, on_cancel);
 	buttons_next->next = NULL;
-
-	start_screen->value = create_fs_panel(BG_IMG, buttons_head);
-	start_screen->next = NULL;
-	window->children_head = start_screen;
-	if (!window->draw(window, NULL )) {
-		printf("Error: Failed to draw start screen\n");
-		return 0;
+	if (window->children_head != NULL) {
+		free_tree(window->children_head->value);
+		free(window->children_head);
 	}
-	if (SDL_Flip(window->view) != 0) {
-		printf("Error: Failed to flip buffer: %s\n", SDL_GetError());
-		return 0;
-	}
-	return 1;
-}
-
-void on_new_game(Control* btn_new_game) {
-
-}
-
-void on_load_game(Control* btn_load_game) {
-
+	window->children_head = NULL;
+	window->children_head = (Link*) malloc(sizeof(Link));
+	window->children_head->value = create_fs_panel(BG_IMG, label);
+	window->children_head->value->parent = window;
+	window->children_head->next = NULL;
+	return draw(window);
 }

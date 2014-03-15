@@ -8,10 +8,12 @@
 #ifndef PLAYIT_CONF_H_
 #define PLAYIT_CONF_H_
 
+#define PLAYIT_IMG		"../resources/PlayIt.bmp"
 #define NEW_GAME_IMG	"../resources/NewGame.bmp"
 #define LOAD_GAME_IMG	"../resources/LoadGame.bmp"
 #define QUIT_IMG		"../resources/Quit.bmp"
 #define BG_IMG			"../resources/Background.bmp"
+#define CANCEL_IMG		"../resources/Cancel.bmp"
 
 #define P_VS_P_IMG		"../resources/PLvsPL.bmp"
 #define P_VS_A_IMG		"../resources/PLvsAI.bmp"
@@ -23,20 +25,37 @@
 #define DIFF2_IMG		"../resources/Difficulty2.bmp"
 #define RESTART_GAME_IMG "../resources/RestartGame.bmp"
 #define MAIN_MENU_IMG	"../resources/MainMenu.bmp"
+#define NUM_GAMES		3
 
+#define SELECT_G_IMG	"../resources/SelectGame.bmp"
 #define REVERSI_IMG		"../resources/Reversi.bmp"
+#define REVERSI_HAN		on_select_reversi
 #define RB_IMG			"../resources/rB.bmp"
 #define RW_IMG			"../resources/rW.bmp"
 #define RN_IMG			"../resources/rN.bmp"
 
+#define SELECT_P_IMG	"../resources/SelectPlayer.bmp"
 #define TIC_TAC_TOE_IMG	"../resources/TicTacToe.bmp"
+#define TIC_TAC_TOE_HAN	on_select_tictactoe
 #define TTTN_IMG		"../resources/tttN.bmp"
 #define TTTO_IMG		"../resources/tttO.bmp"
 #define TTTX_IMG		"../resources/tttX.bmp"
 
 #define CONNECT4_IMG	"../resources/Connect4.bmp"
+#define CONNECT4_HAN	on_select_connect4
 #define C4N_IMG			"../resources/c4N.bmp"
 #define C4P1_IMG		"../resources/c4P1.bmp"
 #define C4P2_IMG		"../resources/c4P2.bmp"
+
+#define WIN_W 640
+#define WIN_H 480
+#define HEADING			"Play it!"
+#define MARGIN_H		30
+#define LOGO_DIM		150
+#define TITLE_H			60
+#define TITLE_W			300
+#define BUT_H			50
+#define	BUT_W			200
+#define LEFT_H			150
 
 #endif /* PLAYIT_CONF_H_ */

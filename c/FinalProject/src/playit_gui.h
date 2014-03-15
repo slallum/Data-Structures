@@ -11,17 +11,17 @@
 #include <stdio.h>
 #include "gui_framework.h"
 #include "playit_conf.h"
+#include "playit_manager.h"
 
 /**
  * Builds the start menu screen, including 3 buttons for selection:
  * Start Game, Load Game, Quit
  */
-int show_start_screen(Control* window);
+int show_main_menu(Control* window);
 
-void on_new_game(Control* btn_new_game);
-
-void on_load_game(Control* btn_load_game);
-
-void on_quit(Control* btn_quit);
+/**
+ * Build game menu, according to definition of containing games
+ */
+int show_game_menu(Control* window);
 
 #endif /* PLAYIT_GUI_H_ */

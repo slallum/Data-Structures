@@ -8,6 +8,7 @@
 #ifndef PLAYIT_BRAIN_H_
 #define PLAYIT_BRAIN_H_
 
+#include "playit_manager.h"
 #include "board.h"
 
 typedef struct game_rules_s
@@ -30,5 +31,6 @@ typedef struct game_s {
     int difficulties[];
 } Game;
 
+void start_new_game();
 
 #endif /* PLAYIT_BRAIN_H_ */
