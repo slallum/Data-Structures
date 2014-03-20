@@ -182,11 +182,11 @@ int draw_leaf(Control* leaf, Control* parent) {
  * then begins freeing their surfaces and themselves,
  * bottom up
  */
-void free_tree(Control* root) {
+void free_UI_tree(Control* root) {
 	Link *prev;
 	Link *current = root->children_head;
 	while ((current != NULL) && (current->value != NULL)) {
-		free_tree(current->value);
+		free_UI_tree(current->value);
 		prev = current;
 		current = prev->next;
 		prev->next = NULL;

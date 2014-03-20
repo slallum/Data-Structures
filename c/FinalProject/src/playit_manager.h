@@ -12,6 +12,7 @@
 #include "playit_brain.h"
 #include "playit_gui.h"
 
+
 /**
  * Handle button 'New Game' click.
  * Moves to game selection screen.

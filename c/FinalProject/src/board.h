@@ -13,4 +13,6 @@ typedef struct board_s {
 
 int board_is_full(Board board, int m);
 
+Board new_board(int n, int m);
+
 #endif /* BOARD_H_ */

@@ -34,6 +34,6 @@ int start_game_console() {
 		}
 		quit = poll_event(window);
 	}
-	free_tree(window);
+	free_UI_tree(window);
 	return 0;
 }

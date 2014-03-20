@@ -63,7 +63,7 @@ int show_game_menu(Control* window) {
 			BUT_W, BUT_H, CANCEL_IMG, on_cancel);
 	buttons_next->next = NULL;
 	if (window->children_head != NULL) {
-		free_tree(window->children_head->value);
+		free_UI_tree(window->children_head->value);
 		free(window->children_head);
 	}
 	window->children_head = NULL;

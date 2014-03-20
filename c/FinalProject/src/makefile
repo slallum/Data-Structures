@@ -1,5 +1,5 @@
 C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm
-O_FILES = playit.o gui_framework.o playit_gui.o playit_brain.o playit_manager.o playit_brain.o
+O_FILES = playit.o gui_framework.o playit_gui.o playit_brain.o playit_manager.o playit_brain.o connect4_brain.o game_framework.o
 
 all: PlayIt
 clean:
@@ -20,5 +20,10 @@ playit_gui.o:		playit_gui.c playit_gui.h playit_conf.h
 playit_manager.o:	playit_manager.c playit_manager.h playit_gui.h playit_brain.h playit_conf.h
 	gcc $(C_FLAGS) -c playit_manager.c `sdl-config --cflags`
 
-playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h
+connect4_brain.o:   connect4_brain.c connect4_brain.h game_framework.h
+	gcc $(C_FLAGS) -c connect4_brain.c `sdl-config --cflags`
+
+playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h connect4_brain.h
 	gcc $(C_FLAGS) -c playit_brain.c `sdl-config --cflags`
+
+

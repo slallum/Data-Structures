@@ -129,7 +129,7 @@ int draw_leaf(Control* leaf, Control* parent);
  * then begins freeing their surfaces and themselves,
  * bottom up
  */
-void free_tree(Control* root);
+void free_UI_tree(Control* root);
 
 /**
  * Event handler

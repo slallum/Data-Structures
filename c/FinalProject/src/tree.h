@@ -3,6 +3,7 @@
 
 #include "board.h"
 
+
 // Linked list element
 typedef struct element_s {
     struct vertex_s     *node;
