@@ -13,7 +13,7 @@
 #include "tree.h"
 
 typedef struct game_s {
-    Board board;
+    Board *board;
 
     int is_first_players_turn;
     int first_player_ai;

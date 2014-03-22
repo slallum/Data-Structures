@@ -24,13 +24,15 @@ int init_fw() {
 /**
  * Creates control with elements that all the types need.
  */
-Control* create_control(int x, int y, int width, int height,
+Control* create_control(int x, int y, int i, int j, int width, int height,
 		Link* children_head, SDL_Surface* view,
 		int (*on_select)(struct Control*),
 		int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
 	new_control->x = x;
 	new_control->y = y;
+	new_control->i = i;
+	new_control->j = j;
 	new_control->width = width;
 	new_control->height = height;
 	new_control->children_head = children_head;
@@ -38,10 +40,10 @@ Control* create_control(int x, int y, int width, int height,
 	new_control->view = view;
 	new_control->on_select = on_select;
 	new_control->draw = draw;
-	while (children_head != NULL) {
-		children_head->value->parent = new_control;
-		children_head = children_head->next;
-	}
+	while ((children_head != NULL )&& (children_head->value != NULL)){
+	children_head->value->parent = new_control;
+	children_head = children_head->next;
+}
 	return new_control;
 }
 
@@ -58,8 +60,8 @@ Control* create_window(Link* children_head) {
 		printf("Error: Failed to set video mode: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	return create_control(0, 0, WIN_W, WIN_H, children_head, view, empty_select,
-			draw_children);
+	return create_control(0, 0, 0, 0, WIN_W, WIN_H, children_head, view,
+			empty_select, draw_children);
 }
 
 /**
@@ -69,16 +71,17 @@ Control* create_window(Link* children_head) {
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(int x, int y, int width, int height, char* bg_path,
-		Link* children_head) {
+Control* create_panel(int x, int y, int i, int j, int width, int height,
+		char* bg_path, Link* children_head) {
+
 	SDL_Surface *img = SDL_LoadBMP(bg_path);
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, width, height, children_head, img, empty_select,
-			draw_node);
+	return create_control(x, y, i, j, width, height, children_head, img,
+			empty_select, draw_node);
 }
 
 /**
@@ -88,7 +91,7 @@ Control* create_panel(int x, int y, int width, int height, char* bg_path,
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
 Control* create_fs_panel(char* bg_path, Link* children_head) {
-	return create_panel(0, 0, WIN_W, WIN_H, bg_path, children_head);
+	return create_panel(0, 0, 0, 0, WIN_W, WIN_H, bg_path, children_head);
 }
 
 /**
@@ -97,14 +100,14 @@ Control* create_fs_panel(char* bg_path, Link* children_head) {
  * @param label_path	Path to find pic representing the label.
  * 						Loads the pic and draws it.
  */
-Control* create_label(int x, int y, int width, int height, char* label_path) {
+Control* create_label(int x, int y, int i, int j, int width, int height, char* label_path) {
 	SDL_Surface *img = SDL_LoadBMP(label_path);
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, width, height, NULL, img, empty_select,
+	return create_control(x, y, i, j, width, height, NULL, img, empty_select,
 			draw_leaf);
 }
 
@@ -116,7 +119,7 @@ Control* create_label(int x, int y, int width, int height, char* label_path) {
  * 						Could be the destination control or controls to be freed.
  * @param on_select		Function to be called when the button is selected
  */
-Control* create_button(int x, int y, int width, int height, char* label_path,
+Control* create_button(int x, int y, int i, int j, int width, int height, char* label_path,
 		int (*on_select)(struct Control*)) {
 	SDL_Surface *img = SDL_LoadBMP(label_path);
 	if (img == NULL ) {
@@ -124,7 +127,7 @@ Control* create_button(int x, int y, int width, int height, char* label_path,
 		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, width, height, NULL, img, on_select, draw_leaf);
+	return create_control(x, y, i, j, width, height, NULL, img, on_select, draw_leaf);
 }
 
 /**
@@ -185,13 +188,13 @@ int draw_leaf(Control* leaf, Control* parent) {
 void free_tree(Control* root) {
 	Link *prev;
 	Link *current = root->children_head;
-	while ((current != NULL) && (current->value != NULL)) {
-		free_tree(current->value);
-		prev = current;
-		current = prev->next;
-		prev->next = NULL;
-		free(prev);
-	}
+	while ((current != NULL )&& (current->value != NULL)){
+	free_tree(current->value);
+	prev = current;
+	current = prev->next;
+	prev->next = NULL;
+	free(prev);
+}
 	SDL_FreeSurface(root->view);
 	root->parent = NULL;
 	free(root);
@@ -221,17 +224,16 @@ int poll_event(Control* ui_tree) {
 int clickElement(Control* ui_tree, int x, int y) {
 
 	Link* head = ui_tree->children_head;
+	int ret = 1;
 	if (head == NULL ) {
 		if ((ui_tree->x <= x) && (ui_tree->x + ui_tree->width >= x)
-				&& (ui_tree->y <= y)
-				&& (ui_tree->y + ui_tree->height >= y)) {
+				&& (ui_tree->y <= y) && (ui_tree->y + ui_tree->height >= y)) {
 			return ui_tree->on_select(ui_tree);
 		}
-		return 0;
+		return 1;
 	}
-	int ret = 0;
-	while (head != NULL) {
-		ret = ret || clickElement(head->value, x, y);
+	while ((ret == 1) && (head != NULL )) {
+		ret = clickElement(head->value, x, y);
 		head = head->next;
 	}
 	return ret;
@@ -252,7 +254,7 @@ int flip(Control* window) {
  * Calls for window draw and checks for errors
  */
 int draw(Control* window) {
-	if (!window->draw(window, NULL)) {
+	if (!window->draw(window, NULL )) {
 		printf("Error: Failed to draw start screen\n");
 		return 0;
 	}

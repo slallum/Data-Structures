@@ -32,6 +32,8 @@ struct Link {
 struct Control {
 	int x;
 	int y;
+	int i;
+	int j;
 	int width;
 	int height;
 	struct Link* children_head;
@@ -53,7 +55,7 @@ int init_fw();
 /**
  * Creates control with elements that all the types need.
  */
-Control* create_control(int x, int y, int width, int height,
+Control* create_control(int x, int y, int i, int j, int width, int height,
 		Link* children_head, SDL_Surface* view,
 		int (*on_select)(struct Control*), int (*draw)(struct Control*, struct Control*));
 
@@ -71,7 +73,7 @@ Control* create_window(Link* children_head);
  * @param x, y		Position, relative to parent
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
-Control* create_panel(int x, int y, int width, int height, char* bg_path,
+Control* create_panel(int x, int y, int i, int j, int width, int height, char* bg_path,
 		Link* children_head);
 
 /**
@@ -88,7 +90,7 @@ Control* create_fs_panel(char* bg_path, Link* children_head);
  * @param label_path	Path to find pic representing the label.
  * 						Loads the pic and draws it.
  */
-Control* create_label(int x, int y, int width, int height, char* label_path);
+Control* create_label(int x, int y, int i, int j, int width, int height, char* label_path);
 
 /**
  * Creates a button control
@@ -98,7 +100,7 @@ Control* create_label(int x, int y, int width, int height, char* label_path);
  * 						Could be the destination control or controls to be freed.
  * @param on_select		Function to be called when the button is selected
  */
-Control* create_button(int x, int y, int width, int height, char* label_path,
+Control* create_button(int x, int y, int i, int j, int width, int height, char* label_path,
 		int (*on_select)(struct Control*));
 
 /**

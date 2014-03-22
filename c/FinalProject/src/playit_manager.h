@@ -30,7 +30,7 @@ int on_load_game(Control* btn_load_game);
  * Handle button 'Quit'.
  * Closes window.
  */
-int on_quit(Control* btn_quit);
+int on_select_quit(Control* btn_quit);
 
 /**
  * Handles choice of a ttt game.
@@ -56,5 +56,51 @@ int on_select_connect4(Control* btn_game);
  */
 int on_cancel(Control* btn_game);
 
+/**
+ * Sets current game with player as first and second.
+ */
+int on_select_pl_pl(Control* btn_pl_type);
+
+/**
+ * Sets current game with player first and ai second.
+ */
+int on_select_pl_ai(Control* btn_pl_type);
+
+/**
+ * Sets current game with ai first and second.
+ */
+int on_select_ai_ai(Control* btn_pl_type);
+
+/**
+ * Sets current game with ai first and player second.
+ */
+int on_select_ai_pl(Control* btn_pl_type);
+
+/**
+ * Handles selection of a tile on the board.
+ * Performs corresponding move according to stated by
+ * current game rules.
+ */
+int on_select_tile(Control* btn_tile);
+
+/**
+ * Start new game with exact same parameters as current.
+ */
+int on_select_restart(Control* btn);
+
+/**
+ * Save current game state to a file, without stopping the game.
+ */
+int on_select_save(Control* btn);
+
+/**
+ * Change to main menu window.
+ */
+int on_select_main(Control* btn);
+
+/**
+ * Climb to the root of the tree
+ */
+Control* get_root(Control* control);
 
 #endif /* PLAYIT_MANAGER_H_ */

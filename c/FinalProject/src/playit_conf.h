@@ -14,11 +14,18 @@
 #define QUIT_IMG		"../resources/Quit.bmp"
 #define BG_IMG			"../resources/Background.bmp"
 #define CANCEL_IMG		"../resources/Cancel.bmp"
+#define CANCEL_HAN		on_cancel
 
 #define P_VS_P_IMG		"../resources/PLvsPL.bmp"
+#define P_VS_P_HAN		on_select_pl_pl
 #define P_VS_A_IMG		"../resources/PLvsAI.bmp"
+#define P_VS_A_HAN		on_select_pl_ai
 #define A_VS_A_IMG		"../resources/AIvsAI.bmp"
+#define A_VS_A_HAN		on_select_ai_ai
 #define A_VS_P_IMG		"../resources/AIvsPL.bmp"
+#define A_VS_P_HAN		on_select_ai_pl
+#define SELECT_P_IMG	"../resources/SelectPlayer.bmp"
+#define NUM_PLAY_TYPES	4
 
 #define SAVE_GAME_IMG	"../resources/SaveGame.bmp"
 #define DIFF1_IMG		"../resources/Difficulty1.bmp"
@@ -34,7 +41,6 @@
 #define RW_IMG			"../resources/rW.bmp"
 #define RN_IMG			"../resources/rN.bmp"
 
-#define SELECT_P_IMG	"../resources/SelectPlayer.bmp"
 #define TIC_TAC_TOE_IMG	"../resources/TicTacToe.bmp"
 #define TIC_TAC_TOE_HAN	on_select_tictactoe
 #define TTTN_IMG		"../resources/tttN.bmp"
@@ -56,6 +62,9 @@
 #define TITLE_W			300
 #define BUT_H			50
 #define	BUT_W			200
-#define LEFT_H			150
+#define TILE_W			50
+#define TILE_H			50
+#define TILE_SPACE		10
+#define BOARD_PANEL_W	WIN_W - BUT_W - 20
 
 #endif /* PLAYIT_CONF_H_ */
