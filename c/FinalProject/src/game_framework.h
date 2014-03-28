@@ -16,8 +16,8 @@ typedef struct game_s {
 
     // rules
     // struct Game* (*new_game)();
-    int** (*available_moves)(struct Game*);
-    int (*won_board)(struct Game*);
+    int** (*available_moves)(struct game_s*);
+    int (*won_board)(struct game_s*);
     
     // minmax tree
     int depth;
