@@ -9,9 +9,7 @@
 #define PLAYIT_BRAIN_H_
 
 #include "playit_manager.h"
-
 #include "connect4_brain.h"
-
 
 
 #endif /* PLAYIT_BRAIN_H_ */
