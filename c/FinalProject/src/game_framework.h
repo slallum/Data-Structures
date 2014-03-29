@@ -22,7 +22,7 @@ typedef struct game_s {
     // minmax tree
     int depth;
     minmax_tree *tree;
-    int difficulties[];
+    int *difficulties;
 } Game;
 
 void free_game(Game *game);

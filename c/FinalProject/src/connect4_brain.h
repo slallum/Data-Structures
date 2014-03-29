@@ -6,10 +6,10 @@
 #define BOARD_HEIGHT 6
 #define BOARD_WIDTH 7
 
-Game *new_game();
+Game *connect4_new_game();
 
-int** available_moves(Game game);
+int** available_moves(Game* game);
 
-int won_board(Game game);
+int won_board(Game* game);
 
 #endif /* CONNECT4_BRAIN_H_ */
