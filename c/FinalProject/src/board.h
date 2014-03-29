@@ -7,12 +7,12 @@ typedef struct board_s {
 	int** cells;
 	int n;
 	int m;
-	int (*scoring_func)(int**, int, int);
-	int (*make_move)(int**, int, int, int);
+	// int (*scoring_func)(int**, int, int);
+	// int (*make_move)(int**, int, int, int);
 } Board;
 
 int board_is_full(Board board, int m);
 
-Board new_board(int n, int m);
+Board *new_board(int n, int m);
 
 #endif /* BOARD_H_ */

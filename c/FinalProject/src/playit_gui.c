@@ -83,7 +83,7 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*), int (*
 	buttons_next = window->children_head;
 
 	buttons_next->value = create_board(BOARD_PANEL_W, window->height,
-			game->board.n, game->board.m, game->board.cells, handle);
+			game->board->n, game->board->m, game->board->cells, handle);
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
 	buttons_next->value = create_game_menu(window->height, window->width - BOARD_PANEL_W, menu_handles);
