@@ -18,6 +18,8 @@ int init_fw() {
 		return 0;
 	}
 	atexit(SDL_Quit);
+	atexit(TTF_Quit);
+	TTF_Init();
 	return 1;
 }
 
@@ -74,7 +76,7 @@ Control* create_window(Link* children_head) {
 Control* create_panel(int x, int y, int i, int j, int width, int height,
 		char* bg_path, Link* children_head) {
 
-	SDL_Surface *img = SDL_LoadBMP(bg_path);
+	SDL_Surface *img = SDL_LoadBMP(full_path(bg_path));
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
@@ -101,10 +103,12 @@ Control* create_fs_panel(char* bg_path, Link* children_head) {
  * 						Loads the pic and draws it.
  */
 Control* create_label(int x, int y, int i, int j, int width, int height, char* label_path) {
-	SDL_Surface *img = SDL_LoadBMP(label_path);
+	SDL_Surface *img = SDL_LoadBMP(full_path(label_path));
 	if (img == NULL ) {
-		printf("Error: failed to load image: %s\n", SDL_GetError());
-		return NULL ;
+		img = create_text(label_path);
+		if (img == NULL) {
+			return 0;
+		}
 	}
 	img = SDL_DisplayFormat(img);
 	return create_control(x, y, i, j, width, height, NULL, img, empty_select,
@@ -121,13 +125,39 @@ Control* create_label(int x, int y, int i, int j, int width, int height, char* l
  */
 Control* create_button(int x, int y, int i, int j, int width, int height, char* label_path,
 		int (*on_select)(struct Control*)) {
-	SDL_Surface *img = SDL_LoadBMP(label_path);
+	SDL_Surface *img = SDL_LoadBMP(full_path(label_path));
 	if (img == NULL ) {
-		printf("Error: Failed to load image: %s\n", SDL_GetError());
-		return NULL ;
+		img = create_text(label_path);
+		if (img == NULL) {
+			return 0;
+		}
 	}
 	img = SDL_DisplayFormat(img);
 	return create_control(x, y, i, j, width, height, NULL, img, on_select, draw_leaf);
+}
+
+SDL_Surface* create_text(char* title) {
+	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, 32);
+	if (text_font == NULL) {
+		printf("Error: failed to load font: %s\n", TEXT_FONT);
+		return NULL;
+	}
+	SDL_Color text_color;
+	text_color.r = 0xe0;
+	text_color.g = 0xbc;
+	text_color.b = 0xe0;
+	SDL_Surface *text_image =  TTF_RenderText_Solid(text_font, title, text_color);
+	SDL_Surface *img = SDL_LoadBMP(full_path(TEXT_BG));
+	if (img == NULL ) {
+		printf("Error: failed to load image: %s\n", SDL_GetError());
+		return NULL ;
+	}
+//		SDL_Rect to_place = { 2, 2, width, height };
+	if (SDL_BlitSurface(text_image, 0, img, 0) != 0) {
+		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
+		return NULL;
+	}
+	return img;
 }
 
 /**
@@ -259,5 +289,12 @@ int draw(Control* window) {
 		return 0;
 	}
 	return 1;
+}
+
+
+char* full_path(char* file_name) {
+	char full_path[MAX_STR_LEN];
+	sprintf(full_path, "%s%s", IMGS_PATH, file_name);
+	return full_path;
 }
 
