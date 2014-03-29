@@ -18,8 +18,8 @@ Game *new_game() {
 	game.won_board = won_board;
 
 	game.depth = 1;
-	game.tree = create_tree(&game.board, game.depth)
-	game.difficulties = {1,2,3,4,5,6,7}
+	game.tree = create_tree(&game.board, game.depth);
+	game.difficulties = {1,2,3,4,5,6,7};
 
 	return &game;
   //   int **cells;

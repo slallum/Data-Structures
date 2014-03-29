@@ -49,20 +49,20 @@ int on_select_pl_pl(Control* btn_pl_type) {
 	//TODO
 //	game->first_player_ai = 0;
 //	game->second_player_ai = 0;
-	return !show_game_arena(get_root(btn_pl_type));
+	return !show_game_arena(get_root(btn_pl_type), game);
 }
 
 int on_select_pl_ai(Control* btn_pl_type) {
 	//TODO
 //	game->first_player_ai = 0;
 //	game->second_player_ai = 1;
-	return !show_game_arena(get_root(btn_pl_type));
+	return !show_game_arena(get_root(btn_pl_type), game);
 }
 
 int on_select_ai_ai(Control* btn_pl_type) {
 //	game->first_player_ai = 1;
 //	game->second_player_ai = 1;
-	return !show_game_arena(get_root(btn_pl_type));
+	return !show_game_arena(get_root(btn_pl_type), game);
 }
 
 int on_select_ai_pl(Control* btn_pl_type) {
