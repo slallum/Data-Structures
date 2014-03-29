@@ -15,7 +15,6 @@ typedef struct game_s {
     int game_over;
 
     // rules
-    // struct Game* (*new_game)();
     int** (*available_moves)(struct game_s*);
     int (*won_board)(struct game_s*);
     
