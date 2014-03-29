@@ -12,6 +12,7 @@
 #include "playit_brain.h"
 #include "playit_gui.h"
 
+/* --- GUI handles --- */
 
 /**
  * Handle button 'New Game' click.
@@ -66,26 +67,6 @@ int on_cancel(Control* btn_game);
 int on_select_player(Control* btn_pl_type);
 
 /**
- * Sets current game with player as first and second.
- */
-int on_select_pl_pl(Control* btn_pl_type);
-
-/**
- * Sets current game with player first and ai second.
- */
-int on_select_pl_ai(Control* btn_pl_type);
-
-/**
- * Sets current game with ai first and second.
- */
-int on_select_ai_ai(Control* btn_pl_type);
-
-/**
- * Sets current game with ai first and player second.
- */
-int on_select_ai_pl(Control* btn_pl_type);
-
-/**
  * Handles selection of a tile on the board.
  * Performs corresponding move according to stated by
  * current game rules.
@@ -103,11 +84,6 @@ int on_select_restart(Control* btn);
 int on_select_save(Control* btn);
 
 /**
- * Change to main menu window.
- */
-int on_select_main(Control* btn);
-
-/**
  * Handles save of current game to selected file,
  * denoted by the i of the given file_btn
  */
@@ -118,6 +94,8 @@ int on_select_save_file(Control* file_btn);
  * denoted by the i of the given file_btn
  */
 int on_select_load_file(Control* file_btn);
+
+/* --- Inner methods --- */
 
 /**
  * Climb to the root of the tree

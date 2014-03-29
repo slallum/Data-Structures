@@ -164,9 +164,10 @@ int draw(Control* window);
 
 /**
  * Attaches given file name to constant images path
- * in order to create a full path to the image
+ * in order to create a full path to the image.
+ * Then loads the image, using sdl
  */
-char* full_path(char* file_name);
+SDL_Surface *load_image(char* file_name);
 
 
 #endif /* GUI_FRAMEWORK_H_ */

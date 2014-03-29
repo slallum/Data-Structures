@@ -26,6 +26,9 @@
 #define A_VS_P_IMG		"AIvsPL.bmp"
 #define AI_PLAYING		1
 #define PL_PLAYING		0
+#define NO_PLAYER		-1
+#define FIRST_PL_TURN	1
+#define SECOND_PL_TURN	-1
 #define SELECT_P_IMG	"SelectPlayer.bmp"
 #define NUM_PLAY_TYPES	4
 
@@ -62,8 +65,8 @@
 #define C4P2_IMG		"c4P2.bmp"
 
 // Size parameters
-#define WIN_W 640
-#define WIN_H 480
+#define WIN_W			800
+#define WIN_H			600
 #define HEADING			"Play it!"
 #define MARGIN_H		30
 #define LOGO_DIM		150
@@ -78,16 +81,17 @@
 #define MAX_STR_LEN		80
 
 // Game saving \ loading
-#define FILE_NAME		"Game File"
+#define FILE_NAME		"Game"
 #define FILES_NUM		5
 #define FILE_SELECT		"SelectFile.bmp"
 #define FILE_PATH		"../files/game_file_%d.txt"
-#define TTT_NAME		"Tic Tac Toe";
-#define	CONNECT_NAME	"Connect 4";
+#define TTT_NAME		"Tic-tac-toe";
+#define	CONNECT_NAME	"Connect4";
 #define REVERSI_NAME	"Reversi";
 
 // General label
 #define TEXT_BG			"Plain.bmp"
+#define TEXT_SIZE		30
 #define TEXT_FONT		"/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf"
 
 #endif /* PLAYIT_CONF_H_ */

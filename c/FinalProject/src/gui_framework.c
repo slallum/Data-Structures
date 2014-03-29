@@ -43,9 +43,9 @@ Control* create_control(int x, int y, int i, int j, int width, int height,
 	new_control->on_select = on_select;
 	new_control->draw = draw;
 	while ((children_head != NULL )&& (children_head->value != NULL)){
-	children_head->value->parent = new_control;
-	children_head = children_head->next;
-}
+		children_head->value->parent = new_control;
+		children_head = children_head->next;
+	}
 	return new_control;
 }
 
@@ -75,8 +75,7 @@ Control* create_window(Link* children_head) {
  */
 Control* create_panel(int x, int y, int i, int j, int width, int height,
 		char* bg_path, Link* children_head) {
-
-	SDL_Surface *img = SDL_LoadBMP(full_path(bg_path));
+	SDL_Surface *img = load_image(bg_path);
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
@@ -103,7 +102,7 @@ Control* create_fs_panel(char* bg_path, Link* children_head) {
  * 						Loads the pic and draws it.
  */
 Control* create_label(int x, int y, int i, int j, int width, int height, char* label_path) {
-	SDL_Surface *img = SDL_LoadBMP(full_path(label_path));
+	SDL_Surface *img = load_image(label_path);
 	if (img == NULL ) {
 		img = create_text(label_path);
 		if (img == NULL) {
@@ -125,7 +124,7 @@ Control* create_label(int x, int y, int i, int j, int width, int height, char* l
  */
 Control* create_button(int x, int y, int i, int j, int width, int height, char* label_path,
 		int (*on_select)(struct Control*)) {
-	SDL_Surface *img = SDL_LoadBMP(full_path(label_path));
+	SDL_Surface *img = load_image(label_path);
 	if (img == NULL ) {
 		img = create_text(label_path);
 		if (img == NULL) {
@@ -137,7 +136,7 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 }
 
 SDL_Surface* create_text(char* title) {
-	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, 32);
+	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, TEXT_SIZE);
 	if (text_font == NULL) {
 		printf("Error: failed to load font: %s\n", TEXT_FONT);
 		return NULL;
@@ -147,13 +146,13 @@ SDL_Surface* create_text(char* title) {
 	text_color.g = 0xbc;
 	text_color.b = 0xe0;
 	SDL_Surface *text_image =  TTF_RenderText_Solid(text_font, title, text_color);
-	SDL_Surface *img = SDL_LoadBMP(full_path(TEXT_BG));
+	SDL_Surface *img = load_image(TEXT_BG);
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
-//		SDL_Rect to_place = { 2, 2, width, height };
-	if (SDL_BlitSurface(text_image, 0, img, 0) != 0) {
+	SDL_Rect rect = { 5, 5, BUT_W - 10, BUT_H - 10 };
+	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
 	}
@@ -254,17 +253,19 @@ int poll_event(Control* ui_tree) {
 int clickElement(Control* ui_tree, int x, int y) {
 
 	Link* head = ui_tree->children_head;
-	int ret = 1;
-	if (head == NULL ) {
-		if ((ui_tree->x <= x) && (ui_tree->x + ui_tree->width >= x)
+	int ret = -1;
+	if ((ui_tree->x <= x) && (ui_tree->x + ui_tree->width >= x)
 				&& (ui_tree->y <= y) && (ui_tree->y + ui_tree->height >= y)) {
+		if (head == NULL) {
 			return ui_tree->on_select(ui_tree);
 		}
-		return 1;
-	}
-	while ((ret == 1) && (head != NULL )) {
-		ret = clickElement(head->value, x, y);
-		head = head->next;
+		while ((ret == -1) && (head != NULL )) {
+			ret = clickElement(head->value, x - ui_tree->x, y - ui_tree->y);
+			head = head->next;
+		}
+		if (ret == -1) {
+			return 0;
+		}
 	}
 	return ret;
 }
@@ -291,10 +292,13 @@ int draw(Control* window) {
 	return 1;
 }
 
-
-char* full_path(char* file_name) {
-	char full_path[MAX_STR_LEN];
-	sprintf(full_path, "%s%s", IMGS_PATH, file_name);
-	return full_path;
+SDL_Surface *load_image(char* file_name) {
+	SDL_Surface *img;
+	char* path = (char*) malloc(strlen(IMGS_PATH) + strlen(file_name) + 1);
+	strcpy(path, IMGS_PATH);
+	strcat(path, file_name);
+	img = SDL_LoadBMP(path);
+	free(path);
+	return img;
 }
 

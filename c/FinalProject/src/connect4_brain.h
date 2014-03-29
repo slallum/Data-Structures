@@ -2,6 +2,9 @@
 #define CONNECT4_BRAIN_H_
 
 #include "game_framework.h"
+#include "board.h"
+#include "tree.h"
+#include "playit_conf.h"
 
 #define BOARD_HEIGHT 6
 #define BOARD_WIDTH 7

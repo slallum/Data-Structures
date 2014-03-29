@@ -20,7 +20,7 @@ tree.o:				tree.c tree.h board.h
 gui_framework.o:	gui_framework.c gui_framework.h
 	gcc $(C_FLAGS) -c gui_framework.c `sdl-config --cflags`
 
-game_framework.o:	game_framework.c game_framework.h tree.h board.h
+game_framework.o:	game_framework.c game_framework.h tree.h board.h playit_conf.h 
 	gcc $(C_FLAGS) -c game_framework.c `sdl-config --cflags`
 	
 playit_gui.o:		playit_gui.c playit_gui.h playit_conf.h playit_manager.h gui_framework.h game_framework.h
@@ -29,10 +29,10 @@ playit_gui.o:		playit_gui.c playit_gui.h playit_conf.h playit_manager.h gui_fram
 playit_manager.o:	playit_manager.c playit_manager.h playit_gui.h playit_brain.h playit_conf.h
 	gcc $(C_FLAGS) -c playit_manager.c `sdl-config --cflags`
 
-connect4_brain.o:   connect4_brain.c connect4_brain.h game_framework.h board.h tree.h	
+connect4_brain.o:   connect4_brain.c connect4_brain.h game_framework.h board.h tree.h playit_conf.h 
 	gcc $(C_FLAGS) -c connect4_brain.c `sdl-config --cflags`
 
-playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h connect4_brain.h
+playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h connect4_brain.h 
 	gcc $(C_FLAGS) -c playit_brain.c `sdl-config --cflags`
 
 

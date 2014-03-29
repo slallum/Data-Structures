@@ -18,7 +18,7 @@
  * Generically creates a vertical buttons menu.
  * Calculates the spaces between the buttons according to their number, widths and heights.
  */
-Control* create_button_menu(int height, int width, int num, char* games[],
+Link* create_button_menu(int height, int width, int num, char* games[],
 		int (*handles[])(Control*), int widths[], int heights[]);
 
 /**
@@ -43,23 +43,27 @@ int show_game_menu(Control* window, int (*handles[])(Control*));
 /**
  * Build list of possible players options
  */
-int show_player_select(Control* window, int (*handles[])(Control*));
+int show_player_select(Control* window, int (*empty)(Control*),
+		int (*player)(Control*), int (*cancel)(Control*));
 
 /**
  * Shows the screen with the selected game, according to request.
  * Includes game board, game options and general menu
  */
-int show_game_arena(Control* window, Game *game, int (*handle)(Control*), int (*menu_handles[])(Control*));
+int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
+		int (*menu_handles[])(Control*));
 
 /**
  * Build the side menu for the game window.
  */
-Control* create_game_menu(int height, int width, int (*menu_handles[])(Control*));
+Control* create_game_panel(int height, int width,
+		int (*menu_handles[])(Control*));
 
 /**
  * Build the board view for the current game.
  */
-Control* create_board(int width, int height, int n, int m, int** cells, int (*handle)(Control*));
+Control* create_board(int width, int height, int n, int m, int** cells,
+		int (*handle)(Control*));
 
 /**
  * Sets current empty, player 1 and player 2
@@ -83,7 +87,8 @@ void set_connect4_tiles();
  * Show screen allowing user to select a game file
  * for loading \ saving, depending on request
  */
-int show_files_menu(Control* window, int (*handles[])(Control*));
+int show_files_menu(Control* window, int (*empty)(Control*),
+		int (*file_han)(Control*), int (*cancel)(Control*));
 
 /**
  * Clears current window - frees tree that window is its root

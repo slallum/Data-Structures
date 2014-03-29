@@ -4,8 +4,6 @@
 #include "board.h"
 #include "tree.h"
 
-#define AI_NOT_SET -1;
-
 typedef struct game_s {
     Board *board;
 
