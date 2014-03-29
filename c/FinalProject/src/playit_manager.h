@@ -58,6 +58,14 @@ int on_select_connect4(Control* btn_game);
 int on_cancel(Control* btn_game);
 
 /**
+ * According to i of the selected button,
+ * updates the current player.
+ * Note: Counts on the order of the players.
+ *       New types can be added easily as long as in the end..
+ */
+int on_select_player(Control* btn_pl_type);
+
+/**
  * Sets current game with player as first and second.
  */
 int on_select_pl_pl(Control* btn_pl_type);
@@ -98,6 +106,18 @@ int on_select_save(Control* btn);
  * Change to main menu window.
  */
 int on_select_main(Control* btn);
+
+/**
+ * Handles save of current game to selected file,
+ * denoted by the i of the given file_btn
+ */
+int on_select_save_file(Control* file_btn);
+
+/**
+ * Handles save of current game to selected file,
+ * denoted by the i of the given file_btn
+ */
+int on_select_load_file(Control* file_btn);
 
 /**
  * Climb to the root of the tree

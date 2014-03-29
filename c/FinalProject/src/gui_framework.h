@@ -9,6 +9,7 @@
 #define GUI_FRAMEWORK_H_
 
 #include <stdio.h>
+#include <SDL/SDL_ttf.h>
 #include <SDL.h>
 #include <SDL_video.h>
 #include "playit_conf.h"
@@ -94,6 +95,8 @@ Control* create_label(int x, int y, int i, int j, int width, int height, char* l
 
 /**
  * Creates a button control
+ * If creation from given path fails,
+ * tries creating generically using a text label by same name
  *
  * @param label_path	Path to find pic representing the label.
  * @param children		Controls needed when button is selected.
@@ -102,6 +105,12 @@ Control* create_label(int x, int y, int i, int j, int width, int height, char* l
  */
 Control* create_button(int x, int y, int i, int j, int width, int height, char* label_path,
 		int (*on_select)(struct Control*));
+
+/**
+ * Creates a text element with given title
+ * Uses a plain pre-defined background and creates title on the fly
+ */
+SDL_Surface* create_text(char* title);
 
 /**
  * Nothing happens on select
@@ -152,6 +161,12 @@ int flip(Control* window);
  * Calls for window draw and checks for errors
  */
 int draw(Control* window);
+
+/**
+ * Attaches given file name to constant images path
+ * in order to create a full path to the image
+ */
+char* full_path(char* file_name);
 
 
 #endif /* GUI_FRAMEWORK_H_ */

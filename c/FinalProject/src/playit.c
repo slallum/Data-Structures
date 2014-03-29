@@ -24,7 +24,8 @@ int start_game_console() {
 	if (window == NULL) {
 		return 1;
 	}
-	if (!show_main_menu(window)) {
+
+	if (on_cancel(window)) {
 		return 1;
 	}
 	while (!quit) {
