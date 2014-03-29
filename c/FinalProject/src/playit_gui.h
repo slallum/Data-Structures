@@ -72,6 +72,12 @@ void set_tictactoe_tiles();
 void set_connect4_tiles();
 
 /**
+ * Show screen allowing user to select a game file
+ * for loading \ saving, depending on request
+ */
+int show_files_menu(Control* window, int load);
+
+/**
  * Clears current window - frees tree that window is its root
  */
 void clear_window(Control* window);

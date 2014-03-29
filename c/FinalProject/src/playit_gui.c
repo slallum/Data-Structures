@@ -8,7 +8,7 @@
 #include "playit_gui.h"
 #include "game_framework.h"
 
-extern char* current_tiles[3];
+extern char* current_tiles[3] = { "" };
 
 Control* create_button_menu(int height, int width, int num, char* pics[],
 		int (*handles[])(Control*), int widths[], int heights[]) {
@@ -149,6 +149,10 @@ void set_connect4_tiles() {
 	current_tiles[0] = C4N_IMG;
 	current_tiles[1] = C4P1_IMG;
 	current_tiles[2] = C4P2_IMG;
+}
+
+int show_files_menu(Control* window, int load) {
+
 }
 
 void clear_window(Control* window) {

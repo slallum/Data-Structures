@@ -7,7 +7,7 @@
 
 #include "playit_manager.h"
 
-extern Game *game;
+Game *game;
 
 int on_new_game(Control* btn_new_game) {
 
@@ -15,7 +15,7 @@ int on_new_game(Control* btn_new_game) {
 }
 
 int on_load_game(Control* btn_load_game) {
-	return 0;
+	return !show_files_menu(get_root(btn_load_game), 1);
 }
 
 int on_select_quit(Control* btn_quit) {
@@ -23,19 +23,21 @@ int on_select_quit(Control* btn_quit) {
 }
 
 int on_select_tictactoe(Control* btn_game) {
-	// TODO create game!
+	// TODO create correct game!
+	game = connect4_new_game();
 	set_tictactoe_tiles();
 	return !show_player_select(get_root(btn_game));
 }
 
 int on_select_reversi(Control* btn_game) {
-	// TODO create game!
+	// TODO create correct game!
+	game = connect4_new_game();
 	set_reversi_tiles();
 	return !show_player_select(get_root(btn_game));
 }
 
 int on_select_connect4(Control* btn_game) {
-	// TODO create game!
+	game = connect4_new_game();
 	set_connect4_tiles();
 	return !show_player_select(get_root(btn_game));
 }
@@ -86,8 +88,7 @@ int on_select_restart(Control* btn) {
 }
 
 int on_select_save(Control* btn) {
-	//TODO save game
-	return 0;
+	return !show_files_menu(get_root(btn), 0);
 }
 
 int on_select_main(Control* btn) {
