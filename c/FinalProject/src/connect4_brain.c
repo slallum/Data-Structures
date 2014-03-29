@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "connect4_brain.h"
 #include "game_framework.h"
 #include "board.h"
@@ -25,11 +26,12 @@ Game *connect4_new_game() {
 	game->won_board = won_board;
 
 	game->depth = 1;
-	game->tree = create_tree(&(game->board), game->depth);
+	game->tree = create_tree(game->board, game->depth, make_move, get_score);
 	game->difficulties = game_difficulties;
 
 	return game;
 }
+
 
 
 int** available_moves(Game* game) {
@@ -38,4 +40,12 @@ int** available_moves(Game* game) {
 
 int won_board(Game* game) {
 	
+}
+
+int make_move(int** cells, int n, int m, int value) {
+	return 0;
+}
+
+int get_score(int** cells, int n, int m) {
+
 }

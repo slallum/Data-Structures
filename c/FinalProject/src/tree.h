@@ -3,6 +3,8 @@
 
 #include "board.h"
 
+// TODO: get this const out of here!
+#define EXTREME_VALUE 100000
 
 // Linked list element
 typedef struct element_s {
@@ -39,7 +41,7 @@ typedef struct minmax_tree_s {
  * Initializes a new tree and builds it until requested depth.
  * User is always first so root will be his turn.
  */
-minmax_tree* create_tree(Board* board, int depth);
+minmax_tree* create_tree(Board* board, int depth, int (*make_move)(int**, int, int, int), int (*get_score)(int**, int, int));
 
 /**
  * Adds levels to tree until reaching requested depth
@@ -54,7 +56,7 @@ void update_tree(minmax_tree *tree, Board* board, int col, int depth);
  * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
  *
  */
-void extend(vertex* node, Board* board, int depth);
+void extend(vertex* current_node, Board* board, int depth, int (*make_move)(int**, int, int, int), int (*get_score)(int**, int, int));
 
 
 /**
@@ -66,6 +68,5 @@ void remove_tree(vertex* node);
  * Goes recursively down tree, thile building the appropriate boards.
  * When reaching a leaf, performs extension of the tree.
  */
-void extend_leafs(vertex* node, Board* board, int depth);
-
+void extend_leafs(vertex* current_node, Board* board, int depth, int (*make_move)(int**, int, int, int), int (*get_score)(int**, int, int));
 #endif /* TREE_H_ */

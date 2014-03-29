@@ -21,7 +21,5 @@ Board *new_board(int n, int m) {
     }
     board->n = n;
     board->m = m;
-    board.
-
-
+    return board;
 }
