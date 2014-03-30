@@ -62,26 +62,7 @@ Control* create_game_panel(int height, int width,
 /**
  * Build the board view for the current game.
  */
-Control* create_board(int width, int height, int n, int m, int** cells,
-		int (*handle)(Control*));
-
-/**
- * Sets current empty, player 1 and player 2
- * tiles to match reversi game.
- */
-void set_reversi_tiles();
-
-/**
- * Sets current empty, player 1, and player 2
- * tiles to match tictactoe game
- */
-void set_tictactoe_tiles();
-
-/**
- * Sets current empty and players'
- * tiles to match the connect4 game
- */
-void set_connect4_tiles();
+Control* create_board(int width, int height, Game* game, int (*handle)(Control*));
 
 /**
  * Show screen allowing user to select a game file

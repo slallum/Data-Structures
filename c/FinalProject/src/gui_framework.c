@@ -286,7 +286,7 @@ int flip(Control* window) {
  */
 int draw(Control* window) {
 	if (!window->draw(window, NULL )) {
-		printf("Error: Failed to draw start screen\n");
+		printf("Error: Failed to screen\n");
 		return 0;
 	}
 	return 1;

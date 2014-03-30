@@ -85,9 +85,9 @@
 #define FILES_NUM		5
 #define FILE_SELECT		"SelectFile.bmp"
 #define FILE_PATH		"../files/game_file_%d.txt"
-#define TTT_NAME		"Tic-tac-toe";
-#define	CONNECT_NAME	"Connect4";
-#define REVERSI_NAME	"Reversi";
+#define TTT_NAME		"Tic-tac-toe"
+#define	CONNECT4_NAME	"Connect4"
+#define REVERSI_NAME	"Reversi"
 
 // General label
 #define TEXT_BG			"Plain.bmp"

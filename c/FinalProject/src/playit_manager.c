@@ -30,7 +30,6 @@ int on_select_tictactoe(Control* btn_game) {
 	save_game_name = TTT_NAME;
 	// TODO create correct game!
 	game = connect4_new_game();
-	set_tictactoe_tiles();
 	return !show_player_select(get_root(btn_game), empty_select, on_select_player, on_cancel);
 }
 
@@ -38,14 +37,12 @@ int on_select_reversi(Control* btn_game) {
 	save_game_name = REVERSI_NAME;
 	// TODO create correct game!
 	game = connect4_new_game();
-	set_reversi_tiles();
 	return !show_player_select(get_root(btn_game), empty_select, on_select_player, on_cancel);
 }
 
 int on_select_connect4(Control* btn_game) {
-	save_game_name = CONNECT_NAME;
+	save_game_name = CONNECT4_NAME;
 	game = connect4_new_game();
-	set_connect4_tiles();
 	return !show_player_select(get_root(btn_game), empty_select, on_select_player, on_cancel);
 }
 

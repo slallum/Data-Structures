@@ -22,6 +22,8 @@ typedef struct game_s {
     int depth;
     minmax_tree *tree;
     int *difficulties;
+
+    char* tiles[3];
 } Game;
 
 void free_game(Game *game);

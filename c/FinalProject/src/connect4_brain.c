@@ -26,10 +26,12 @@ Game *connect4_new_game() {
 	game->tree = create_tree(game->board, game->depth, make_move, get_score);
 	game->difficulties = game_difficulties;
 
+	game->tiles[0] = C4N_IMG;
+	game->tiles[1] = C4P1_IMG;
+	game->tiles[2] = C4P2_IMG;
+
 	return game;
 }
-
-
 
 int** available_moves(Game* game) {
 

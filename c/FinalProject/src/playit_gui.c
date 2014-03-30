@@ -8,8 +8,6 @@
 #include "playit_gui.h"
 #include "game_framework.h"
 
-char* current_tiles[3] = { "" };
-
 Link* create_button_menu(int height, int width, int num, char* pics[],
 		int (*handles[])(Control*), int widths[], int heights[]) {
 
@@ -98,8 +96,7 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	window->children_head = (Link*) calloc(1, sizeof(Link));
 	buttons_next = window->children_head;
 
-	buttons_next->value = create_board(BOARD_PANEL_W, window->height,
-			game->board->n, game->board->m, game->board->cells, handle);
+	buttons_next->value = create_board(BOARD_PANEL_W, window->height, game, handle);
 	buttons_next->value->parent = window;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
@@ -119,21 +116,23 @@ Control* create_game_panel(int height, int width, int (*menu_handles[])(Control*
 			create_button_menu(height, width, 4, pics, menu_handles, widths, heights));
 }
 
-Control* create_board(int width, int height, int n, int m, int** cells,
-		int (*handle)(Control*)) {
+Control* create_board(int width, int height, Game* game, int (*handle)(Control*)) {
 
-	int i, j, current_x, current_y;
+	int i, j, current_x, current_y, initial_x;
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link *buttons_next = head;
 
-	current_y = (height - (n * TILE_H) - ((n - 1) * TILE_SPACE)) / 2;
-	current_x = (width - (m * TILE_W) - ((m - 1) * TILE_SPACE)) / 2;
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < m; j++) {
+	// Calculating start spacing according to size
+	// Available height\width - all tiles height\width - all tile spacings
+	current_y = (height - (game->board->n * TILE_H) - ((game->board->n - 1) * TILE_SPACE)) / 2;
+	initial_x = (width - (game->board->m * TILE_W) - ((game->board->m - 1) * TILE_SPACE)) / 2;
+	current_x = initial_x;
+	for (i = 0; i < game->board->n; i++) {
+		for (j = 0; j < game->board->m; j++) {
 			buttons_next->value = create_button(current_x, current_y, i, j,
-					TILE_W, TILE_H, current_tiles[cells[i][j] % 3], handle);
+					TILE_W, TILE_H, game->tiles[game->board->cells[i][j] % 3], handle);
 			current_x += TILE_W + TILE_SPACE;
-			if ((i == n - 1) && (j == m - 1)) {
+			if ((i == game->board->n - 1) && (j == game->board->m - 1)) {
 				buttons_next->next = NULL;
 			} else {
 				buttons_next->next = (Link*) calloc(1, sizeof(Link));
@@ -141,28 +140,11 @@ Control* create_board(int width, int height, int n, int m, int** cells,
 			}
 		}
 		current_y += TILE_H + TILE_SPACE;
-		current_x = (width - (m * TILE_W) - ((m - 1) * TILE_SPACE)) / 2;
+		current_x = initial_x;
 	}
 	return create_panel(0, 0, 0, 0, width, height, BG_IMG, head);
 }
 
-void set_reversi_tiles() {
-	current_tiles[0] = RN_IMG;
-	current_tiles[1] = RW_IMG;
-	current_tiles[2] = RB_IMG;
-}
-
-void set_tictactoe_tiles() {
-	current_tiles[0] = TTTN_IMG;
-	current_tiles[1] = TTTX_IMG;
-	current_tiles[2] = TTTO_IMG;
-}
-
-void set_connect4_tiles() {
-	current_tiles[0] = C4N_IMG;
-	current_tiles[1] = C4P1_IMG;
-	current_tiles[2] = C4P2_IMG;
-}
 
 int show_files_menu(Control* window, int (*empty)(Control*),
 		int (*file_han)(Control*), int (*cancel)(Control*)) {

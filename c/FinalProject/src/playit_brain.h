@@ -12,6 +12,7 @@
 #include "playit_conf.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Saves required parameters of the game in required format
