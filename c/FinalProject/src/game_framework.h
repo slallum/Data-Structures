@@ -14,11 +14,11 @@ typedef struct game_s {
 
     // rules
     int** (*available_moves)(struct game_s*);
-    int (*make_move)(int**, int, int, int);
-    int (*won_board)(struct game_s*);
+    int (*make_move)(Board* board, int i, int j, int value);
+    int (*won_board)(Board* board);
     
     // minmax tree
-    int (*get_score)(int**, int, int);
+    int (*get_score)(Board* board);
     int depth;
     minmax_tree *tree;
     int *difficulties;

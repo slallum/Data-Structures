@@ -68,8 +68,11 @@ int on_select_player(Control* btn_pl_type) {
 }
 
 int on_select_tile(Control* btn_tile) {
-	//TODO make a move in game!
-	//TODO recreate board or just change specific tile?
+	game->make_move(game->board, btn_tile->i, btn_tile->j, game->is_first_players_turn);
+	if (game->won_board(game->board)) {
+		//TODO
+	}
+	game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
 	return 0;
 }
 

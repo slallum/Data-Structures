@@ -49,20 +49,22 @@
 #define CONNECT4_IMG	"Connect4.bmp"
 #define CONNECT4_HAN	on_select_connect4
 
-// Reversi tiles
+// Reversi
 #define RB_IMG			"rB.bmp"
 #define RW_IMG			"rW.bmp"
 #define RN_IMG			"rN.bmp"
 
-// Tic tac toe tiles
+// Tic tac toe
 #define TTTN_IMG		"tttN.bmp"
 #define TTTO_IMG		"tttO.bmp"
 #define TTTX_IMG		"tttX.bmp"
 
-// Connect4 tiles
+// Connect4
 #define C4N_IMG			"c4N.bmp"
 #define C4P1_IMG		"c4P1.bmp"
 #define C4P2_IMG		"c4P2.bmp"
+#define C4_BOARD_N		6
+#define C4_BOARD_M		7
 
 // Size parameters
 #define WIN_W			800
@@ -88,6 +90,9 @@
 #define TTT_NAME		"Tic-tac-toe"
 #define	CONNECT4_NAME	"Connect4"
 #define REVERSI_NAME	"Reversi"
+
+// Tree
+#define EXTREME_VALUE 100000
 
 // General label
 #define TEXT_BG			"Plain.bmp"

@@ -73,10 +73,12 @@ Game* load_game(int file_num) {
 	if (strcmp(game_name, TTT_NAME) == 0) {
 		// TODO
 	}
+	// Reading which player's turn
 	if (fscanf(read_file, "%d\n", &(loaded_game->is_first_players_turn)) < 0) {
 		printf("Error: Missing first player signification in %s\n", path_to_read);
 		return NULL;
 	}
+	// Reading board cells, according to size determined by game creation
 	for (i = 0; i < loaded_game->board->n; i++) {
 		for (j = 0; j < (loaded_game->board->m - 1); j++) {
 			if (fscanf(read_file, "%d ", &(loaded_game->board->cells[i][j])) < 0) {
@@ -84,12 +86,12 @@ Game* load_game(int file_num) {
 				return NULL;
 			}
 		}
+		// Last one will have line break
 		if (fscanf(read_file, "%d\n", &(loaded_game->board->cells[i][j])) < 0) {
 			printf("Error: Missing cell in %s\n", path_to_read);
 			return NULL;
 		}
 	}
-
 	fclose(read_file);
 	return loaded_game;
 }

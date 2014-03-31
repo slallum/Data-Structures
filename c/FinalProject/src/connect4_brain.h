@@ -6,16 +6,47 @@
 #include "tree.h"
 #include "playit_conf.h"
 
-#define BOARD_HEIGHT 6
-#define BOARD_WIDTH 7
-
 Game *connect4_new_game();
 
-int** available_moves(Game* game);
-int make_move(int**, int, int, int);
-int won_board(Game* game);
-int get_score(int**, int, int);
+int** connect4_available_moves(Game* game);
 
+/*
+ * gets cells, hight of cells, columnd to insert and a value to insert
+ * makes the move, according to connect4 laws
+ * returns the row of the changed cell
+ * if the column is full - returns -1
+ */
+int connect4_make_move(Board* board, int i, int j, int value);
 
+/*
+ * checks if the board has a winning streak (the player who won doesn't matter)
+ */
+int connect4_won_board(Board* board);
+
+/**
+ * Scoring function for the connect4 game
+ * Each 4 disc span recieves a score and the number
+ * of spans for each score are calculated.
+ * The outcome vector is multiplied by a weight vector
+ */
+int connect4_get_score(Board* board);
+
+/**
+ * Goes over all horizontal spans on board.
+ * For each row, calcs first span and then just updates each step
+ */
+void count_horizontal(int *spans_count, int** board, int n, int m);
+
+/**
+ * Goes over all vertical spans on board.
+ * For each coloumn, calcs first span and then just update each step.
+ */
+void count_vertical(int *spans_count, int** board, int n, int m);
+
+/**
+ * Goes over all vertical spans on board.
+ * For each coloumn, calcs first span and then just update each step.
+ */
+void count_diagonal(int *spans_count, int** board, int n, int m);
 
 #endif /* CONNECT4_BRAIN_H_ */
