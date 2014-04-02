@@ -32,4 +32,11 @@ int save_game(int file_num, Game* game, char* game_name);
  */
 Game* load_game(int file_num);
 
+/**
+ * If rc < 0, means there was an IO error,
+ * either reading or writing.
+ * Outputs suitable message.
+ */
+void check_validity(int rc);
+
 #endif /* PLAYIT_BRAIN_H_ */

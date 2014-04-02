@@ -70,10 +70,11 @@ int on_select_player(Control* btn_pl_type) {
 int on_select_tile(Control* btn_tile) {
 	game->make_move(game->board, btn_tile->i, btn_tile->j, game->is_first_players_turn);
 	if (game->won_board(game->board)) {
-		//TODO
+		// TODO
+		return !show_game_arena(get_root(btn_tile), game, empty_select, game_menu_handles);
 	}
 	game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
-	return 0;
+	return !show_game_arena(get_root(btn_tile), game, on_select_tile, game_menu_handles);
 }
 
 int on_select_restart(Control* btn) {

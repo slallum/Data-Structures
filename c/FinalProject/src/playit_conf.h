@@ -80,6 +80,7 @@
 #define TILE_H			50
 #define TILE_SPACE		10
 #define BOARD_PANEL_W	WIN_W - BUT_W - 20
+#define BOARD_PANEL_H	WIN_H - BUT_H * 2 - 15
 #define MAX_STR_LEN		80
 
 // Game saving \ loading

@@ -26,13 +26,13 @@ int save_game(int file_num, Game* game, char* game_name) {
 		printf("Error: Could not open saved game %s\n", path_to_save);
 		return 0;
 	}
-	fprintf(write_file, "%s", game_name);
-	fprintf(write_file, "\n%d\n", game->is_first_players_turn);
+	check_validity(fprintf(write_file, "%s", game_name));
+	check_validity(fprintf(write_file, "\n%d\n", game->is_first_players_turn));
 	for (i = 0; i < game->board->n; i++) {
 		for (j = 0; j < (game->board->m - 1); j++) {
-			fprintf(write_file, "%d ", game->board->cells[i][j]);
+			check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
 		}
-		fprintf(write_file, "%d\n", game->board->cells[i][j]);
+		check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
 	}
 	fclose(write_file);
 	return 1;
@@ -59,10 +59,7 @@ Game* load_game(int file_num) {
 		printf("Error: Could not open saved game %s\n", path_to_read);
 		return NULL;
 	}
-	if (fscanf(read_file, "%s\n", game_name) < 0) {
-		printf("Error: Missing saved game name %s\n", path_to_read);
-		return NULL;
-	}
+	check_validity(fscanf(read_file, "%s\n", game_name));
 	// Create game according to name
 	if (strcmp(game_name, CONNECT4_NAME) == 0) {
 		loaded_game = connect4_new_game();
@@ -74,24 +71,21 @@ Game* load_game(int file_num) {
 		// TODO
 	}
 	// Reading which player's turn
-	if (fscanf(read_file, "%d\n", &(loaded_game->is_first_players_turn)) < 0) {
-		printf("Error: Missing first player signification in %s\n", path_to_read);
-		return NULL;
-	}
+	check_validity(fscanf(read_file, "%d\n", &(loaded_game->is_first_players_turn)));
 	// Reading board cells, according to size determined by game creation
 	for (i = 0; i < loaded_game->board->n; i++) {
 		for (j = 0; j < (loaded_game->board->m - 1); j++) {
-			if (fscanf(read_file, "%d ", &(loaded_game->board->cells[i][j])) < 0) {
-				printf("Error: Missing cell in %s\n", path_to_read);
-				return NULL;
-			}
+			check_validity(fscanf(read_file, "%d ", &(loaded_game->board->cells[i][j])));
 		}
 		// Last one will have line break
-		if (fscanf(read_file, "%d\n", &(loaded_game->board->cells[i][j])) < 0) {
-			printf("Error: Missing cell in %s\n", path_to_read);
-			return NULL;
-		}
+		check_validity(fscanf(read_file, "%d\n", &(loaded_game->board->cells[i][j])));
 	}
 	fclose(read_file);
 	return loaded_game;
+}
+
+void check_validity(int rc) {
+	if (rc <= 0) {
+		printf("Error: Game file not in expected format\n");
+	}
 }

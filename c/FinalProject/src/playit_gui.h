@@ -62,7 +62,12 @@ Control* create_game_panel(int height, int width,
 /**
  * Build the board view for the current game.
  */
-Control* create_board(int width, int height, Game* game, int (*handle)(Control*));
+Control* create_board_panel(int width, int height, Game* game, int (*handle)(Control*));
+
+/**
+ * Builds panel showing current players and turn
+ */
+Control* create_info_panel(int width, int height, Game* game);
 
 /**
  * Show screen allowing user to select a game file

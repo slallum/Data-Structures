@@ -96,13 +96,17 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	window->children_head = (Link*) calloc(1, sizeof(Link));
 	buttons_next = window->children_head;
 
-	buttons_next->value = create_board(BOARD_PANEL_W, window->height, game, handle);
+	buttons_next->value = create_board_panel(BOARD_PANEL_W, BOARD_PANEL_H, game, handle);
 	buttons_next->value->parent = window;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
 	buttons_next->value = create_game_panel(window->height,
 			window->width - (BOARD_PANEL_W), menu_handles);
 	buttons_next->value->parent = window;
+//	buttons_next->next = (Link*) calloc(1, sizeof(Link));
+//	buttons_next = buttons_next->next;
+//	buttons_next->value = create_info_panel(BOARD_PANEL_W, window->height - BOARD_PANEL_H, game);
+//	buttons_next->value->parent = window;
 	buttons_next->next = NULL;
 
 	return draw(window);
@@ -116,7 +120,7 @@ Control* create_game_panel(int height, int width, int (*menu_handles[])(Control*
 			create_button_menu(height, width, 4, pics, menu_handles, widths, heights));
 }
 
-Control* create_board(int width, int height, Game* game, int (*handle)(Control*)) {
+Control* create_board_panel(int width, int height, Game* game, int (*handle)(Control*)) {
 
 	int i, j, current_x, current_y, initial_x;
 	Link *head = (Link*) calloc(1, sizeof(Link));
@@ -143,6 +147,14 @@ Control* create_board(int width, int height, Game* game, int (*handle)(Control*)
 		current_x = initial_x;
 	}
 	return create_panel(0, 0, 0, 0, width, height, BG_IMG, head);
+}
+
+Control* create_info_panel(int width, int height, Game* game) {
+
+	Link *head = (Link*) calloc(1, sizeof(Link));
+	Link *buttons_next = head;
+
+	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
 }
 
 
