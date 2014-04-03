@@ -68,7 +68,12 @@ int on_select_player(Control* btn_pl_type) {
 }
 
 int on_select_tile(Control* btn_tile) {
-	game->make_move(game->board, btn_tile->i, btn_tile->j, game->is_first_players_turn);
+	//TODO check first if AI or regular
+	// Or should make move do it all?
+	int rc = handle_move(game, btn_tile->i, btn_tile->j);
+	if (rc == 1) {
+		on_select_tile(btn_tile);
+	}
 	if (game->won_board(game->board)) {
 		// TODO
 		return !show_game_arena(get_root(btn_tile), game, empty_select, game_menu_handles);

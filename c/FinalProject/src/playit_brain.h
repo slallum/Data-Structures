@@ -15,6 +15,14 @@
 #include <string.h>
 
 /**
+ * Handles all logic around making a move in the game.
+ * Updates the tree for all players and get
+ *
+ * @return	1 if this is an AI vs. AI game and no waiting for player
+ */
+int handle_move(Game* game, int i, int j);
+
+/**
  * Saves required parameters of the game in required format
  * to a file, in order to allow retrieving.
  *

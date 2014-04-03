@@ -8,7 +8,7 @@
 #ifndef PLAYIT_CONF_H_
 #define PLAYIT_CONF_H_
 
-#define IMGS_PATH		"../resources/"
+#define IMGS_PATH		"../../resources/"
 
 // Main menu
 #define PLAYIT_IMG		"PlayIt.bmp"

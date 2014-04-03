@@ -7,6 +7,11 @@
 
 #include "playit_brain.h"
 
+int handle_move(Game* game, int i, int j) {
+	game->make_move(game->board, i, j, game->is_first_players_turn);
+	return 0;
+}
+
 /**
  * Saves required parameters of the game in required format
  * to a file, in order to allow retrieving.

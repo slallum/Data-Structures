@@ -19,11 +19,12 @@ Game *connect4_new_game() {
 
 	game->game_over = 0;
 
+	game->make_move = connect4_make_move;
 	game->available_moves = connect4_available_moves;
 	game->won_board = connect4_won_board;
 
 	game->depth = 1;
-	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
+//	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
 	game->difficulties = game_difficulties;
 
 	game->tiles[0] = C4N_IMG;
