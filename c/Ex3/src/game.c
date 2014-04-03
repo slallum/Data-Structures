@@ -59,12 +59,6 @@ int new_game(game *current_game, int depth) {
     return 1;
 }
 
-/*
- * gets cells, hight of cells, columnd to insert and a value to insert
- * makes the move, according to connect4 laws
- * returns the row of the changed cell
- * if the column is full - returns -1
- */ 
 int make_connect4_move(int** cells, int n, int i, int value) {
 	int j = 0;
     // check when we reach a non empty cell
