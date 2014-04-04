@@ -51,7 +51,7 @@ int show_player_select(Control* window, int (*empty)(Control*),
  * Includes game board, game options and general menu
  */
 int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
-		int (*menu_handles[])(Control*));
+		int (*menu_handles[])(Control*), int (*difficulty_handle)(Control*));
 
 /**
  * Build the side menu for the game window.
@@ -67,7 +67,21 @@ Control* create_board_panel(int width, int height, Game* game, int (*handle)(Con
 /**
  * Builds panel showing current players and turn
  */
-Control* create_info_panel(int width, int height, Game* game);
+Control* create_info_panel(int width, int height, Game* game, int (*handle)(Control*));
+
+/**
+ * Replaces btn with a panel holding a difficulty option menu,
+ * for corresponding player
+ */
+int open_difficulty(Game* game, Control* btn, int (*handle)(Control*));
+
+/**
+ * Creates a panel containing buttons with required amount of numbers
+ *
+ * @param k	Largest difficulty available
+ */
+Control* create_difficulty_panel(int x, int y, int i, int j, int width,
+		int height, int k, int (*handle)(Control*));
 
 /**
  * Show screen allowing user to select a game file

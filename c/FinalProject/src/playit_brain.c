@@ -7,10 +7,44 @@
 
 #include "playit_brain.h"
 
-int handle_move(Game* game, int i, int j) {
-	game->make_move(game->board, i, j, game->is_first_players_turn);
+
+int switch_player(Game* game) {
+	game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
+	if ((game->is_first_players_turn == FIRST_PL_TURN) && (game->first_player_ai == AI_PLAYING)) {
+		return 1;
+	}
+	if ((game->is_first_players_turn == SECOND_PL_TURN) && (game->second_player_ai == AI_PLAYING)) {
+		return 1;
+	}
 	return 0;
 }
+
+// TODO
+int handle_move(Game* game, int i, int j) {
+	Move* new_move = (Move*) malloc(sizeof(Move));
+	new_move->i = i;
+	new_move->j = j;
+	// Now new_move should be updated
+	if (game->make_move(game->board, new_move, game->is_first_players_turn) == -1) {
+		free(new_move);
+		return -1;
+	}
+	free(new_move);
+	return 0;
+}
+
+int board_full(Game* game) {
+	int i, j, full = 1;
+	for (i = 0; i < game->board->n; i++) {
+		for (j = 0; j < game->board->m; j++) {
+			if (game->board->cells[i][j] == 0) {
+				full = 0;
+			}
+		}
+	}
+	return full;
+}
+
 
 /**
  * Saves required parameters of the game in required format
@@ -25,21 +59,23 @@ int save_game(int file_num, Game* game, char* game_name) {
 	FILE *write_file;
 	int i, j;
 
-	sprintf(path_to_save, FILE_PATH, file_num);
-	write_file = fopen(path_to_save, "w");
-	if (write_file == NULL ) {
-		printf("Error: Could not open saved game %s\n", path_to_save);
-		return 0;
-	}
-	check_validity(fprintf(write_file, "%s", game_name));
-	check_validity(fprintf(write_file, "\n%d\n", game->is_first_players_turn));
-	for (i = 0; i < game->board->n; i++) {
-		for (j = 0; j < (game->board->m - 1); j++) {
-			check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+	if (file_num <= FILES_NUM) {
+		sprintf(path_to_save, FILE_PATH, file_num);
+		write_file = fopen(path_to_save, "w");
+		if (write_file == NULL ) {
+			printf("Error: Could not open saved game %s\n", path_to_save);
+			return 0;
 		}
-		check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
+		check_validity(fprintf(write_file, "%s", game_name));
+		check_validity(fprintf(write_file, "\n%d\n", game->is_first_players_turn));
+		for (i = 0; i < game->board->n; i++) {
+			for (j = 0; j < (game->board->m - 1); j++) {
+				check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+			}
+			check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
+		}
+		fclose(write_file);
 	}
-	fclose(write_file);
 	return 1;
 }
 

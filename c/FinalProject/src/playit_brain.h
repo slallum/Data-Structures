@@ -15,12 +15,28 @@
 #include <string.h>
 
 /**
+ * Switches players from current to other (flips marks)
+ * If currently playing is an AI player, returns 1,
+ * indicating to continue fictive clicking, without waiting for user.
+ */
+int switch_player(Game* game);
+
+/**
  * Handles all logic around making a move in the game.
  * Updates the tree for all players and get
  *
- * @return	1 if this is an AI vs. AI game and no waiting for player
+ * @return	 0 - All went well, move was made and turn should pass on
+ * 			-1 - Move was not made and turn should not pass (was illegal for player)
+ * 			 1 - Move was made but turn should not pass (next player has no illegal moves)
+ *
  */
 int handle_move(Game* game, int i, int j);
+
+/**
+ * If at least one cell in the board has no value in it,
+ * return false - means there are more moves
+ */
+int board_full(Game* game);
 
 /**
  * Saves required parameters of the game in required format

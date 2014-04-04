@@ -9,19 +9,20 @@ typedef struct game_s {
 
     int is_first_players_turn;
     int first_player_ai;
+    int first_player_depth;
     int second_player_ai;
+    int second_player_depth;
     int game_over;
 
     // rules
     int** (*available_moves)(struct game_s*);
-    int (*make_move)(Board* board, int i, int j, int value);
+    int (*make_move)(Board* board, Move* new_move, int value);
     int (*won_board)(Board* board);
     
     // minmax tree
     int (*get_score)(Board* board);
-    int depth;
     minmax_tree *tree;
-    int *difficulties;
+    int max_depth;
 
     char* tiles[3];
 } Game;

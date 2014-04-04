@@ -15,8 +15,9 @@ int** connect4_available_moves(Game* game);
  * makes the move, according to connect4 laws
  * returns the row of the changed cell
  * if the column is full - returns -1
+ * Otherwise, if move was made, returns 0
  */
-int connect4_make_move(Board* board, int i, int j, int value);
+int connect4_make_move(Board* board, Move* new_move, int value);
 
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)

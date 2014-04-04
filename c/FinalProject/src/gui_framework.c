@@ -136,22 +136,34 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 }
 
 SDL_Surface* create_text(char* title) {
+	int w, h;
+	SDL_Surface *text_image, *img;
+	SDL_Color text_color;
 	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, TEXT_SIZE);
 	if (text_font == NULL) {
 		printf("Error: failed to load font: %s\n", TEXT_FONT);
 		return NULL;
 	}
-	SDL_Color text_color;
 	text_color.r = 0xe0;
 	text_color.g = 0xbc;
 	text_color.b = 0xe0;
-	SDL_Surface *text_image =  TTF_RenderText_Solid(text_font, title, text_color);
-	SDL_Surface *img = load_image(TEXT_BG);
+	text_image = TTF_RenderText_Solid(text_font, title, text_color);
+	if (strlen(title) == 1) {
+		// Setting tile image
+		img = load_image(TEXT_CHAR_BG);
+		w = TEXT_CHAR_W;
+		h = TEXT_H;
+	} else {
+		// Setting button image
+		img = load_image(TEXT_BG);
+		w = TEXT_W;
+		h = TEXT_H;
+	}
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	SDL_Rect rect = { 5, 5, BUT_W - 10, BUT_H - 10 };
+	SDL_Rect rect = { (w - (strlen(title) * 14)) / 2 , 5, strlen(title) * 14, h - 10 };
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;

@@ -11,6 +11,11 @@ typedef struct board_s {
 	// int (*make_move)(int**, int, int, int);
 } Board;
 
+typedef struct move_s {
+	int i;
+	int j;
+} Move;
+
 int board_is_full(Board board, int m);
 
 Board *new_board(int n, int m);

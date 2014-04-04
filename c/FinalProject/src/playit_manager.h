@@ -95,6 +95,18 @@ int on_select_save_file(Control* file_btn);
  */
 int on_select_load_file(Control* file_btn);
 
+/**
+ * Should be allowed only for AI players.
+ * Opens menu with available difficulty levels (numbers)
+ */
+int on_conf_difficulty(Control* btn);
+
+/**
+ * Clicking difficulty from menu, sets stated value as current difficulty
+ * for the corresponding player (according to btn position)
+ */
+int on_select_difficulty(Control* btn);
+
 /* --- Inner methods --- */
 
 /**

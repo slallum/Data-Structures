@@ -4,7 +4,6 @@
 #include "connect4_brain.h"
 
 Game *connect4_new_game() {
-	int game_difficulties[] = {1,2,3,4,5,6,7};
 	Game *game = (Game*)malloc(sizeof(Game));
 	if (game == NULL) {
 		printf("ERROR: game could not be initialized.");
@@ -16,6 +15,8 @@ Game *connect4_new_game() {
 
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
+	game->first_player_depth = 1;
+	game->second_player_depth = 1;
 
 	game->game_over = 0;
 
@@ -23,9 +24,8 @@ Game *connect4_new_game() {
 	game->available_moves = connect4_available_moves;
 	game->won_board = connect4_won_board;
 
-	game->depth = 1;
 //	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
-	game->difficulties = game_difficulties;
+	game->max_depth = 7;
 
 	game->tiles[0] = C4N_IMG;
 	game->tiles[1] = C4P1_IMG;
@@ -38,18 +38,20 @@ int** connect4_available_moves(Game* game) {
 	return NULL;
 }
 
-int connect4_make_move(Board* board, int i, int j, int value) {
+int connect4_make_move(Board* board, Move* new_move, int value) {
 
+	new_move->i = 0;
 	// check when we reach a non empty cell
-	while ((i < board->n) && (board->cells[i][j] == 0)) {
-		i++;
+	while ((new_move->i < board->n) && (board->cells[new_move->i][new_move->j] == 0)) {
+		(new_move->i)++;
 	}
     // if j IS 0 - it means that the column is full and we'll return -1
     // otherwise - we'll change the value in the cells and return the right row
-	if (i != 0) {
-		board->cells[i - 1][j] = value;
+	if (new_move->i != 0) {
+		board->cells[new_move->i - 1][new_move->j] = value;
+		return 0;
 	}
-	return i - 1;
+	return new_move->i - 1;
 }
 
 int connect4_won_board(Board* board) {

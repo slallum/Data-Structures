@@ -23,7 +23,7 @@ typedef struct vertex_s {
 //    Board         game_state;
     int             score;
     // The move that leads to this node
-    int             column_num;
+    Move*           current_move;
     int				value;
     linked_list     *children;
 } vertex;
@@ -31,7 +31,7 @@ typedef struct vertex_s {
 // Tree represented by root
 typedef struct minmax_tree_s {
     vertex *root;
-    int (*make_move)(Board* board, int i, int j, int value);
+    int (*make_move)(Board* board, Move* new_move, int value);
     int (*scoring_func)(Board* board);
 } minmax_tree;
 
@@ -41,7 +41,7 @@ typedef struct minmax_tree_s {
  * User is always first so root will be his turn.
  */
 minmax_tree* create_tree(Board* board, int depth,
-		int (*make_move)(Board* board, int i, int j, int value), int (*get_score)(Board* board));
+		int (*make_move)(Board* board, Move* new_move, int value), int (*get_score)(Board* board));
 
 /**
  * Adds levels to tree until reaching requested depth
@@ -57,7 +57,7 @@ void update_tree(minmax_tree *tree, Board* board, int col, int depth);
  *
  */
 void extend(vertex* current_node, Board* board, int depth,
-		int (*make_move)(Board* board, int i, int j, int value), int (*get_score)(Board* board));
+		int (*make_move)(Board* board, Move* new_move, int value), int (*get_score)(Board* board));
 
 
 /**
@@ -70,6 +70,6 @@ void remove_tree(vertex* node);
  * When reaching a leaf, performs extension of the tree.
  */
 void extend_leafs(vertex* current_node, Board* board, int depth,
-		int (*make_move)(Board* board, int i, int j, int value),int (*get_score)(Board* board));
+		int (*make_move)(Board* board, Move* new_move, int value),int (*get_score)(Board* board));
 
 #endif /* TREE_H_ */
