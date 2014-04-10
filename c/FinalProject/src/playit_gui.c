@@ -168,10 +168,16 @@ Control* create_info_panel(int width, int height, Game* game,
 	int curr_y = INFO_PANEL_Y;
 	char num[2];
 
-	buttons_next->value = create_label(curr_x, curr_y, 0, 0, TITLE_W, TITLE_H,
-			PLAYER1_IMG);
+	// Choose highlight or regular according to whether current turn
+	if (game->is_first_players_turn == FIRST_PL_TURN) {
+		buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
+				BUT_H, PLAYER1_H_IMG);
+	} else {
+		buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
+				BUT_H, PLAYER1_IMG);
+	}
 	// Adding difficulty link if needed, according to type of player
-	curr_x += TITLE_W + INFO_PANEL_X;
+	curr_x += BUT_W + INFO_PANEL_X;
 	if (game->first_player_ai == AI_PLAYING) {
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
 		buttons_next = buttons_next->next;
@@ -182,14 +188,19 @@ Control* create_info_panel(int width, int height, Game* game,
 
 	// Adding second player
 	curr_x = INFO_PANEL_X;
-	curr_y += TITLE_H + INFO_PANEL_Y;
+	curr_y += BUT_H + INFO_PANEL_Y;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TITLE_W, TITLE_H,
-			PLAYER2_IMG);
+	if (game->is_first_players_turn == FIRST_PL_TURN) {
+		buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
+				BUT_H, PLAYER2_IMG);
+	} else {
+		buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
+				BUT_H, PLAYER2_H_IMG);
+	}
 
 	// Adding difficulty link if needed, according to type of player
-	curr_x += TITLE_W + INFO_PANEL_X;
+	curr_x += INFO_PANEL_X + BUT_W;
 	if (game->second_player_ai == AI_PLAYING) {
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
 		buttons_next = buttons_next->next;

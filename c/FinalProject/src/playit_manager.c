@@ -78,6 +78,7 @@ int on_select_tile(Control* btn_tile) {
 				game_menu_handles, on_select_difficulty);
 	}
 	if ((rc == 0) && switch_player(game)) {
+		// TODO if both AI need to show GUI in between
 		return on_select_tile(btn_tile);
 	}
 	return !show_game_arena(get_root(btn_tile), game, on_select_tile,
@@ -131,9 +132,9 @@ int on_select_difficulty(Control* btn) {
 /* --- Inner methods --- */
 
 void nextLevel(int* curr, int range[]) {
-	*curr = (*curr + 1) % (range[1] - range[0] + 1);
-	if (*curr == range[0] - 1) {
-		*curr = range[1];
+	*curr = (*curr + 1);
+	if (*curr == range[1] + 1) {
+		*curr = range[0];
 	}
 }
 

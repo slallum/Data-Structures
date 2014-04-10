@@ -45,7 +45,9 @@
 
 // Game arena info
 #define PLAYER1_IMG		"PlayerI.bmp"
+#define PLAYER1_H_IMG	"PlayerIH.bmp"
 #define PLAYER2_IMG		"PlayerII.bmp"
+#define PLAYER2_H_IMG	"PlayerIIH.bmp"
 #define DIFFICULTY_TXT	"Difficulty"
 
 // Game selection
