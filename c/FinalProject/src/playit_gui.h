@@ -8,7 +8,6 @@
 #ifndef PLAYIT_GUI_H_
 #define PLAYIT_GUI_H_
 
-#include <stdio.h>
 #include "gui_framework.h"
 #include "game_framework.h"
 #include "playit_conf.h"
@@ -68,20 +67,6 @@ Control* create_board_panel(int width, int height, Game* game, int (*handle)(Con
  * Builds panel showing current players and turn
  */
 Control* create_info_panel(int width, int height, Game* game, int (*handle)(Control*));
-
-/**
- * Replaces btn with a panel holding a difficulty option menu,
- * for corresponding player
- */
-int open_difficulty(Game* game, Control* btn, int (*handle)(Control*));
-
-/**
- * Creates a panel containing buttons with required amount of numbers
- *
- * @param k	Largest difficulty available
- */
-Control* create_difficulty_panel(int x, int y, int i, int j, int width,
-		int height, int k, int (*handle)(Control*));
 
 /**
  * Show screen allowing user to select a game file

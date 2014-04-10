@@ -9,7 +9,9 @@
 
 
 int switch_player(Game* game) {
-	game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
+	if (opponent_has_moves(game) == 0) {
+		game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
+	}
 	if ((game->is_first_players_turn == FIRST_PL_TURN) && (game->first_player_ai == AI_PLAYING)) {
 		return 1;
 	}
@@ -17,6 +19,35 @@ int switch_player(Game* game) {
 		return 1;
 	}
 	return 0;
+}
+
+int opponent_has_moves(Game* game) {
+
+	int i = 0, j = 0, k, l;
+	int avail_move = -1;
+	int player = game->is_first_players_turn * SECOND_PL_TURN;
+	Move* curr_move = (Move*) malloc(sizeof(Move));
+	Board* temp_board = new_board(game->board->n, game->board->m);
+
+	while ((avail_move == -1) && i < game->board->n) {
+		while ((avail_move == -1) && j < game->board->m) {
+			curr_move->i = i;
+			curr_move->j = j;
+			if (game->board->cells[i][j] == 0) {
+				for (k = 0; k < game->board->n; k++) {
+					for (l = 0; l < game->board->m; l++) {
+						temp_board->cells[k][l]= game->board->cells[k][l];
+					}
+				}
+				avail_move = game->make_move(temp_board, curr_move, player);
+			}
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	free(curr_move);
+	return avail_move;
 }
 
 // TODO
@@ -53,7 +84,7 @@ int board_full(Game* game) {
  * @param file_num	Number of file to save game to
  * @param game		Game struct that should contain current state
  */
-int save_game(int file_num, Game* game, char* game_name) {
+int save_game(int file_num, Game* game) {
 
 	char path_to_save[MAX_STR_LEN];
 	FILE *write_file;
@@ -66,7 +97,7 @@ int save_game(int file_num, Game* game, char* game_name) {
 			printf("Error: Could not open saved game %s\n", path_to_save);
 			return 0;
 		}
-		check_validity(fprintf(write_file, "%s", game_name));
+		check_validity(fprintf(write_file, "%s", game->save_game_name));
 		check_validity(fprintf(write_file, "\n%d\n", game->is_first_players_turn));
 		for (i = 0; i < game->board->n; i++) {
 			for (j = 0; j < (game->board->m - 1); j++) {

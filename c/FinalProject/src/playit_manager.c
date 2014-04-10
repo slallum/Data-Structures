@@ -8,8 +8,6 @@
 #include "playit_manager.h"
 
 Game* game;
-char* save_game_name;
-
 int (*game_menu_handles[4])(
 		Control*) = {on_select_restart, on_select_save, on_cancel, on_select_quit
 		};
@@ -30,23 +28,18 @@ int on_select_quit(Control* btn_quit) {
 }
 
 int on_select_tictactoe(Control* btn_game) {
-	save_game_name = TTT_NAME;
-	// TODO create correct game!
-	game = connect4_new_game();
+	game = ttt_new_game();
 	return !show_player_select(get_root(btn_game), empty_select,
 			on_select_player, on_cancel);
 }
 
 int on_select_reversi(Control* btn_game) {
-	save_game_name = REVERSI_NAME;
-	// TODO create correct game!
-	game = connect4_new_game();
+	game = reversi_new_game();
 	return !show_player_select(get_root(btn_game), empty_select,
 			on_select_player, on_cancel);
 }
 
 int on_select_connect4(Control* btn_game) {
-	save_game_name = CONNECT4_NAME;
 	game = connect4_new_game();
 	return !show_player_select(get_root(btn_game), empty_select,
 			on_select_player, on_cancel);
@@ -71,7 +64,7 @@ int on_select_player(Control* btn_pl_type) {
 		game->second_player_ai = PL_PLAYING;
 	}
 	return !show_game_arena(get_root(btn_pl_type), game, on_select_tile,
-			game_menu_handles, on_conf_difficulty);
+			game_menu_handles, on_select_difficulty);
 }
 
 int on_select_tile(Control* btn_tile) {
@@ -80,22 +73,24 @@ int on_select_tile(Control* btn_tile) {
 	int rc = handle_move(game, btn_tile->i, btn_tile->j);
 	if (game->won_board(game->board)) {
 		// TODO update info panel
+		game->game_over = 1;
 		return !show_game_arena(get_root(btn_tile), game, empty_select,
-				game_menu_handles, on_conf_difficulty);
+				game_menu_handles, on_select_difficulty);
 	}
 	if ((rc == 0) && switch_player(game)) {
-		on_select_tile(btn_tile);
+		return on_select_tile(btn_tile);
 	}
 	return !show_game_arena(get_root(btn_tile), game, on_select_tile,
-			game_menu_handles, on_conf_difficulty);
+			game_menu_handles, on_select_difficulty);
 }
 
 int on_select_restart(Control* btn) {
 
 	game->board = new_board(game->board->n, game->board->m);
 	game->is_first_players_turn = FIRST_PL_TURN;
+	game->init_board(game->board);
 	return !show_game_arena(get_root(btn), game, on_select_tile,
-			game_menu_handles, on_conf_difficulty);
+			game_menu_handles, on_select_difficulty);
 }
 
 int on_select_save(Control* btn) {
@@ -105,11 +100,11 @@ int on_select_save(Control* btn) {
 }
 
 int on_select_save_file(Control* file_btn) {
-	if (!save_game(file_btn->i, game, save_game_name)) {
+	if (!save_game(file_btn->i, game)) {
 		// TODO error dialog?
 	}
 	return !show_game_arena(get_root(file_btn), game, on_select_tile,
-			game_menu_handles, on_conf_difficulty);
+			game_menu_handles, on_select_difficulty);
 }
 
 int on_select_load_file(Control* file_btn) {
@@ -122,19 +117,24 @@ int on_select_load_file(Control* file_btn) {
 			on_select_player, on_cancel);
 }
 
-int on_conf_difficulty(Control* btn) {
-	return !open_difficulty(game, btn, on_select_difficulty);
-}
-
 int on_select_difficulty(Control* btn) {
-	if (btn->parent->j == 0) {
-		game->first_player_depth = btn->j;
+	if (btn->i == 0) {
+		nextLevel(&(game->first_player_depth), game->depth_range);
 	}
-	if (btn->parent->j == 1) {
-		game->second_player_depth = btn->j;
+	if (btn->i == 1) {
+		nextLevel(&(game->second_player_depth), game->depth_range);
 	}
 	return !show_game_arena(get_root(btn), game, on_select_tile,
-			game_menu_handles, on_conf_difficulty);
+			game_menu_handles, on_select_difficulty);
+}
+
+/* --- Inner methods --- */
+
+void nextLevel(int* curr, int range[]) {
+	*curr = (*curr + 1) % (range[1] - range[0] + 1);
+	if (*curr == range[0] - 1) {
+		*curr = range[1];
+	}
 }
 
 Control* get_root(Control* control) {

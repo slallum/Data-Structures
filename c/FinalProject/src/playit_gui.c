@@ -161,83 +161,44 @@ Control* create_board_panel(int width, int height, Game* game,
 Control* create_info_panel(int width, int height, Game* game,
 		int (*handle)(Control*)) {
 
-	int start_x = (width - 3 * TEXT_W) / 2;
-	int start_y = 10;
-	int w = TEXT_W;
-	int h = TEXT_H;
-	int h_space = w + TEXT_W;
-	int v_space = h + 30;
-
-	// Adding both players
+	// Adding first player
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link* buttons_next = head;
-	buttons_next->value = create_label(start_x, start_y, 0, 0, w, h,
+	int curr_x = INFO_PANEL_X;
+	int curr_y = INFO_PANEL_Y;
+	char num[2];
+
+	buttons_next->value = create_label(curr_x, curr_y, 0, 0, TITLE_W, TITLE_H,
 			PLAYER1_IMG);
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_label(start_x + h_space, start_y, 0, 1, w, h,
-			PLAYER2_IMG);
-	// Adding difficulty link if needed
+	// Adding difficulty link if needed, according to type of player
+	curr_x += TITLE_W + INFO_PANEL_X;
 	if (game->first_player_ai == AI_PLAYING) {
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
 		buttons_next = buttons_next->next;
-		buttons_next->value = create_button(start_x, start_y + v_space, 1, 0, w,
-				h, DIFFICULTY_TXT, handle);
+		sprintf(num, "%d", game->first_player_depth);
+		buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W,
+				TILE_H, num, handle);
 	}
+
+	// Adding second player
+	curr_x = INFO_PANEL_X;
+	curr_y += TITLE_H + INFO_PANEL_Y;
+	buttons_next->next = (Link*) calloc(1, sizeof(Link));
+	buttons_next = buttons_next->next;
+	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TITLE_W, TITLE_H,
+			PLAYER2_IMG);
+
+	// Adding difficulty link if needed, according to type of player
+	curr_x += TITLE_W + INFO_PANEL_X;
 	if (game->second_player_ai == AI_PLAYING) {
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
 		buttons_next = buttons_next->next;
-		buttons_next->value = create_button(start_x + h_space,
-				start_y + v_space, 1, 1, w, h, DIFFICULTY_TXT, handle);
+		sprintf(num, "%d", game->second_player_depth);
+		buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
+				TILE_H, num, handle);
 	}
 	buttons_next->next = NULL;
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
-}
-
-int open_difficulty(Game* game, Control* btn, int (*handle)(Control*)) {
-
-	Link* current = btn->parent->children_head;
-	int i, j, x, y, width;
-	// Searching for link of given button
-	while ((current != NULL )&& ((current->value->i != btn->i) || (current->value->j != btn->j))){
-	current = current->next;
-}
-	if (current == NULL ) {
-		return 0;
-	}
-	i = current->value->i;
-	j = current->value->j;
-	x = btn->x;
-	y = btn->y;
-	width = game->max_depth * TILE_W;
-	free(current->value);
-	current->value = create_difficulty_panel(x, y, i, j, width, TILE_H,
-			game->max_depth, handle);
-	while (btn->parent != NULL ) {
-		btn = btn->parent;
-	}
-	return draw(btn);
-}
-
-Control* create_difficulty_panel(int x, int y, int i, int j, int width,
-		int height, int k, int (*handle)(Control*)) {
-
-	Link *head = (Link*) calloc(1, sizeof(Link));
-	Link* buttons_next = head;
-	char num[2];
-	int ind;
-	for (ind = 1; ind < k; ind++) {
-		sprintf(num, "%d", ind);
-		buttons_next->value = create_button((ind - 1) * TEXT_CHAR_W, 0, 0, ind,
-				TEXT_CHAR_W, TILE_H, num, handle);
-		buttons_next->next = (Link*) calloc(1, sizeof(Link));
-		buttons_next = buttons_next->next;
-	}
-	sprintf(num, "%d", ind);
-	buttons_next->value = create_button((ind - 1) * TEXT_CHAR_W, 0, 0, ind,
-			TEXT_CHAR_W, TILE_H, num, handle);
-	buttons_next->next = NULL;
-	return create_panel(x, y, i, j, width, height, BG_IMG, head);
 }
 
 int show_files_menu(Control* window, int (*empty)(Control*),

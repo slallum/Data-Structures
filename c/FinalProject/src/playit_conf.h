@@ -8,6 +8,9 @@
 #ifndef PLAYIT_CONF_H_
 #define PLAYIT_CONF_H_
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #define IMGS_PATH		"../resources/"
 
 // Main menu
@@ -58,11 +61,15 @@
 #define RB_IMG			"rB.bmp"
 #define RW_IMG			"rW.bmp"
 #define RN_IMG			"rN.bmp"
+#define REVERSI_BOARD_N	8
+#define REVERSI_BOARD_M	8
 
 // Tic tac toe
 #define TTTN_IMG		"tttN.bmp"
 #define TTTO_IMG		"tttO.bmp"
 #define TTTX_IMG		"tttX.bmp"
+#define TTT_BOARD_N		3
+#define TTT_BOARD_M		3
 
 // Connect4
 #define C4N_IMG			"c4N.bmp"
@@ -83,12 +90,13 @@
 #define	BUT_W			200
 #define TEXT_W			160
 #define TEXT_H			40
-#define TEXT_CHAR_W		20
 #define TILE_W			50
 #define TILE_H			50
 #define TILE_SPACE		10
 #define BOARD_PANEL_W	WIN_W - BUT_W - 10
-#define BOARD_PANEL_H	WIN_H - TITLE_H * 2 - 20
+#define BOARD_PANEL_H	WIN_H - TITLE_H * 2
+#define INFO_PANEL_X	20
+#define INFO_PANEL_Y	5
 #define MAX_STR_LEN		80
 
 // Game saving \ loading
@@ -105,8 +113,8 @@
 
 // General label
 #define TEXT_BG			"Plain.bmp"
-#define TEXT_CHAR_BG	"PlainChar.bmp"
-#define TEXT_SIZE		24
+#define TEXT_CHAR_BG	"charPlain.bmp"
+#define TEXT_SIZE		28
 #define TEXT_FONT		"/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf"
 
 #endif /* PLAYIT_CONF_H_ */

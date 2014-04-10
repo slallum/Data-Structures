@@ -1,31 +1,31 @@
-#include <stdlib.h>
-#include <stdio.h>
 
 #include "connect4_brain.h"
 
 Game *connect4_new_game() {
+
 	Game *game = (Game*)malloc(sizeof(Game));
 	if (game == NULL) {
 		printf("ERROR: game could not be initialized.");
 		return NULL;
 	}
-
+	game->save_game_name = CONNECT4_NAME;
 	game->board = new_board(C4_BOARD_N, C4_BOARD_M);
 	game->is_first_players_turn = 1;
 
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
-	game->first_player_depth = 1;
-	game->second_player_depth = 1;
+	game->depth_range[0] = 1;
+	game->depth_range[1] = 7;
+	game->first_player_depth = game->depth_range[0];
+	game->second_player_depth = game->depth_range[0];
 
 	game->game_over = 0;
 
 	game->make_move = connect4_make_move;
-	game->available_moves = connect4_available_moves;
 	game->won_board = connect4_won_board;
+	game->init_board = connect4_init_board;
 
 //	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
-	game->max_depth = 7;
 
 	game->tiles[0] = C4N_IMG;
 	game->tiles[1] = C4P1_IMG;
@@ -34,8 +34,12 @@ Game *connect4_new_game() {
 	return game;
 }
 
-int** connect4_available_moves(Game* game) {
-	return NULL;
+
+/**
+ * Nothing special to do
+ */
+void connect4_init_board(Board* board) {
+
 }
 
 int connect4_make_move(Board* board, Move* new_move, int value) {

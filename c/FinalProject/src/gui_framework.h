@@ -110,7 +110,7 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
  * Creates a text element with given title
  * Uses a plain pre-defined background and creates title on the fly
  */
-SDL_Surface* create_text(char* title);
+SDL_Surface* create_text(char* title, int width, int height);
 
 /**
  * Nothing happens on select

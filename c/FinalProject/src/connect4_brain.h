@@ -6,9 +6,16 @@
 #include "tree.h"
 #include "playit_conf.h"
 
+/**
+ * Creates a new game specific for connect4,
+ * with all needed parameters
+ */
 Game *connect4_new_game();
 
-int** connect4_available_moves(Game* game);
+/**
+ * Nothing special to do
+ */
+void connect4_init_board(Board* board);
 
 /*
  * gets cells, hight of cells, columnd to insert and a value to insert

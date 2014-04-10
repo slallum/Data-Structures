@@ -104,7 +104,7 @@ Control* create_fs_panel(char* bg_path, Link* children_head) {
 Control* create_label(int x, int y, int i, int j, int width, int height, char* label_path) {
 	SDL_Surface *img = load_image(label_path);
 	if (img == NULL ) {
-		img = create_text(label_path);
+		img = create_text(label_path, width, height);
 		if (img == NULL) {
 			return 0;
 		}
@@ -126,7 +126,7 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 		int (*on_select)(struct Control*)) {
 	SDL_Surface *img = load_image(label_path);
 	if (img == NULL ) {
-		img = create_text(label_path);
+		img = create_text(label_path, width, height);
 		if (img == NULL) {
 			return 0;
 		}
@@ -135,8 +135,7 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 	return create_control(x, y, i, j, width, height, NULL, img, on_select, draw_leaf);
 }
 
-SDL_Surface* create_text(char* title) {
-	int w, h;
+SDL_Surface* create_text(char* title, int width, int height) {
 	SDL_Surface *text_image, *img;
 	SDL_Color text_color;
 	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, TEXT_SIZE);
@@ -151,19 +150,15 @@ SDL_Surface* create_text(char* title) {
 	if (strlen(title) == 1) {
 		// Setting tile image
 		img = load_image(TEXT_CHAR_BG);
-		w = TEXT_CHAR_W;
-		h = TEXT_H;
 	} else {
 		// Setting button image
 		img = load_image(TEXT_BG);
-		w = TEXT_W;
-		h = TEXT_H;
 	}
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	SDL_Rect rect = { (w - (strlen(title) * 14)) / 2 , 5, strlen(title) * 14, h - 10 };
+	SDL_Rect rect = { (width - (strlen(title) * 14)) / 2 , 5, strlen(title) * 14, height - 10 };
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
