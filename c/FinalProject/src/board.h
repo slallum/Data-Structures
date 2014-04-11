@@ -20,4 +20,11 @@ int board_is_full(Board board, int m);
 
 Board *new_board(int n, int m);
 
+/**
+ * If at least one cell in the board has no value in it,
+ * return true - means there are more moves
+ */
+int board_full(Board* board);
+
+
 #endif /* BOARD_H_ */

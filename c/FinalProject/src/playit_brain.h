@@ -26,7 +26,7 @@ int switch_player(Game* game);
  * until meeting one that is possible.
  * Erases each move been made.
  */
-int opponent_has_moves(Game* game);
+int has_moves(Game* game, int player);
 
 /**
  * Handles all logic around making a move in the game.
@@ -38,12 +38,6 @@ int opponent_has_moves(Game* game);
  *
  */
 int handle_move(Game* game, int i, int j);
-
-/**
- * If at least one cell in the board has no value in it,
- * return false - means there are more moves
- */
-int board_full(Game* game);
 
 /**
  * Saves required parameters of the game in required format

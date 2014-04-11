@@ -9,7 +9,7 @@
 
 
 int switch_player(Game* game) {
-	if (opponent_has_moves(game) == 0) {
+	if (has_moves(game, game->is_first_players_turn * SECOND_PL_TURN) == 0) {
 		game->is_first_players_turn = game->is_first_players_turn * (SECOND_PL_TURN);
 	}
 	if ((game->is_first_players_turn == FIRST_PL_TURN) && (game->first_player_ai == AI_PLAYING)) {
@@ -21,11 +21,10 @@ int switch_player(Game* game) {
 	return 0;
 }
 
-int opponent_has_moves(Game* game) {
+int has_moves(Game* game, int player) {
 
 	int i = 0, j = 0, k, l;
 	int avail_move = -1;
-	int player = game->is_first_players_turn * SECOND_PL_TURN;
 	Move* curr_move = (Move*) malloc(sizeof(Move));
 	Board* temp_board = new_board(game->board->n, game->board->m);
 
@@ -63,19 +62,6 @@ int handle_move(Game* game, int i, int j) {
 	free(new_move);
 	return 0;
 }
-
-int board_full(Game* game) {
-	int i, j, full = 1;
-	for (i = 0; i < game->board->n; i++) {
-		for (j = 0; j < game->board->m; j++) {
-			if (game->board->cells[i][j] == 0) {
-				full = 0;
-			}
-		}
-	}
-	return full;
-}
-
 
 /**
  * Saves required parameters of the game in required format

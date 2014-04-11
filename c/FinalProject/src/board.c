@@ -23,3 +23,15 @@ Board *new_board(int n, int m) {
     board->m = m;
     return board;
 }
+
+int board_full(Board* board) {
+	int i, j, full = 1;
+	for (i = 0; i < board->n; i++) {
+		for (j = 0; j < board->m; j++) {
+			if (board->cells[i][j] == 0) {
+				full = 0;
+			}
+		}
+	}
+	return full;
+}

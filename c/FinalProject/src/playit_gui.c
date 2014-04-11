@@ -161,55 +161,68 @@ Control* create_board_panel(int width, int height, Game* game,
 Control* create_info_panel(int width, int height, Game* game,
 		int (*handle)(Control*)) {
 
-	// Adding first player
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link* buttons_next = head;
 	int curr_x = INFO_PANEL_X;
 	int curr_y = INFO_PANEL_Y;
-	char num[2];
+	char* images[4];
 
-	// Choose highlight or regular according to whether current turn
-	if (game->is_first_players_turn == FIRST_PL_TURN) {
-		buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
-				BUT_H, PLAYER1_H_IMG);
-	} else {
-		buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
-				BUT_H, PLAYER1_IMG);
-	}
-	// Adding difficulty link if needed, according to type of player
+	fill_parameters(game, images);
+	buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
+			BUT_H, images[0]);
 	curr_x += BUT_W + INFO_PANEL_X;
-	if (game->first_player_ai == AI_PLAYING) {
-		buttons_next->next = (Link*) calloc(1, sizeof(Link));
-		buttons_next = buttons_next->next;
-		sprintf(num, "%d", game->first_player_depth);
-		buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W,
-				TILE_H, num, handle);
-	}
+	buttons_next->next = (Link*) calloc(1, sizeof(Link));
+	buttons_next = buttons_next->next;
+	buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W,
+			TILE_H, images[1], handle);
 
 	// Adding second player
 	curr_x = INFO_PANEL_X;
 	curr_y += BUT_H + INFO_PANEL_Y;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	if (game->is_first_players_turn == FIRST_PL_TURN) {
-		buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
-				BUT_H, PLAYER2_IMG);
-	} else {
-		buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
-				BUT_H, PLAYER2_H_IMG);
-	}
+	buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
+		BUT_H, images[2]);
 
 	// Adding difficulty link if needed, according to type of player
 	curr_x += INFO_PANEL_X + BUT_W;
-	if (game->second_player_ai == AI_PLAYING) {
-		buttons_next->next = (Link*) calloc(1, sizeof(Link));
-		buttons_next = buttons_next->next;
-		sprintf(num, "%d", game->second_player_depth);
-		buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
-				TILE_H, num, handle);
-	}
+	buttons_next->next = (Link*) calloc(1, sizeof(Link));
+	buttons_next = buttons_next->next;
+	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
+			TILE_H, images[3], handle);
 	buttons_next->next = NULL;
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
+}
+
+/**
+ * Choose highlight or regular according to whose current turn
+ * Also, choose trophy if game is won,
+ * or difficulty choice, if AI player
+ */
+void fill_parameters(Game* game, char** images) {
+
+	char num[2];
+	images[2] = NO_IMG;
+	images[3] = NO_IMG;
+	if (game->is_first_players_turn == FIRST_PL_TURN) {
+		images[0] = PLAYER1_H_IMG;
+		images[1] = PLAYER2_IMG;
+		if (game->game_over) {
+			images[2] = TROPHY_IMG;
+		} else if (game->first_player_ai == AI_PLAYING) {
+			sprintf(num, "%d", game->first_player_depth);
+			images[2] = num;
+		}
+	} else {
+		images[0] = PLAYER1_IMG;
+		images[1] = PLAYER2_H_IMG;
+		if (game->game_over) {
+			images[3] = TROPHY_IMG;
+		} else if (game->second_player_ai == AI_PLAYING) {
+			sprintf(num, "%d", game->second_player_depth);
+			images[3] = num;
+		}
+	}
 }
 
 int show_files_menu(Control* window, int (*empty)(Control*),

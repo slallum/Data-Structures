@@ -48,7 +48,8 @@
 #define PLAYER1_H_IMG	"PlayerIH.bmp"
 #define PLAYER2_IMG		"PlayerII.bmp"
 #define PLAYER2_H_IMG	"PlayerIIH.bmp"
-#define DIFFICULTY_TXT	"Difficulty"
+#define TROPHY_IMG		"Trophy.bmp"
+#define NO_IMG			"Empty.bmp"
 
 // Game selection
 #define SELECT_G_IMG	"SelectGame.bmp"

@@ -71,9 +71,7 @@ int on_select_tile(Control* btn_tile) {
 	//TODO check first if AI or regular
 	// Or should make move do it all?
 	int rc = handle_move(game, btn_tile->i, btn_tile->j);
-	if (game->won_board(game->board)) {
-		// TODO update info panel
-		game->game_over = 1;
+	if (game->won_game(game)) {
 		return !show_game_arena(get_root(btn_tile), game, empty_select,
 				game_menu_handles, on_select_difficulty);
 	}

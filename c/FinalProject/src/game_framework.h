@@ -20,7 +20,7 @@ typedef struct game_s {
     void (*init_board)(Board* board);
     int (*make_move)(Board* board, Move* new_move, int value);
     int (*undo_move)(Board* board, Move* new_move);
-    int (*won_board)(Board* board);
+    int (*won_game)(struct game_s*);
     
     // minmax tree
     int (*get_score)(Board* board);

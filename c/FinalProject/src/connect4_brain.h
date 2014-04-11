@@ -29,7 +29,7 @@ int connect4_make_move(Board* board, Move* new_move, int value);
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)
  */
-int connect4_won_board(Board* board);
+int connect4_won_board(Game* game);
 
 /**
  * Scoring function for the connect4 game

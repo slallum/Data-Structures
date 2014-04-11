@@ -22,7 +22,7 @@ Game *connect4_new_game() {
 	game->game_over = 0;
 
 	game->make_move = connect4_make_move;
-	game->won_board = connect4_won_board;
+	game->won_game = connect4_won_board;
 	game->init_board = connect4_init_board;
 
 //	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
@@ -58,9 +58,10 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
 	return new_move->i - 1;
 }
 
-int connect4_won_board(Board* board) {
-    int score = connect4_get_score(board);
+int connect4_won_board(Game* game) {
+    int score = connect4_get_score(game->board);
     if (score == EXTREME_VALUE || score == -EXTREME_VALUE) {
+    	game->game_over = 1;
         return 1;
     } else {
         return 0;

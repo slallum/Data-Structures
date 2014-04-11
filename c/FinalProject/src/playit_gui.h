@@ -69,6 +69,13 @@ Control* create_board_panel(int width, int height, Game* game, int (*handle)(Con
 Control* create_info_panel(int width, int height, Game* game, int (*handle)(Control*));
 
 /**
+ * Choose highlight or regular according to whose current turn
+ * Also, choose trophy if game is won,
+ * or difficulty choice, if AI player
+ */
+void fill_parameters(Game* game, char** images);
+
+/**
  * Show screen allowing user to select a game file
  * for loading \ saving, depending on request
  */
