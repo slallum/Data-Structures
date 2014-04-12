@@ -26,7 +26,7 @@ int switch_player(Game* game);
  * until meeting one that is possible.
  * Erases each move been made.
  */
-int has_moves(Game* game, int player);
+int no_moves(Game* game, int player);
 
 /**
  * Handles all logic around making a move in the game.

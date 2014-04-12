@@ -29,7 +29,13 @@ int connect4_make_move(Board* board, Move* new_move, int value);
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)
  */
-int connect4_won_board(Game* game);
+Move** connect4_won_game(Game* game);
+
+/**
+ * Checks if in any diagonal span on board there is a
+ * 4-some, four adjacent, same player discs
+ */
+Move** check_spans(int** board, int start[2], int end[2], int dir[2]);
 
 /**
  * Scoring function for the connect4 game

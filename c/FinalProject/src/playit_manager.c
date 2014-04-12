@@ -71,7 +71,8 @@ int on_select_tile(Control* btn_tile) {
 	//TODO check first if AI or regular
 	// Or should make move do it all?
 	int rc = handle_move(game, btn_tile->i, btn_tile->j);
-	if (game->won_game(game)) {
+	Move** winning_span = game->won_game(game);
+	if (winning_span != NULL) {
 		return !show_game_arena(get_root(btn_tile), game, empty_select,
 				game_menu_handles, on_select_difficulty);
 	}
@@ -88,6 +89,7 @@ int on_select_restart(Control* btn) {
 	game->board = new_board(game->board->n, game->board->m);
 	game->is_first_players_turn = FIRST_PL_TURN;
 	game->init_board(game->board);
+	game->game_over = 0;
 	return !show_game_arena(get_root(btn), game, on_select_tile,
 			game_menu_handles, on_select_difficulty);
 }

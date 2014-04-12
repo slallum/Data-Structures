@@ -204,6 +204,12 @@ void fill_parameters(Game* game, char** images) {
 	char num[2];
 	images[2] = NO_IMG;
 	images[3] = NO_IMG;
+	if (game->is_first_players_turn == 0 && game->game_over) {
+		images[0] = PLAYER1_H_IMG;
+		images[1] = PLAYER2_H_IMG;
+		images[2] = TROPHY_IMG;
+		images[3] = TROPHY_IMG;
+	}
 	if (game->is_first_players_turn == FIRST_PL_TURN) {
 		images[0] = PLAYER1_H_IMG;
 		images[1] = PLAYER2_IMG;
