@@ -113,7 +113,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     if (max) {
         while (iterator != NULL) {
             make_move(board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board,
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board, best_move,
                                                make_move, undo_move, get_score);
             undo_move(board, iterator->node->current_move);
             if (current_score > alpha) {
@@ -134,7 +134,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             node->children->tail->node->score = get_score(board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board, best_move,
                                                make_move, undo_move, get_score);
             undo_move(board, node->children->tail->node->current_move);
             if (current_score > alpha) {
@@ -153,7 +153,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     } else {
         while (iterator != NULL) {
             make_move(board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board,
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board, best_move,
                                                make_move, undo_move, get_score);
             undo_move(board, iterator->node->current_move);
             if (current_score < beta) {
@@ -174,7 +174,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             node->children->tail->node->score = get_score(board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board, best_move,
                                                make_move, undo_move, get_score);
             undo_move(board, node->children->tail->node->current_move);
             if (current_score > beta) {
@@ -197,7 +197,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
  */
 int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value) {
     element *new_element;
-    vertex *node;
 
     if ((new_element = (element*)calloc(1, sizeof(element))) == NULL) {
         printf("Error: standard function calloc has failed");
@@ -212,8 +211,8 @@ int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value)
         printf("Error: standard function malloc has failed");
         return 0;
     }
-    new_element->node->current_move->i = move->i;
-    new_element->node->current_move->j = move->j;
+    new_element->node->current_move->i = move.i;
+    new_element->node->current_move->j = move.j;
     new_element->node->value = value;
     
     // update the linked list
@@ -245,7 +244,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
     int result_index = 0;
     if ((result = (Move*)calloc(board->n*board->m, sizeof(Move))) == NULL) {
         printf("Error: unable to init moves list in get_unimplemented_moves.\n");
-        return NULL
+        return NULL;
     }
 
     for (i=0; i < (board->n); i++) {
