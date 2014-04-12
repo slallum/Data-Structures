@@ -31,14 +31,6 @@ typedef struct game_s {
 
 void free_game(Game *game);
 
-/*
- * returns the best column to insert in the board accoring to its parameters and the tree
- * param tree_root: the root of the minmax tree
- * param depth - the depth of the game
- * param max - 1 if we want to do max to this level (user), 0 is we want to do min to this level (computer)
- */ 
-int get_best_coloumn(vertex* tree_root, int depth, int max);
-
 Game *init_game();
 
 #endif /* GAME_FRAMEWORK_H_ */
