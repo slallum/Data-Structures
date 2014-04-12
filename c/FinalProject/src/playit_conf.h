@@ -39,7 +39,7 @@
 #define SAVE_GAME_IMG	"SaveGame.bmp"
 #define DIFF1_IMG		"Difficulty1.bmp"
 #define DIFF2_IMG		"Difficulty2.bmp"
-#define RESTART_GAME_IMG "/RestartGame.bmp"
+#define RESTART_GAME_IMG "RestartGame.bmp"
 #define MAIN_MENU_IMG	"MainMenu.bmp"
 #define NUM_GAMES		3
 
@@ -49,6 +49,7 @@
 #define PLAYER2_IMG		"PlayerII.bmp"
 #define PLAYER2_H_IMG	"PlayerIIH.bmp"
 #define TROPHY_IMG		"Trophy.bmp"
+#define TROPHY_TILE_IMG	"TrophyTile.bmp"
 #define NO_IMG			"Empty.bmp"
 
 // Game selection

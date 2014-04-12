@@ -29,7 +29,8 @@ Game *connect4_new_game() {
 
 	game->tiles[0] = C4N_IMG;
 	game->tiles[1] = C4P1_IMG;
-	game->tiles[2] = C4P2_IMG;
+	game->tiles[3] = C4P2_IMG;
+	game->tiles[2] = TROPHY_TILE_IMG;
 
 	return game;
 }
@@ -58,66 +59,66 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
 	return new_move->i - 1;
 }
 
-Move** connect4_won_game(Game* game) {
+int connect4_won_game(Game* game) {
 
-	int start[2], end[2], dir[2];
+	int start[2], end[2], dir[2], strike = 0;
+	// Checking forward diagonal
 	start[0] = 0;
 	start[1] = 0;
 	end[0] = game->board->n - 3;
 	end[1] = game->board->m - 3;
 	dir[0] = 1;
 	dir[1] = 1;
-	Move** winning_span = check_spans(game->board->cells, start, end, dir);
-	if (winning_span == NULL) {
+	strike = check_spans(game->board, start, end, dir);
+	if (!strike) {
+		// Checking horizontal spans
 		dir[0] = 0;
 		end[0] = end[0] + 3;
-		winning_span = check_spans(game->board->cells, start, end, dir);
+		strike = check_spans(game->board, start, end, dir);
 	}
-	if (winning_span == NULL) {
+	if (!strike) {
+		// Checking vertical spans
 		dir[0] = 1;
 		dir[1] = 0;
 		end[1] = end[1] + 3;
 		end[0] = end[0] - 3;
-		winning_span = check_spans(game->board->cells, start, end, dir);
+		strike = check_spans(game->board, start, end, dir);
 	}
-	if (winning_span == NULL) {
+	if (!strike) {
+		// Checking backward diagonal
 		start[1] = 3;
 		dir[1] = -1;
-		winning_span = winning_span = check_spans(game->board->cells, start, end, dir);
+		strike = check_spans(game->board, start, end, dir);
 	}
-	return winning_span;
+	if (strike) {
+		game->game_over = 1;
+	}
+	return strike;
 }
 
 /**
  * Checks if in any diagonal span on board there is a
  * 4-some, four adjacent, same player discs
  */
-Move** check_spans(int** board, int start[2], int end[2], int dir[2]) {
-	Move** winning_span = (Move**) malloc(sizeof(Move*) * 5);
+int check_spans(Board* board, int start[2], int end[2], int dir[2]) {
 	int i = start[0], j = start[1], k, result = 0;
-	// Check all forward diagonal
-	while ((result < 4) && (i < end[0])) {
-		while ((result < 4) && (j < end[1])) {
-			// Taking elements forward
+	while ((result < 4) && (result > -4) && (i < end[0])) {
+		while ((result < 4) && (result > -4) && (j < end[1])) {
 			result = 0;
 			for (k = 0; k < 4; k++) {
-				result += board[i + k*dir[0]][j + k*dir[1]];
+				result += board->cells[i + k*dir[0]][j + k*dir[1]];
+				if ((result == 4) || (result == -4)) {
+					for (k = 0; k < 4; k++) {
+						board->cells[i + k * dir[0]][j + k * dir[1]] = 2;
+					}
+				}
 			}
 			j++;
 		}
 		j = start[1];
 		i++;
 	}
-	if (result == 4) {
-		for (k = 0; k < 4; k++) {
-			winning_span[k] = (Move*) malloc(sizeof(Move));
-			winning_span[k]->i = i + k * dir[0];
-			winning_span[k]->j = j + k * dir[1];
-		}
-		winning_span[4] = NULL;
-		return winning_span;
-	}
-	return NULL;
+	return ((result == 4) || (result == -4));
 }
 
 int connect4_get_score(Board* board) {

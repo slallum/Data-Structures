@@ -20,13 +20,13 @@ typedef struct game_s {
     void (*init_board)(Board* board);
     int (*make_move)(Board* board, Move* new_move, int value);
     int (*undo_move)(Board* board, Move* new_move);
-    Move** (*won_game)(struct game_s*);
+    int (*won_game)(struct game_s*);
     
     // minmax tree
     int (*get_score)(Board* board);
     minmax_tree *tree;
     int depth_range[2];
-    char* tiles[3];
+    char* tiles[4];
 } Game;
 
 void free_game(Game *game);

@@ -37,7 +37,8 @@ Game *reversi_new_game() {
 
 	game->tiles[0] = RN_IMG;
 	game->tiles[1] = RW_IMG;
-	game->tiles[2] = RB_IMG;
+	game->tiles[3] = RB_IMG;
+	game->tiles[2] = TROPHY_TILE_IMG;
 
 	return game;
 }
@@ -131,11 +132,10 @@ int consider_move(Board* board, Move* position, Move* direction, int value) {
  * Changes current player to be the winner.
  *
  */
-Move** reversi_won_game(Game* game) {
+int reversi_won_game(Game* game) {
 	int first_count = 0;
 	int second_count = 0;
 	int i, j;
-	Move** winning_span = { NULL };
 
 	if (board_full(game->board) || (no_moves(game, FIRST_PL_TURN)
 			&& no_moves(game, SECOND_PL_TURN))) {
@@ -158,9 +158,9 @@ Move** reversi_won_game(Game* game) {
 			game->is_first_players_turn = SECOND_PL_TURN;
 		}
 		game->game_over = 1;
-		return winning_span;
+		return 1;
 	}
-	return NULL;
+	return 0;
 }
 
 /**

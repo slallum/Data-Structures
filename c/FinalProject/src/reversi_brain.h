@@ -46,7 +46,7 @@ int consider_move(Board* board, Move* position, Move* direction, int value);
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)
  */
-Move** reversi_won_game(Game* game);
+int reversi_won_game(Game* game);
 
 /**
  *

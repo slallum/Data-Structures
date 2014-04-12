@@ -143,7 +143,7 @@ Control* create_board_panel(int width, int height, Game* game,
 		for (j = 0; j < game->board->m; j++) {
 			buttons_next->value = create_button(current_x, current_y, i, j,
 					TILE_W, TILE_H,
-					game->tiles[(game->board->cells[i][j] + 3) % 3], handle);
+					game->tiles[(game->board->cells[i][j] + 4) % 4], handle);
 			current_x += TILE_W + TILE_SPACE;
 			if ((i == game->board->n - 1) && (j == game->board->m - 1)) {
 				buttons_next->next = NULL;

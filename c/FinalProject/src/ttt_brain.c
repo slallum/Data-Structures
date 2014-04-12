@@ -34,7 +34,8 @@ Game *ttt_new_game() {
 
 	game->tiles[0] = TTTN_IMG;
 	game->tiles[1] = TTTX_IMG;
-	game->tiles[2] = TTTO_IMG;
+	game->tiles[3] = TTTO_IMG;
+	game->tiles[2] = TROPHY_TILE_IMG;
 
 	return game;
 }
@@ -68,106 +69,91 @@ int ttt_make_move(Board* board, Move* new_move, int value) {
 /*
  * If there are 3 of same symbol in a row - player won
  */
-Move** ttt_won_game(Game* game) {
+int ttt_won_game(Game* game) {
 
-	Move** winning_span = ttt_won_board(game->board);
-	if (winning_span != NULL) {
+	if (ttt_won_board(game->board)) {
 		game->game_over = 1;
+		return 1;
 	}
-	return winning_span;
+	return 0;
 }
 
-Move** ttt_won_board(Board* board) {
-	int i = 0, j = 0;
-	Move** winning_span = NULL;
+int ttt_won_board(Board* board) {
+	int i = 0, j = 0, strike = 0;
 	int players[2] = { FIRST_PL_TURN, SECOND_PL_TURN };
 
-	while ((winning_span == NULL) && (i < TTT_BOARD_N)) {
-		while ((winning_span == NULL) && (j < 2)) {
-			winning_span = checkHorizontal(i, board, players[j]);
-			if (winning_span == NULL) {
-				winning_span = checkVertical(i, board, players[j]);
+	while (!strike && (i < TTT_BOARD_N)) {
+		while (!strike && (j < 2)) {
+			strike = checkHorizontal(i, board, players[j]);
+			if (!strike) {
+				strike = checkVertical(i, board, players[j]);
 			}
 			j++;
 		}
 		j = 0;
 		i++;
 	}
-	while ((winning_span == NULL) && (j < 2)) {
-		winning_span = checkMainDiag(board, players[j]);
-		if (winning_span == NULL) {
-			winning_span = checkSecDiag(board, players[j]);
+	while (!strike && (j < 2)) {
+		strike = checkMainDiag(board, players[j]);
+		if (!strike) {
+			strike = checkSecDiag(board, players[j]);
 		}
 		j++;
 	}
-	return winning_span;
+	return strike;
 }
 
 
-Move** checkHorizontal(int i, Board* board, int value) {
+int checkHorizontal(int i, Board* board, int value) {
 	int j = 0, strike = 1, k;
-	Move** winning_span = (Move**) malloc(sizeof(Move*) * 4);
-	// Checking horizontal strike
 	while ((strike == 1) && (j < TTT_BOARD_M)) {
 		strike = strike && (board->cells[i][j] == value);
 		j++;
 	}
 	if (strike) {
 		for (k = 0; k < 3; k++) {
-			winning_span[k] = (Move*) malloc(sizeof(Move));
-			winning_span[k]->i = i;
-			winning_span[k]->j = k;
+			board->cells[i][k] = 2;
 		}
-		winning_span[3] = NULL;
-		return winning_span;
+		return 1;
 	} else {
-		return NULL;
+		return 0;
 	}
 }
 
-Move** checkVertical(int i, Board* board, int value) {
+int checkVertical(int i, Board* board, int value) {
 	int j = 0, strike = 1, k;
-	Move** winning_span = (Move**) malloc(sizeof(Move*) * 4);
 	while ((strike == 1) && (j < TTT_BOARD_M)) {
 		strike = strike && (board->cells[j][i] == value);
 		j++;
 	}
 	if (strike) {
 		for (k = 0; k < 3; k++) {
-			winning_span[k] = (Move*) malloc(sizeof(Move));
-			winning_span[k]->i = k;
-			winning_span[k]->j = i;
+			board->cells[k][i] = 2;
 		}
-		winning_span[3] = NULL;
-		return winning_span;
+		return 1;
 	} else {
-		return NULL;
+		return 0;
 	}
 }
 
-Move** checkMainDiag(Board* board, int value) {
+int checkMainDiag(Board* board, int value) {
 	int i = 0, strike = 1, k;
-	Move** winning_span = (Move**) malloc(sizeof(Move*) * 4);
 	while ((strike == 1) && (i < TTT_BOARD_M)) {
 		strike = strike && (board->cells[i][i] == value);
 		i++;
 	}
 	if (strike) {
 		for (k = 0; k < 3; k++) {
-			winning_span[k] = (Move*) malloc(sizeof(Move));
-			winning_span[k]->i = k;
-			winning_span[k]->j = k;
+			board->cells[k][k] = 2;
 		}
-		winning_span[3] = NULL;
-		return winning_span;
+		return 1;
 	} else {
-		return NULL;
+		return 0;
 	}
 }
 
-Move** checkSecDiag(Board* board, int value) {
+int checkSecDiag(Board* board, int value) {
 	int i = TTT_BOARD_M - 1, j = 0, k;
-	Move** winning_span = (Move**) malloc(sizeof(Move*) * 4);
 	int strike = 1;
 	while ((strike == 1) && (i >= 0)) {
 		while ((strike == 1) && (j < TTT_BOARD_M)) {
@@ -178,14 +164,11 @@ Move** checkSecDiag(Board* board, int value) {
 	}
 	if (strike) {
 		for (k = 0; k < 3; k++) {
-			winning_span[k] = (Move*) malloc(sizeof(Move));
-			winning_span[k]->i = k;
-			winning_span[k]->j = TTT_BOARD_M - k;
+			board->cells[k][TTT_BOARD_M - 1 - k] = 2;
 		}
-		winning_span[3] = NULL;
-		return winning_span;
+		return 1;
 	} else {
-		return NULL;
+		return 0;
 	}
 }
 
