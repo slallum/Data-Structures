@@ -20,7 +20,6 @@ typedef struct linked_list_s {
 
 // Tree vertex holding data
 typedef struct vertex_s {
-//    Board         game_state;
     int             score;
     // The move that leads to this node
     Move*           current_move;
@@ -46,18 +45,42 @@ minmax_tree* create_tree(Board* board, int depth,
 /**
  * Adds levels to tree until reaching requested depth
  */
-void update_tree(minmax_tree *tree, Board* board, int col, int depth);
+void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth);
 
+
+/**
+ * runs minmax and extend at the same time
+ * 
+ * @param depth - the depth of the tree
+ * @param max - do max or min?
+ */
+int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
+                       Board *board, Move *best_move,
+                       int (*make_move)(Board* board, Move* new_move, int value), 
+                       int (*undo_move)(Board* board, Move* new_move),
+                       int (*get_score)(Board* board));
 
 /* --- Helper Methods --- */
 
-/**
- * Receives a leaf in the tree and extends it with all options for moves.
- * Recursively extends children created, until completing depth (i.e. remaining depth is 0)
- *
+/*
+ * adds a node with the given move to the end of the linked list
  */
-void extend(vertex* current_node, Board* board, int depth,
-		int (*make_move)(Board* board, Move* new_move, int value), int (*get_score)(Board* board));
+int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value);
+
+/* 
+ * returns an array of moves that can be made but don't exist in the nodes list
+ */
+Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_length, int max,
+                              int (*make_move)(Board* board, Move* new_move, int value), 
+                              int (*undo_move)(Board* board, Move* new_move));
+
+/*
+ * returns True if a move exists in the list of nodes, False o/w.
+ */
+int move_in_linked_list(Move move, linked_list *nodes_list);
+
+
+
 
 
 /**
@@ -65,11 +88,5 @@ void extend(vertex* current_node, Board* board, int depth,
  */
 void remove_tree(vertex* node);
 
-/**
- * Goes recursively down tree, thile building the appropriate boards.
- * When reaching a leaf, performs extension of the tree.
- */
-void extend_leafs(vertex* current_node, Board* board, int depth,
-		int (*make_move)(Board* board, Move* new_move, int value),int (*get_score)(Board* board));
 
 #endif /* TREE_H_ */
