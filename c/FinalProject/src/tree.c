@@ -128,7 +128,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            add_node_to_end(node->children, unimplemented_moves[i], borad, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            add_node_to_end(node->children, unimplemented_moves[i], board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(board, node->children->tail->node->current_move, node->children->tail->node->value);
             node->children->tail->node->score = get_score(board);
@@ -136,7 +136,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board,
                                                make_move, undo_move, get_score);
-            undo_move(board, node->childre->tail->node->current_move);
+            undo_move(board, node->children->tail->node->current_move);
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -168,7 +168,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            add_node_to_end(node->children, unimplemented_moves[i], borad, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            add_node_to_end(node->children, unimplemented_moves[i], board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(board, node->children->tail->node->current_move, node->children->tail->node->value);
             node->children->tail->node->score = get_score(board);
@@ -176,7 +176,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board,
                                                make_move, undo_move, get_score);
-            undo_move(board, node->childre->tail->node->current_move);
+            undo_move(board, node->children->tail->node->current_move);
             if (current_score > beta) {
                 beta = current_score;
                 // update the best move accordingly
