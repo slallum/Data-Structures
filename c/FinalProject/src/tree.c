@@ -29,7 +29,6 @@ minmax_tree* create_tree(Board* board, int depth,
     current_root->current_move->j = -1;
     current_root->value = 1;
     current_root->children = NULL;
-    extend(current_root, board, depth, make_move, get_score);
 
     tree->root = current_root;
     return tree;
