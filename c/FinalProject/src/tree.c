@@ -249,22 +249,23 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
 
     for (i=0; i < (board->n); i++) {
         for (j=0; j < board->m; j++) {
-            current_move = {.i = i, .j = j};
+            current_move.i = i;
+            current_move.j = j;
             // if this move doesn't exist in the linked list - add it to result
             if (!move_in_linked_list(current_move, nodes_list)) {
-                if (make_move(board, current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN) != -1){
+                if (make_move(board, &current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN) != -1){
                     // first - undo the unnecessary move
-                    undo_move(board, current_move);
+                    undo_move(board, &current_move);
                     
                     // add the move to the result
-                    result[result_index] = Move(.i=current_move.i, .j=current_move.j);
+                    result[result_index] = (Move){.i=current_move.i, .j=current_move.j};
                     result_index++;
                 }
             }
         }
     }
 
-    if (result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
+    if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
         printf("Error: can't allocate result in get_unimplemented_moves.\n");
         return NULL;
     }
