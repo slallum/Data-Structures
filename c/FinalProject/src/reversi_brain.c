@@ -17,7 +17,7 @@ Game *reversi_new_game() {
 
 	game->save_game_name = REVERSI_NAME;
 	game->board = new_board(REVERSI_BOARD_N, REVERSI_BOARD_M);
-	game->is_first_players_turn = FIRST_PL_TURN;
+	game->current_player = FIRST_PL_TURN;
 	reversi_init_board(game->board);
 
 	game->first_player_ai = NO_PLAYER;
@@ -139,12 +139,12 @@ int reversi_won_game(Game* game) {
 	if ((avail_moves[0] == 0) && (avail_moves[1] == 0)) {
 		disk_difference = count_disk_parity(game->board);
 		if (disk_difference == 0) {
-			game->is_first_players_turn = 0;
+			game->current_player = 0;
 		}
 		if (disk_difference > 0) {
-			game->is_first_players_turn = FIRST_PL_TURN;
+			game->current_player = FIRST_PL_TURN;
 		} else {
-			game->is_first_players_turn = SECOND_PL_TURN;
+			game->current_player = SECOND_PL_TURN;
 		}
 		game->game_over = 1;
 		free(avail_moves);

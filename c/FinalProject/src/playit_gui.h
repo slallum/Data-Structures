@@ -79,7 +79,7 @@ void fill_parameters(Game* game, char** images);
  * for loading \ saving, depending on request
  */
 int show_files_menu(Control* window, int (*empty)(Control*),
-		int (*file_han)(Control*), int (*cancel)(Control*));
+		int (*file_han)(Control*), int (*cancel)(Control*), int* exist);
 
 /**
  * Clears current window - frees tree that window is its root

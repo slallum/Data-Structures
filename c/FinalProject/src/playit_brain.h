@@ -58,10 +58,20 @@ int save_game(int file_num, Game* game);
 Game* load_game(int file_num);
 
 /**
+ * Create suitable game according to given name
+ */
+Game* check_game(char game_name[MAX_STR_LEN]);
+
+/**
  * If rc < 0, means there was an IO error,
  * either reading or writing.
- * Outputs suitable message.
+ * Outputs suitable message and returns error or not.
  */
-void check_validity(int rc);
+int check_validity(int rc);
+
+/**
+ * Returns whether the game file number file_num exists
+ */
+int file_exists(int file_num);
 
 #endif /* PLAYIT_BRAIN_H_ */

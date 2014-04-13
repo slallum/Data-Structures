@@ -192,14 +192,6 @@ Control* create_info_panel(int width, int height, Game* game,
 	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
 			TILE_H, images[3], handle);
 	buttons_next->next = NULL;
-	// If titles are 1 char long, means created from number
-	// and as the memory was allocated, should be released
-	if (strlen(images[2]) == 1) {
-		free(images[2]);
-	}
-	if (strlen(images[3]) == 1) {
-		free(images[3]);
-	}
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
 }
 
@@ -212,13 +204,13 @@ void fill_parameters(Game* game, char** images) {
 
 	images[2] = NO_IMG;
 	images[3] = NO_IMG;
-	if (game->is_first_players_turn == 0 && game->game_over) {
+	if (game->current_player == 0 && game->game_over) {
 		images[0] = PLAYER1_H_IMG;
 		images[1] = PLAYER2_H_IMG;
 		images[2] = TROPHY_IMG;
 		images[3] = TROPHY_IMG;
 	}
-	if (game->is_first_players_turn == FIRST_PL_TURN) {
+	if (game->current_player == FIRST_PL_TURN) {
 		images[0] = PLAYER1_H_IMG;
 		images[1] = PLAYER2_IMG;
 		if (game->game_over) {
@@ -244,7 +236,7 @@ void fill_parameters(Game* game, char** images) {
 }
 
 int show_files_menu(Control* window, int (*empty)(Control*),
-		int (*file_han)(Control*), int (*cancel)(Control*)) {
+		int (*file_han)(Control*), int (*cancel)(Control*), int* exist) {
 
 	int i;
 	char* pics[FILES_NUM + 2] = { FILE_SELECT };
@@ -256,8 +248,13 @@ int show_files_menu(Control* window, int (*empty)(Control*),
 	// Giving a name to a button, as oppose to a valid path
 	// will create it on the fly using text
 	for (i = 1; i <= FILES_NUM; i++) {
-		pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 2 + 1);
-		sprintf(pics[i], "%s %d", FILE_NAME, i);
+		if (exist[i - 1]) {
+			pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 4 + 1);
+			sprintf(pics[i], "\"%s %d\"", FILE_NAME, i);
+		} else {
+			pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 2 + 1);
+			sprintf(pics[i], "%s %d", FILE_NAME, i);
+		}
 		widths[i] = TEXT_W;
 		heights[i] = TEXT_H;
 		handles[i] = file_han;

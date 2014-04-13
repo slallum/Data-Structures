@@ -1,6 +1,10 @@
 
 #include "connect4_brain.h"
 
+/**
+ * Creates a new game specific for connect4,
+ * with all needed parameters
+ */
 Game *connect4_new_game() {
 
 	Game *game = (Game*)malloc(sizeof(Game));
@@ -10,7 +14,7 @@ Game *connect4_new_game() {
 	}
 	game->save_game_name = CONNECT4_NAME;
 	game->board = new_board(C4_BOARD_N, C4_BOARD_M);
-	game->is_first_players_turn = 1;
+	game->current_player = 1;
 
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
@@ -43,6 +47,13 @@ void connect4_init_board(Board* board) {
 
 }
 
+/*
+ * Gets cells, height of cells, column to insert and a value to insert
+ * makes the move, according to connect4 laws
+ * returns the row of the changed cell
+ * if the column is full - returns -1
+ * Otherwise, if move was made, returns 0
+ */
 int connect4_make_move(Board* board, Move* new_move, int value) {
 
 	new_move->i = 0;
@@ -59,6 +70,11 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
 	return new_move->i - 1;
 }
 
+/*
+ * Checks if the board has a winning streak (player doesn't matter).
+ * Checks spans in each direction.
+ * Once finding a winning span, changes their value to winning value.
+ */
 int connect4_won_game(Game* game) {
 
 	int start[2], end[2], dir[2], strike = 0;
@@ -125,6 +141,12 @@ int check_spans(Board* board, int start[2], int end[2], int dir[2]) {
 	return ((result == 4) || (result == -4));
 }
 
+/**
+ * Scoring function for the connect4 game
+ * Each 4 disc span recieves a score and the number
+ * of spans for each score are calculated.
+ * The outcome vector is multiplied by a weight vector
+ */
 int connect4_get_score(Board* board) {
 	int weight[9] = { 0, -5, -2, -1, 0, 1, 2, 5, 0 };
 	int spans_count[9] = { 0 };
