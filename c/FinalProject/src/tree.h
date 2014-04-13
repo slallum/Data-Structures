@@ -30,8 +30,6 @@ typedef struct vertex_s {
 // Tree represented by root
 typedef struct minmax_tree_s {
     vertex *root;
-    int (*make_move)(Board* board, Move* new_move, int value);
-    int (*scoring_func)(Board* board);
 } minmax_tree;
 
 
@@ -39,8 +37,7 @@ typedef struct minmax_tree_s {
  * Initializes a new tree and builds it until requested depth.
  * User is always first so root will be his turn.
  */
-minmax_tree* create_tree(Board* board, int depth,
-		int (*make_move)(Board* board, Move* new_move, int value), int (*get_score)(Board* board));
+minmax_tree* create_tree(Board* board, int (*get_score)(Board* board));
 
 /**
  * Adds levels to tree until reaching requested depth

@@ -7,9 +7,7 @@
  * Initializes a new tree and builds it until requested depth.
  * User is always first so root will be his turn.
  */
-minmax_tree* create_tree(Board* board, int depth, 
-                         int (*make_move)(Board* board, Move* new_move, int value), 
-                         int (*get_score)(Board* board)) {
+minmax_tree* create_tree(Board* board, int (*get_score)(Board* board)) {
     minmax_tree* tree;
     vertex* current_root;
 
@@ -23,7 +21,7 @@ minmax_tree* create_tree(Board* board, int depth,
         return NULL;
     }
 
-    current_root->score = 0;
+    current_root->score = get_score(board);
     current_root->current_move = (Move*) malloc(sizeof(Move));
     current_root->current_move->i = -1;
     current_root->current_move->j = -1;

@@ -25,7 +25,7 @@ Game *connect4_new_game() {
 	game->won_game = connect4_won_game;
 	game->init_board = connect4_init_board;
 
-//	game->tree = create_tree(game->board, game->depth, connect4_make_move, connect4_get_score);
+	game->tree = create_tree(game->board, connect4_get_score);
 
 	game->tiles[0] = C4N_IMG;
 	game->tiles[1] = C4P1_IMG;
