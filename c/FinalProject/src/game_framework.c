@@ -7,8 +7,8 @@ Move *get_best_move(Game *game) {
 		printf("Error: can't allocate memory for best move in get_best_move.\n");
 		return NULL;
 	}
-	depth = game->is_first_players_turn == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth;
-	max = game->is_first_players_turn;
+	depth = game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth;
+	max = game->current_player;
 	minmax_with_extend(game->tree->root, depth, -EXTREME_VALUE, EXTREME_VALUE, 
 					   max, game->board, best_move,
 					   game->make_move, game->undo_move, game->get_score);
@@ -16,7 +16,7 @@ Move *get_best_move(Game *game) {
 }
 
 int current_player_is_ai(Game *game) {
-	if (game->is_first_players_turn == FIRST_PL_TURN) {
+	if (game->current_player == FIRST_PL_TURN) {
 		return game->first_player_ai;
 	} else {
 		return game->second_player_ai;
