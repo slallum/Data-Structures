@@ -30,7 +30,7 @@ Game *ttt_new_game() {
 	game->won_game = ttt_won_game;
 	game->init_board = ttt_init_board;
 
-//	game->tree = create_tree(game->board, game->depth, ttt_make_move, ttt_get_score);
+	game->tree = create_tree(game->board, ttt_get_score);
 
 	game->tiles[0] = TTTN_IMG;
 	game->tiles[1] = TTTX_IMG;

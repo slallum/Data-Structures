@@ -33,7 +33,7 @@ Game *reversi_new_game() {
 	game->won_game = reversi_won_game;
 	game->init_board = reversi_init_board;
 
-//	game->tree = create_tree(game->board, game->depth, reversi_make_move, reversi_get_score);
+	game->tree = create_tree(game->board, reversi_get_score);
 
 	game->tiles[0] = RN_IMG;
 	game->tiles[1] = RW_IMG;
