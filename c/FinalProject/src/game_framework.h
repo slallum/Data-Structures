@@ -36,7 +36,7 @@ Move *get_best_move(Game *game);
 
 
 // return if the current player is AI or not
-int current_player_is_ai(Game *game)
+int current_player_is_ai(Game *game);
 
 Game *init_game();
 
