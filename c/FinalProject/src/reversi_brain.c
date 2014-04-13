@@ -133,43 +133,202 @@ int consider_move(Board* board, Move* position, Move* direction, int value) {
  *
  */
 int reversi_won_game(Game* game) {
-	int first_count = 0;
-	int second_count = 0;
-	int i, j;
+	int disk_difference;
+	int* avail_moves = count_avail_moves(game->board);
 
-	if (board_full(game->board) || (no_moves(game, FIRST_PL_TURN)
-			&& no_moves(game, SECOND_PL_TURN))) {
-		for (i = 0; i < game->board->n; i++) {
-			for (j = 0; j < game->board->m; j++) {
-				if (game->board->cells[i][j] == FIRST_PL_TURN) {
-					first_count++;
-				}
-				if (game->board->cells[i][j] == SECOND_PL_TURN) {
-					second_count++;
-				}
-			}
-		}
-		if (first_count == second_count) {
+	if ((avail_moves[0] == 0) && (avail_moves[1] == 0)) {
+		disk_difference = count_disk_parity(game->board);
+		if (disk_difference == 0) {
 			game->is_first_players_turn = 0;
 		}
-		if (first_count > second_count) {
+		if (disk_difference > 0) {
 			game->is_first_players_turn = FIRST_PL_TURN;
 		} else {
 			game->is_first_players_turn = SECOND_PL_TURN;
 		}
 		game->game_over = 1;
+		free(avail_moves);
 		return 1;
 	}
+	free(avail_moves);
 	return 0;
 }
 
+int count_disk_parity(Board* board) {
+	int disk_difference = 0;
+	int i, j;
+	for (i = 0; i < board->n; i++) {
+		for (j = 0; j < board->m; j++) {
+			disk_difference += board->cells[i][j];
+		}
+	}
+	return disk_difference;
+}
+
 /**
- *
+ * Heuristic calculation follows:
+ * weighted disk parity + 2 * available moves parity + 5 * stability parity
  */
 int reversi_get_score(Board* board) {
 
+	int* avail_moves = count_avail_moves(board);
+	int moves_parity = avail_moves[0] - avail_moves[1];
+	int disk_parity = weighted_disk_parity(board);
 
+	if ((avail_moves[0] == 0) && (avail_moves[1] == 0)) {
+		free(avail_moves);
+		if (count_disk_parity(board) > 0) {
+			return EXTREME_VALUE;
+		} else {
+			return -EXTREME_VALUE;
+		}
+	} else {
+		free(avail_moves);
+		return moves_parity * 2 + count_stability_parity(board) * 5 + disk_parity;
+	}
 }
 
+int weighted_disk_parity(Board* board) {
+	int i;
+	int weight[5] = { 1, -1, 5, -5, 10 };
+	int (*counter[5])(Board*) = { count_reg_1, count_reg_2, count_reg_3, count_reg_4, count_reg_5 };
+	int count = 0;
 
+	for (i = 0; i < 5; i++) {
+		count += (counter[i](board) * weight[i]);
+	}
+	return count;
+}
+
+int count_reg_1(Board* board) {
+	int i, j, count = 0;
+	for (i = 2; i < board->n - 2; i++) {
+		for (j = 2; j < board->m - 2; j++) {
+			count += board->cells[i][j];
+		}
+	}
+	return count;
+}
+
+int count_reg_2(Board* board) {
+	int i, count = 0;
+
+	for (i = 2; i < board->m - 2; i++) {
+		count += board->cells[1][i];
+	}
+	for (i = 2; i < board->m - 2; i++) {
+		count += board->cells[board->n - 2][i];
+	}
+	for (i = 2; i < board->n - 2; i++) {
+		count += board->cells[i][1];
+	}
+	for (i = 2; i < board->n - 2; i++) {
+		count += board->cells[i][board->m - 2];
+	}
+	return count;
+}
+
+int count_reg_3(Board* board) {
+	int i, count = 0;
+
+	for (i = 2; i < board->m - 2; i++) {
+		count += board->cells[0][i];
+	}
+	for (i = 2; i < board->m - 2; i++) {
+		count += board->cells[board->n - 1][i];
+	}
+	for (i = 2; i < board->n - 2; i++) {
+		count += board->cells[i][0];
+	}
+	for (i = 2; i < board->n - 2; i++) {
+		count += board->cells[i][board->m - 1];
+	}
+	return count;
+}
+
+int count_reg_4(Board* board) {
+	return board->cells[0][1] + board->cells[1][0] +
+			board->cells[1][1] + board->cells[0][board->m - 2] +
+			board->cells[1][board->m - 2] + board->cells[1][board->m - 1] +
+			board->cells[board->n - 2][0] + board->cells[board->n - 2][1] +
+			board->cells[board->n - 1][1] + board->cells[board->n - 2][board->m - 2] +
+			board->cells[board->n - 1][board->m - 2] + board->cells[board->n - 2][board->m - 1];
+}
+
+int count_reg_5(Board* board) {
+	return board->cells[0][0] +
+			board->cells[0][board->m - 1] +
+			board->cells[board->n - 1][0] +
+			board->cells[board->n - 1][board->m - 1];
+}
+
+int* count_avail_moves(Board* board) {
+
+	int i, j;
+	int* moves_count = (int*) malloc(2 * sizeof(int));
+	moves_count[0] = 0;
+	moves_count[1] = 0;
+	Move* curr_move = (Move*) malloc(sizeof(Move));
+	Board* temp_board = new_board(board->n, board->m);
+
+	for (i = 0; i < board->n; i++) {
+		for (j = 0; j < board->m; j++) {
+			copy_board(board, temp_board);
+			curr_move->i = i;
+			curr_move->j = j;
+			if (reversi_make_move(temp_board, curr_move, FIRST_PL_TURN) == 0) {
+				moves_count[0]++;
+			}
+			copy_board(board, temp_board);
+			if (reversi_make_move(temp_board, curr_move, SECOND_PL_TURN) == 0) {
+				moves_count[1]++;
+			}
+		}
+	}
+	free(curr_move);
+	free(temp_board);
+	return moves_count;
+}
+
+int count_stability_parity(Board* board) {
+
+	int stability_parity = 0;
+
+	stability_parity += count_stability_section(board, 0, 0, board->n, board->m, 1, 1);
+	stability_parity += count_stability_section(board, 0, board->m - 1, board->n, 0, 1, -1);
+	stability_parity += count_stability_section(board, board->n - 1, board->m - 1, 0, 0, -1, -1);
+	stability_parity += count_stability_section(board, board->n - 1, 0, 0, board->m, -1, 1);
+
+	return stability_parity;
+}
+
+int count_stability_section(Board* board, int i_start, int j_start,
+		int i_end, int j_end, int i_dir, int j_dir) {
+
+	int i = i_start, j = j_start + j_dir;
+	int stability_parity = board->cells[i][j - j_dir];
+	while ((i != i_end) && (j != j_start) && (board->cells[i][j] != 0)) {
+		while ((j != j_end)	&& (board->cells[i][j] == board->cells[i][j - j_dir])) {
+			stability_parity += board->cells[i][j];
+			j += j_dir;
+		}
+		j_end = j;
+		j = j_start;
+		i += i_dir;
+		if (board->cells[i][j] == board->cells[i - i_dir][j]) {
+			stability_parity += board->cells[i][j];
+			j += j_dir;
+		}
+	}
+	return stability_parity;
+}
+
+void copy_board(Board* from_board, Board* to_board) {
+	int i, j;
+	for (i = 0; i < from_board->n; i++) {
+		for (j = 0; j < to_board->m; j++) {
+			to_board->cells[i][j] = from_board->cells[i][j];
+		}
+	}
+}
 

@@ -34,10 +34,12 @@ int no_moves(Game* game, int player) {
 			curr_move->j = j;
 			if (game->board->cells[i][j] == 0) {
 				for (k = 0; k < game->board->n; k++) {
+					// Updating temp board with real state
 					for (l = 0; l < game->board->m; l++) {
 						temp_board->cells[k][l]= game->board->cells[k][l];
 					}
 				}
+				// Attempt move
 				avail_move = game->make_move(temp_board, curr_move, player);
 			}
 			j++;
@@ -46,6 +48,7 @@ int no_moves(Game* game, int player) {
 		i++;
 	}
 	free(curr_move);
+	free(temp_board);
 	return avail_move;
 }
 
@@ -123,10 +126,10 @@ Game* load_game(int file_num) {
 		loaded_game = connect4_new_game();
 	}
 	if (strcmp(game_name, REVERSI_NAME) == 0) {
-		// TODO
+		loaded_game = reversi_new_game();
 	}
 	if (strcmp(game_name, TTT_NAME) == 0) {
-		// TODO
+		loaded_game = ttt_new_game();
 	}
 	// Reading which player's turn
 	check_validity(fscanf(read_file, "%d\n", &(loaded_game->is_first_players_turn)));

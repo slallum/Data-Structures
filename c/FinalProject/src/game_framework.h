@@ -16,7 +16,7 @@ typedef struct game_s {
     int second_player_depth;
     int game_over;
 
-    // rules
+    // game logic
     void (*init_board)(Board* board);
     int (*make_move)(Board* board, Move* new_move, int value);
     int (*undo_move)(Board* board, Move* new_move);

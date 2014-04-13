@@ -18,7 +18,7 @@ Game *connect4_new_game();
 void connect4_init_board(Board* board);
 
 /*
- * gets cells, hight of cells, columnd to insert and a value to insert
+ * Gets cells, height of cells, column to insert and a value to insert
  * makes the move, according to connect4 laws
  * returns the row of the changed cell
  * if the column is full - returns -1
@@ -27,13 +27,20 @@ void connect4_init_board(Board* board);
 int connect4_make_move(Board* board, Move* new_move, int value);
 
 /*
- * checks if the board has a winning streak (the player who won doesn't matter)
+ * Checks if the board has a winning streak (player doesn't matter).
+ * Checks spans in each direction.
+ * Once finding a winning span, changes their value to winning value.
  */
 int connect4_won_game(Game* game);
 
 /**
- * Checks if in any diagonal span on board there is a
+ * Checks if in any span on board there is a
  * 4-some, four adjacent, same player discs
+ *
+ * @param board	Current board state
+ * @param start	Indexes for starting i and j in matrix
+ * @param end	Indexes for ending i and j in matrix
+ * @param dir	Indexes for directions of i and j (1, 0, -1)
  */
 int check_spans(Board* board, int start[2], int end[2], int dir[2]);
 

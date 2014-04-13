@@ -11,7 +11,6 @@
 #include "gui_framework.h"
 #include "game_framework.h"
 #include "playit_conf.h"
-//#include "playit_manager.h"
 
 /**
  * Generically creates a vertical buttons menu.

@@ -105,11 +105,14 @@ int check_spans(Board* board, int start[2], int end[2], int dir[2]) {
 	while ((result < 4) && (result > -4) && (i < end[0])) {
 		while ((result < 4) && (result > -4) && (j < end[1])) {
 			result = 0;
+			// Add 4 adjacent values, according to given direction
 			for (k = 0; k < 4; k++) {
-				result += board->cells[i + k*dir[0]][j + k*dir[1]];
+				result += board->cells[i + k * dir[0]][j + k * dir[1]];
+				// 4 means player 1 winning sequence, -4 means player 2 winning sequence
 				if ((result == 4) || (result == -4)) {
+					// Set winning value in the 4 winning cells
 					for (k = 0; k < 4; k++) {
-						board->cells[i + k * dir[0]][j + k * dir[1]] = 2;
+						board->cells[i + k * dir[0]][j + k * dir[1]] = WINNING_TURN;
 					}
 				}
 			}
@@ -118,6 +121,7 @@ int check_spans(Board* board, int start[2], int end[2], int dir[2]) {
 		j = start[1];
 		i++;
 	}
+	// Indicate was win \ was not win
 	return ((result == 4) || (result == -4));
 }
 

@@ -20,6 +20,7 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 		total_height += heights[i];
 	}
 	spacing = ((height - current * 2 - total_height) / num) / 2;
+	// Linkning all buttons with constant spacing
 	for (i = 0; i < num - 1; i++) {
 		buttons_next->value = create_button((width - widths[i] - 10) / 2,
 				current + spacing, i, 0, widths[i], heights[i], pics[i],
@@ -181,8 +182,8 @@ Control* create_info_panel(int width, int height, Game* game,
 	curr_y += BUT_H + INFO_PANEL_Y;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	buttons_next->value = create_label(curr_x, curr_y, 1, 0, BUT_W,
-		BUT_H, images[2]);
+	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TILE_W,
+		TILE_H, images[2]);
 
 	// Adding difficulty link if needed, according to type of player
 	curr_x += INFO_PANEL_X + BUT_W;
@@ -191,6 +192,14 @@ Control* create_info_panel(int width, int height, Game* game,
 	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
 			TILE_H, images[3], handle);
 	buttons_next->next = NULL;
+	// If titles are 1 char long, means created from number
+	// and as the memory was allocated, should be released
+	if (strlen(images[2]) == 1) {
+		free(images[2]);
+	}
+	if (strlen(images[3]) == 1) {
+		free(images[3]);
+	}
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
 }
 
@@ -201,7 +210,6 @@ Control* create_info_panel(int width, int height, Game* game,
  */
 void fill_parameters(Game* game, char** images) {
 
-	char num[2];
 	images[2] = NO_IMG;
 	images[3] = NO_IMG;
 	if (game->is_first_players_turn == 0 && game->game_over) {
@@ -215,18 +223,22 @@ void fill_parameters(Game* game, char** images) {
 		images[1] = PLAYER2_IMG;
 		if (game->game_over) {
 			images[2] = TROPHY_IMG;
-		} else if (game->first_player_ai == AI_PLAYING) {
-			sprintf(num, "%d", game->first_player_depth);
-			images[2] = num;
 		}
 	} else {
 		images[0] = PLAYER1_IMG;
 		images[1] = PLAYER2_H_IMG;
 		if (game->game_over) {
 			images[3] = TROPHY_IMG;
-		} else if (game->second_player_ai == AI_PLAYING) {
-			sprintf(num, "%d", game->second_player_depth);
-			images[3] = num;
+		}
+	}
+	if (!game->game_over) {
+		if (game->first_player_ai == AI_PLAYING) {
+			images[2] = (char*) malloc(sizeof(char) * 2);
+			sprintf(images[2], "%d", game->first_player_depth);
+		}
+		if (game->second_player_ai == AI_PLAYING) {
+			images[3] = (char*) malloc(sizeof(char) * 2);
+			sprintf(images[3], "%d", game->second_player_depth);
 		}
 	}
 }

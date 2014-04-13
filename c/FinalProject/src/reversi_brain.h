@@ -11,7 +11,6 @@
 #include "game_framework.h"
 #include "board.h"
 #include "tree.h"
-#include "playit_brain.h"
 #include "playit_conf.h"
 
 /**
@@ -49,9 +48,79 @@ int consider_move(Board* board, Move* position, Move* direction, int value);
 int reversi_won_game(Game* game);
 
 /**
+ * Returns difference between
+ * Number of Player 1 and number of Player 2
+ * disks on given board
+ */
+int count_disk_parity(Board* board);
+
+/**
  *
  */
 int reversi_get_score(Board* board);
 
+/**
+ * According to simple scoring function (provided for project),
+ * counts all values in board, multiplied by the weight
+ * corresponding with their position on the board.
+ */
+int weighted_disk_parity(Board* board);
+
+/**
+ * Region 1 - the inner square of board
+ * (minus 2 rows and 2 coloumns from top, bottom and sides)
+ */
+int count_reg_1(Board* board);
+
+/**
+ * Region 2 - second coloumns \ rows from edges,
+ * except 2 first and 2 last cells
+ *
+ */
+int count_reg_2(Board* board);
+
+/**
+ * Region 3 - first coloumns \ rows from edges,
+ * except 2 first and 2 last cells.
+ */
+int count_reg_3(Board* board);
+
+/**
+ * Region 4 - three of each 4 corner cells (except corner cell)
+ */
+int count_reg_4(Board* board);
+
+/**
+ * Region 5 - corners
+ */
+int count_reg_5(Board* board);
+
+/**
+ * Checks for each cell on the board, if it is a possible
+ * move for player 1 or for player 2 and updates the counts accordingly
+ */
+int* count_avail_moves(Board* board);
+
+/**
+ * Counts the difference in the stability between first and second players,
+ * where stability is the number of stable pieces.
+ * A stable piece is one that can never be flipped again in the game.
+ * This happens if piece is in the corner,
+ * on edge with only same coloured pieces between it and a neighbour corner,
+ * or in any position within a diagonal between two stable pieces.
+ */
+int count_stability_parity(Board* board);
+
+/**
+ *
+ */
+int count_stability_section(Board* board, int i_start, int j_start,
+		int i_end, int j_end, int i_dir, int j_dir);
+
+/**
+ * Copy each value of each cell in from_board
+ * to the corresponding cell in to_board
+ */
+void copy_board(Board* from_board, Board* to_board);
 
 #endif /* REVERSI_BRAIN_H_ */

@@ -32,6 +32,7 @@
 #define NO_PLAYER		-1
 #define FIRST_PL_TURN	1
 #define SECOND_PL_TURN	-1
+#define WINNING_TURN	2
 #define SELECT_P_IMG	"SelectPlayer.bmp"
 #define NUM_PLAY_TYPES	4
 

@@ -126,6 +126,7 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 		int (*on_select)(struct Control*)) {
 	SDL_Surface *img = load_image(label_path);
 	if (img == NULL ) {
+		// Could not load image - assume it is meant to be text
 		img = create_text(label_path, width, height);
 		if (img == NULL) {
 			return 0;
@@ -135,6 +136,10 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 	return create_control(x, y, i, j, width, height, NULL, img, on_select, draw_leaf);
 }
 
+/**
+ * Creates a text element with given title
+ * Uses a plain pre-defined background and creates title on the fly
+ */
 SDL_Surface* create_text(char* title, int width, int height) {
 	SDL_Surface *text_image, *img;
 	SDL_Color text_color;
@@ -236,6 +241,9 @@ void free_UI_tree(Control* root) {
 	free(root);
 }
 
+/**
+ * Event handler
+ */
 int poll_event(Control* ui_tree) {
 
 	SDL_Event e;
@@ -299,6 +307,11 @@ int draw(Control* window) {
 	return 1;
 }
 
+/**
+ * Attaches given file name to constant images path
+ * in order to create a full path to the image.
+ * Then loads the image, using sdl
+ */
 SDL_Surface *load_image(char* file_name) {
 	SDL_Surface *img;
 	char* path = (char*) malloc(strlen(IMGS_PATH) + strlen(file_name) + 1);
