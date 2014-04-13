@@ -54,14 +54,33 @@ int no_moves(Game* game, int player) {
 
 // TODO
 int handle_move(Game* game, int i, int j) {
-	Move* new_move = (Move*) malloc(sizeof(Move));
-	new_move->i = i;
-	new_move->j = j;
+	Move* new_move;
+	if ((new_move = (Move*) malloc(sizeof(Move))) == NULL) {
+		printf("Error in allocating memory for new move in handle_move.\n");
+		return 0;
+	}
+
+	// get the new move
+	// if we know that the current player is AI, we'll get the best move for it with minmax
+	if (current_player_is_ai(game)) {
+		new_move = get_best_move(game);
+	// if it's a human player's turn - then i, j are the real move.
+	} else {
+		new_move->i = i;
+		new_move->j = j;
+	}
+
 	// Now new_move should be updated
 	if (game->make_move(game->board, new_move, game->is_first_players_turn) == -1) {
 		free(new_move);
 		return -1;
 	}
+	if (game->won_game(game)) {
+		return 0;
+	}
+	// update the tree according to the new move
+	update_tree(game->tree, game->board, j, i, game->is_first_players_turn == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth);
+
 	free(new_move);
 	return 0;
 }

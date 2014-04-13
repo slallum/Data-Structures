@@ -31,6 +31,13 @@ typedef struct game_s {
 
 void free_game(Game *game);
 
+// get the best move for the current game state, by the minmax algorithm with the current depth
+Move *get_best_move(Game *game);
+
+
+// return if the current player is AI or not
+int current_player_is_ai(Game *game)
+
 Game *init_game();
 
 #endif /* GAME_FRAMEWORK_H_ */
