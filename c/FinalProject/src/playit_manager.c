@@ -19,8 +19,13 @@ int on_new_game(Control* btn_new_game) {
 }
 
 int on_load_game(Control* btn_load_game) {
+
+	int exist[FILES_NUM], i;
+	for (i = 1; i <= FILES_NUM; i++) {
+		exist[i - 1] = file_exists(i);
+	}
 	return !show_files_menu(get_root(btn_load_game), empty_select,
-			on_select_load_file, on_cancel);
+			on_select_load_file, on_cancel, exist);
 }
 
 int on_select_quit(Control* btn_quit) {
@@ -86,7 +91,7 @@ int on_select_tile(Control* btn_tile) {
 int on_select_restart(Control* btn) {
 
 	game->board = new_board(game->board->n, game->board->m);
-	game->is_first_players_turn = FIRST_PL_TURN;
+	game->current_player = FIRST_PL_TURN;
 	game->init_board(game->board);
 	game->game_over = 0;
 	return !show_game_arena(get_root(btn), game, on_select_tile,
@@ -95,8 +100,12 @@ int on_select_restart(Control* btn) {
 
 int on_select_save(Control* btn) {
 
+	int exist[FILES_NUM], i;
+	for (i = 1; i <= FILES_NUM; i++) {
+		exist[i - 1] = file_exists(i);
+	}
 	return !show_files_menu(get_root(btn), empty_select, on_select_save_file,
-			on_select_save_file);
+			on_select_save_file, exist);
 }
 
 int on_select_save_file(Control* file_btn) {
@@ -119,10 +128,10 @@ int on_select_load_file(Control* file_btn) {
 
 int on_select_difficulty(Control* btn) {
 	if (btn->i == 0) {
-		nextLevel(&(game->first_player_depth), game->depth_range);
+		next_level(&(game->first_player_depth), game->depth_range);
 	}
 	if (btn->i == 1) {
-		nextLevel(&(game->second_player_depth), game->depth_range);
+		next_level(&(game->second_player_depth), game->depth_range);
 	}
 	return !show_game_arena(get_root(btn), game, on_select_tile,
 			game_menu_handles, on_select_difficulty);
@@ -130,7 +139,7 @@ int on_select_difficulty(Control* btn) {
 
 /* --- Inner methods --- */
 
-void nextLevel(int* curr, int range[]) {
+void next_level(int* curr, int range[]) {
 	*curr = (*curr + 1);
 	if (*curr == range[1] + 1) {
 		*curr = range[0];

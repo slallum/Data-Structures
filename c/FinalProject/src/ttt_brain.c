@@ -15,7 +15,7 @@ Game *ttt_new_game() {
 	}
 	game->save_game_name = TTT_NAME;
 	game->board = new_board(TTT_BOARD_N, TTT_BOARD_M);
-	game->is_first_players_turn = 1;
+	game->current_player = 1;
 
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;

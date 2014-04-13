@@ -110,7 +110,7 @@ int on_select_difficulty(Control* btn);
  * @param curr	Address of player's game depth to increase
  * @param range	Min and max depth possible as set for the current game
  */
-void nextLevel(int* curr, int range[]);
+void next_level(int* curr, int range[]);
 
 /**
  * Climb to the root of the tree

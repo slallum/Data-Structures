@@ -9,7 +9,7 @@ typedef struct game_s {
 
     char* save_game_name;
 
-    int is_first_players_turn;
+    int current_player;
     int first_player_ai;
     int first_player_depth;
     int second_player_ai;
