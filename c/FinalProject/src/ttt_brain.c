@@ -84,9 +84,9 @@ int ttt_won_board(Board* board) {
 
 	while (!strike && (i < TTT_BOARD_N)) {
 		while (!strike && (j < 2)) {
-			strike = checkHorizontal(i, board, players[j]);
+			strike = check_horizontal(i, board, players[j]);
 			if (!strike) {
-				strike = checkVertical(i, board, players[j]);
+				strike = check_vertical(i, board, players[j]);
 			}
 			j++;
 		}
@@ -94,17 +94,20 @@ int ttt_won_board(Board* board) {
 		i++;
 	}
 	while (!strike && (j < 2)) {
-		strike = checkMainDiag(board, players[j]);
+		strike = check_main_diag(board, players[j]);
 		if (!strike) {
-			strike = checkSecDiag(board, players[j]);
+			strike = check_sec_diag(board, players[j]);
 		}
 		j++;
 	}
-	return strike;
+	if (strike) {
+		return players[j - 1];
+	}
+	return 0;
 }
 
 
-int checkHorizontal(int i, Board* board, int value) {
+int check_horizontal(int i, Board* board, int value) {
 	int j = 0, strike = 1, k;
 	while ((strike == 1) && (j < TTT_BOARD_M)) {
 		strike = strike && (board->cells[i][j] == value);
@@ -120,7 +123,7 @@ int checkHorizontal(int i, Board* board, int value) {
 	}
 }
 
-int checkVertical(int i, Board* board, int value) {
+int check_vertical(int i, Board* board, int value) {
 	int j = 0, strike = 1, k;
 	while ((strike == 1) && (j < TTT_BOARD_M)) {
 		strike = strike && (board->cells[j][i] == value);
@@ -136,7 +139,7 @@ int checkVertical(int i, Board* board, int value) {
 	}
 }
 
-int checkMainDiag(Board* board, int value) {
+int check_main_diag(Board* board, int value) {
 	int i = 0, strike = 1, k;
 	while ((strike == 1) && (i < TTT_BOARD_M)) {
 		strike = strike && (board->cells[i][i] == value);
@@ -152,7 +155,7 @@ int checkMainDiag(Board* board, int value) {
 	}
 }
 
-int checkSecDiag(Board* board, int value) {
+int check_sec_diag(Board* board, int value) {
 	int i = TTT_BOARD_M - 1, j = 0, k;
 	int strike = 1;
 	while ((strike == 1) && (i >= 0)) {
@@ -178,10 +181,14 @@ int checkSecDiag(Board* board, int value) {
  * Therefore, need to indicate only winning board
  */
 int ttt_get_score(Board* board) {
-	if (ttt_won_board(board)) {
-		return 1;
-	} else {
-		return 0;
+
+	int who_won = ttt_won_board(board) == FIRST_PL_TURN;
+	if (who_won == FIRST_PL_TURN) {
+		return EXTREME_VALUE;
 	}
+	if (who_won == SECOND_PL_TURN) {
+		return -EXTREME_VALUE;
+	}
+	return 0;
 }
 

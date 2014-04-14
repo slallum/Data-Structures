@@ -26,5 +26,9 @@ Board *new_board(int n, int m);
  */
 int board_full(Board* board);
 
+/**
+ * Frees each and every dynamic memory allocated for the board
+ */
+void free_board(Board* board);
 
 #endif /* BOARD_H_ */

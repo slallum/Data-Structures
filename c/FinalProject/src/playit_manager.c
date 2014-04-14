@@ -7,7 +7,7 @@
 
 #include "playit_manager.h"
 
-Game* game;
+Game* game = NULL;
 int (*game_menu_handles[4])(
 		Control*) = {on_select_restart, on_select_save, on_cancel, on_select_quit
 		};
@@ -29,6 +29,9 @@ int on_load_game(Control* btn_load_game) {
 }
 
 int on_select_quit(Control* btn_quit) {
+	if (game != NULL) {
+		free_game(game);
+	}
 	return 1;
 }
 
@@ -53,6 +56,9 @@ int on_select_connect4(Control* btn_game) {
 int on_cancel(Control* btn) {
 	int (*handles[4])(Control*) = {
 		empty_select, on_new_game, on_load_game, on_select_quit };
+	if (game != NULL) {
+		free_game(game);
+	}
 	return !show_main_menu(get_root(btn), handles);
 }
 
@@ -151,4 +157,9 @@ Control* get_root(Control* control) {
 		control = control->parent;
 	}
 	return control;
+}
+
+void free_game(Game* game) {
+	free_board(game->board);
+	remove_tree(game->tree->root);
 }

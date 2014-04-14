@@ -35,3 +35,12 @@ int board_full(Board* board) {
 	}
 	return full;
 }
+
+void free_board(Board* board) {
+	int i;
+	for (i = 0; i < board->n; i++) {
+		free(board->cells[i]);
+	}
+	free(board->cells);
+	free(board);
+}

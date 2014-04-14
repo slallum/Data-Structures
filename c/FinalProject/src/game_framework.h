@@ -29,6 +29,9 @@ typedef struct game_s {
     char* tiles[4];
 } Game;
 
+/**
+ * Removes all dynamic memory allocated for the game
+ */
 void free_game(Game *game);
 
 // get the best move for the current game state, by the minmax algorithm with the current depth

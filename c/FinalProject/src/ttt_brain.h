@@ -50,24 +50,24 @@ int ttt_won_board(Board* board);
 /**
  * Check if row i on board has all same symbol as value
  */
-int checkHorizontal(int i, Board* board, int value);
+int check_horizontal(int i, Board* board, int value);
 
 /**
  * Check if coloumn i on board has all same symbol as value
  */
-int checkVertical(int i, Board* board, int value);
+int check_vertical(int i, Board* board, int value);
 
 /**
  * Check if main diagonal (i.e. identical row and coloumn)
  * has all same symbol as value
  */
-int checkMainDiag(Board* board, int value);
+int check_main_diag(Board* board, int value);
 
 /**
  * Check if main diagonal (i.e. decreasing row and increasing coloumn)
  * has all same symbol as value
  */
-int checkSecDiag(Board* board, int value);
+int check_sec_diag(Board* board, int value);
 
 /**
  * Tic Tac Toe AI is so clever, it can see until

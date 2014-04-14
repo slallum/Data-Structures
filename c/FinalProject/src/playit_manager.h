@@ -11,6 +11,7 @@
 #include "gui_framework.h"
 #include "playit_brain.h"
 #include "playit_gui.h"
+#include "tree.h"
 
 /* --- GUI handles --- */
 
