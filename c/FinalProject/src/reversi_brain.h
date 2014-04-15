@@ -19,6 +19,8 @@
  */
 Game *reversi_new_game();
 
+int reversi_is_valid_move(Board *board, Move *move, int value);
+
 /*
  * Returns 0 if move is legal and was made.
  * Returns -1 Otherwise

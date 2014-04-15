@@ -24,6 +24,8 @@ Game *ttt_new_game();
  */
 void ttt_init_board(Board* board);
 
+int ttt_is_valid_move(Board *board, Move *move, int value);
+
 /*
  *
  * @param board		Current board of the game

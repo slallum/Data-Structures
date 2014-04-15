@@ -83,12 +83,12 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                        Board *board, Move *best_move,
                        int (*is_valid_move)(Board *board, Move *move, int value),
                        int (*make_move)(Board* board, Move* new_move, int value), 
-                       int (*get_score)(Board* board));
-    Board *copied_board;
+                       int (*get_score)(Board* board)) {
     int i;
     int unimplemented_moves_length;
     int current_score;
-    
+    Board *copied_board;
+
     if (depth == 0) {
         best_move->i = node->current_move->i;
         best_move->j = node->current_move->j;
@@ -106,7 +106,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
-                                                        is_valid_move, undo_move);
+                                                        is_valid_move);
     copied_board = copy_board(board);
 
     // runs max
@@ -114,7 +114,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         while (iterator != NULL) {
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
-                                               make_move, undo_move, get_score);
+                                               is_valid_move, make_move, get_score);
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -134,7 +134,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
-                                               make_move, undo_move, get_score);
+                                               is_valid_move, make_move, get_score);
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -152,7 +152,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         while (iterator != NULL) {
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
-                                               make_move, undo_move, get_score);
+                                               is_valid_move, make_move, get_score);
             if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
@@ -172,7 +172,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
-                                               make_move, undo_move, get_score);
+                                               is_valid_move, make_move, get_score);
             if (current_score > beta) {
                 beta = current_score;
                 // update the best move accordingly

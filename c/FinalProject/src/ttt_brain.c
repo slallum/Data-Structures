@@ -49,7 +49,7 @@ void ttt_init_board(Board* board) {
 }
 
 int ttt_is_valid_move(Board *board, Move *move, int value) {
-	if (board->cells[new_move->i][new_move->j] != 0) {
+	if (board->cells[move->i][move->j] != 0) {
 		return 0;
 	}
 	return 1;
