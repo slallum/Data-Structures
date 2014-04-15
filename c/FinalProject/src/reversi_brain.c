@@ -29,6 +29,7 @@ Game *reversi_new_game() {
 
 	game->game_over = 0;
 
+	game->is_valid_move = reversi_is_valid_move;
 	game->make_move = reversi_make_move;
 	game->won_game = reversi_won_game;
 	game->init_board = reversi_init_board;
@@ -57,6 +58,12 @@ void reversi_init_board(Board* board) {
 		player *= (SECOND_PL_TURN);
 	}
 }
+
+// TODO (ofer) - implement
+int reversi_is_valid_move(Board *board, Move *move, int value) {
+	return -1;
+}
+
 
 /*
  *
@@ -273,13 +280,13 @@ int* count_avail_moves(Board* board) {
 
 	for (i = 0; i < board->n; i++) {
 		for (j = 0; j < board->m; j++) {
-			copy_board(board, temp_board);
+			reversi_copy_board(board, temp_board);
 			curr_move->i = i;
 			curr_move->j = j;
 			if (reversi_make_move(temp_board, curr_move, FIRST_PL_TURN) == 0) {
 				moves_count[0]++;
 			}
-			copy_board(board, temp_board);
+			reversi_copy_board(board, temp_board);
 			if (reversi_make_move(temp_board, curr_move, SECOND_PL_TURN) == 0) {
 				moves_count[1]++;
 			}
@@ -323,7 +330,7 @@ int count_stability_section(Board* board, int i_start, int j_start,
 	return stability_parity;
 }
 
-void copy_board(Board* from_board, Board* to_board) {
+void reversi_copy_board(Board* from_board, Board* to_board) {
 	int i, j;
 	for (i = 0; i < from_board->n; i++) {
 		for (j = 0; j < to_board->m; j++) {

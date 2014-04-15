@@ -7,8 +7,6 @@ typedef struct board_s {
 	int** cells;
 	int n;
 	int m;
-	// int (*scoring_func)(int**, int, int);
-	// int (*make_move)(int**, int, int, int);
 } Board;
 
 typedef struct move_s {
@@ -19,6 +17,8 @@ typedef struct move_s {
 int board_is_full(Board board, int m);
 
 Board *new_board(int n, int m);
+
+Board *copy_board(Board *board);
 
 /**
  * If at least one cell in the board has no value in it,

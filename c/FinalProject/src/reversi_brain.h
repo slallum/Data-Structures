@@ -121,6 +121,6 @@ int count_stability_section(Board* board, int i_start, int j_start,
  * Copy each value of each cell in from_board
  * to the corresponding cell in to_board
  */
-void copy_board(Board* from_board, Board* to_board);
+void reversi_copy_board(Board* from_board, Board* to_board);
 
 #endif /* REVERSI_BRAIN_H_ */

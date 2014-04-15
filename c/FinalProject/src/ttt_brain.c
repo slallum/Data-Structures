@@ -26,6 +26,7 @@ Game *ttt_new_game() {
 
 	game->game_over = 0;
 
+	game->is_valid_move = ttt_is_valid_move;
 	game->make_move = ttt_make_move;
 	game->won_game = ttt_won_game;
 	game->init_board = ttt_init_board;
@@ -45,6 +46,13 @@ Game *ttt_new_game() {
  */
 void ttt_init_board(Board* board) {
 
+}
+
+int ttt_is_valid_move(Board *board, Move *move, int value) {
+	if (board->cells[new_move->i][new_move->j] != 0) {
+		return 0;
+	}
+	return 1;
 }
 
 /*

@@ -17,6 +17,9 @@ Game *connect4_new_game();
  */
 void connect4_init_board(Board* board);
 
+
+int connect4_is_valid_move(Board *board, Move *new_move, int value);
+
 /*
  * Gets cells, height of cells, column to insert and a value to insert
  * makes the move, according to connect4 laws

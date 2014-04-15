@@ -53,8 +53,8 @@ void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth);
  */
 int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                        Board *board, Move *best_move,
+                       int (*is_valid_move)(Board *board, Move *move, int value),
                        int (*make_move)(Board* board, Move* new_move, int value), 
-                       int (*undo_move)(Board* board, Move* new_move),
                        int (*get_score)(Board* board));
 
 /* --- Helper Methods --- */
@@ -68,16 +68,12 @@ int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value)
  * returns an array of moves that can be made but don't exist in the nodes list
  */
 Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_length, int max,
-                              int (*make_move)(Board* board, Move* new_move, int value), 
-                              int (*undo_move)(Board* board, Move* new_move));
+                              int (*is_valid_move)(Board* board, Move* new_move, int value));
 
 /*
  * returns True if a move exists in the list of nodes, False o/w.
  */
 int move_in_linked_list(Move move, linked_list *nodes_list);
-
-
-
 
 
 /**

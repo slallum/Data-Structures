@@ -25,6 +25,7 @@ Game *connect4_new_game() {
 
 	game->game_over = 0;
 
+	game->is_valid_move = connect4_is_valid_move;
 	game->make_move = connect4_make_move;
 	game->won_game = connect4_won_game;
 	game->init_board = connect4_init_board;
@@ -47,6 +48,23 @@ void connect4_init_board(Board* board) {
 
 }
 
+// TODO (ofer) - make_move should use is_valid_move
+int connect4_is_valid_move(Board *board, Move *new_move, int value) {
+	new_move->i = 0;
+	// check when we reach a non empty cell
+	while ((new_move->i < board->n) && (board->cells[new_move->i][new_move->j] == 0)) {
+		(new_move->i)++;
+	}
+    // if j IS 0 - it means that the column is full and we'll return -1
+	if (new_move->i != 0) {
+		return 1;
+	}
+	if ((new_move->i - 1) == -1) {
+		return 0;
+	}
+	return 1;
+}
+
 /*
  * Gets cells, height of cells, column to insert and a value to insert
  * makes the move, according to connect4 laws
@@ -55,7 +73,6 @@ void connect4_init_board(Board* board) {
  * Otherwise, if move was made, returns 0
  */
 int connect4_make_move(Board* board, Move* new_move, int value) {
-
 	new_move->i = 0;
 	// check when we reach a non empty cell
 	while ((new_move->i < board->n) && (board->cells[new_move->i][new_move->j] == 0)) {

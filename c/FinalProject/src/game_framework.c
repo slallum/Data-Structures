@@ -11,7 +11,7 @@ Move *get_best_move(Game *game) {
 	max = game->current_player;
 	minmax_with_extend(game->tree->root, depth, -EXTREME_VALUE, EXTREME_VALUE, 
 					   max, game->board, best_move,
-					   game->make_move, game->undo_move, game->get_score);
+					   game->is_valid_move, game->make_move, game->get_score);
 	return best_move;
 }
 

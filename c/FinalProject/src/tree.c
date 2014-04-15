@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "tree.h"
+#include "board.h"
 
 /**
  * Initializes a new tree and builds it until requested depth.
@@ -80,13 +81,14 @@ void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth) {
  */
 int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                        Board *board, Move *best_move,
+                       int (*is_valid_move)(Board *board, Move *move, int value),
                        int (*make_move)(Board* board, Move* new_move, int value), 
-                       int (*undo_move)(Board* board, Move* new_move),
-                       int (*get_score)(Board* board)) {
+                       int (*get_score)(Board* board));
+    Board *copied_board;
     int i;
     int unimplemented_moves_length;
     int current_score;
-
+    
     if (depth == 0) {
         best_move->i = node->current_move->i;
         best_move->j = node->current_move->j;
@@ -102,17 +104,17 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         node->children->tail = NULL;
     }
 
-
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
-                                                        make_move, undo_move);
+                                                        is_valid_move, undo_move);
+    copied_board = copy_board(board);
+
     // runs max
     if (max) {
         while (iterator != NULL) {
-            make_move(board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board, best_move,
+            make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                make_move, undo_move, get_score);
-            undo_move(board, iterator->node->current_move);
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -125,15 +127,14 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            add_node_to_end(node->children, unimplemented_moves[i], board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
-            make_move(board, node->children->tail->node->current_move, node->children->tail->node->value);
-            node->children->tail->node->score = get_score(board);
+            make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
+            node->children->tail->node->score = get_score(copied_board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board, best_move,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                make_move, undo_move, get_score);
-            undo_move(board, node->children->tail->node->current_move);
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -149,10 +150,9 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     // runs min
     } else {
         while (iterator != NULL) {
-            make_move(board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, board, best_move,
+            make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                make_move, undo_move, get_score);
-            undo_move(board, iterator->node->current_move);
             if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
@@ -165,15 +165,14 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            add_node_to_end(node->children, unimplemented_moves[i], board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
+            add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
-            make_move(board, node->children->tail->node->current_move, node->children->tail->node->value);
-            node->children->tail->node->score = get_score(board);
+            make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
+            node->children->tail->node->score = get_score(copied_board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, board, best_move,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                make_move, undo_move, get_score);
-            undo_move(board, node->children->tail->node->current_move);
             if (current_score > beta) {
                 beta = current_score;
                 // update the best move accordingly
@@ -233,8 +232,7 @@ int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value)
  * returns an array of moves that can be made but don't exist in the nodes list
  */
 Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_length, int max,
-                              int (*make_move)(Board* board, Move* new_move, int value), 
-                              int (*undo_move)(Board* board, Move* new_move)) {
+                              int (*is_valid_move)(Board* board, Move* new_move, int value)) {
     int i, j;
     Move *result;
     Move current_move = {.i = 0, .j = 0};
@@ -250,10 +248,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
             current_move.j = j;
             // if this move doesn't exist in the linked list - add it to result
             if (!move_in_linked_list(current_move, nodes_list)) {
-                if (make_move(board, &current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN) != -1){
-                    // first - undo the unnecessary move
-                    undo_move(board, &current_move);
-                    
+                if (is_valid_move(board, &current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN)){
                     // add the move to the result
                     result[result_index] = (Move){.i=current_move.i, .j=current_move.j};
                     result_index++;

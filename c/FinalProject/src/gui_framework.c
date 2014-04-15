@@ -165,7 +165,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	SDL_Rect rect = { (width - (strlen(title) * 17)) / 2 , 8, strlen(title) * 17, height - 16 };
 	// Text titles come from dynamic allocation and must be freed, once used
-	free(title);
+	// free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
