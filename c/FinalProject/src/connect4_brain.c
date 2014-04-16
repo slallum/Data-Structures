@@ -75,6 +75,7 @@ int connect4_is_valid_move(Board *board, Move *new_move, int value) {
  * Otherwise, if move was made, returns 0
  */
 int connect4_make_move(Board* board, Move* new_move, int value) {
+	int old_i = new_move->i;
 	new_move->i = 0;
 	// check when we reach a non empty cell
 	while ((new_move->i < board->n) && (board->cells[new_move->i][new_move->j] == 0)) {
@@ -84,9 +85,10 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
     // otherwise - we'll change the value in the cells and return the right row
 	if (new_move->i != 0) {
 		board->cells[new_move->i - 1][new_move->j] = value;
+		new_move->i = old_i;
 		return 0;
 	}
-	new_move->i--;
+	(new_move->i)--;
 	return new_move->i;
 }
 
