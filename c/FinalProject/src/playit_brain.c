@@ -97,7 +97,7 @@ int handle_move(Game* game, int i, int j) {
 //		return 0;
 //	}
 	// update the tree according to the new move
-	update_tree(game->tree, game->board, j, i, game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth);
+	update_tree(game->tree, game->board, new_move->j, new_move->i, game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth);
 
 	free(new_move);
 	return 0;
