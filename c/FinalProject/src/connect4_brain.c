@@ -57,6 +57,7 @@ int connect4_is_valid_move(Board *board, Move *new_move, int value) {
 	}
     // if j IS 0 - it means that the column is full and we'll return -1
 	if (new_move->i != 0) {
+		new_move->i--;
 		return 1;
 	}
 	if ((new_move->i - 1) == -1) {
@@ -84,7 +85,8 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
 		board->cells[new_move->i - 1][new_move->j] = value;
 		return 0;
 	}
-	return new_move->i - 1;
+	new_move->i--;
+	return new_move->i;
 }
 
 /*
