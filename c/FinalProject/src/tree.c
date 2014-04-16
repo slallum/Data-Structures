@@ -138,8 +138,8 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
-                best_move->i = node->current_move->i;
-                best_move->j = node->current_move->j;
+                best_move->i = node->children->tail->node->current_move->i;
+                best_move->j = node->children->tail->node->current_move->j;
             }
             // alpha-beta pruning
             if (beta <= alpha) {
@@ -178,8 +178,8 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
-                best_move->i = node->current_move->i;
-                best_move->j = node->current_move->j;
+                best_move->i = node->children->tail->node->current_move->i;
+                best_move->j = node->children->tail->node->current_move->j;
             }
             // alpha-beta pruning
             if (beta <= alpha) {
