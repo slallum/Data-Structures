@@ -107,11 +107,10 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
                                                         is_valid_move);
-    copied_board = copy_board(board);
-
     // runs max
     if (max) {
         while (iterator != NULL) {
+            copied_board = copy_board(board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                is_valid_move, make_move, get_score);
@@ -127,6 +126,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
+            copied_board = copy_board(board);
             add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
@@ -150,6 +150,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     // runs min
     } else {
         while (iterator != NULL) {
+            copied_board = copy_board(board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                is_valid_move, make_move, get_score);
@@ -165,6 +166,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
+            copied_board = copy_board(board);
             add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
@@ -173,7 +175,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
                                                is_valid_move, make_move, get_score);
-            if (current_score > beta) {
+            if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
                 best_move->i = node->current_move->i;
