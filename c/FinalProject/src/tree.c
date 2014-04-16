@@ -88,6 +88,8 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     int unimplemented_moves_length;
     int current_score;
     Board *copied_board;
+    Move *next_best_move;
+
 
     if (depth == 0) {
         best_move->i = node->current_move->i;
@@ -104,6 +106,11 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         node->children->tail = NULL;
     }
 
+    if ((next_best_move = (Move*)malloc(sizeof(Move))) == NULL) {
+        printf("Error: malloc has failed in minmaxtree.\n");
+        exit(1);
+    }
+
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
                                                         is_valid_move);
@@ -112,7 +119,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         while (iterator != NULL) {
             copied_board = copy_board(board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
             if (current_score > alpha) {
                 alpha = current_score;
@@ -122,6 +129,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
             // alpha-beta pruning
             if (beta <= alpha) {
+                free(next_best_move);
                 return alpha;
             }
         }
@@ -133,7 +141,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             node->children->tail->node->score = get_score(copied_board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
             if (current_score > alpha) {
                 alpha = current_score;
@@ -143,16 +151,18 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
             // alpha-beta pruning
             if (beta <= alpha) {
+                free(next_best_move);
                 return alpha;
             }
         }
+        free(next_best_move);
         return alpha;
     // runs min
     } else {
         while (iterator != NULL) {
             copied_board = copy_board(board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
-            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, best_move,
+            current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
             if (current_score < beta) {
                 beta = current_score;
@@ -162,6 +172,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
             // alpha-beta pruning
             if (beta <= alpha) {
+                free(next_best_move);
                 return beta;
             }
         }
@@ -173,7 +184,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             node->children->tail->node->score = get_score(copied_board);
 
             // now for the minmax part
-            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, best_move,
+            current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
             if (current_score < beta) {
                 beta = current_score;
@@ -183,9 +194,11 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             }
             // alpha-beta pruning
             if (beta <= alpha) {
+                free(next_best_move);
                 return beta;
             }
         }
+        free(next_best_move);
         return beta;
     }
 }
