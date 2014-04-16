@@ -126,11 +126,13 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 // update the best move accordingly
                 best_move->i = node->current_move->i;
                 best_move->j = node->current_move->j;
-            }
-            // alpha-beta pruning
-            if (beta <= alpha) {
-                free(next_best_move);
-                return alpha;
+                
+                // alpha-beta pruning
+                if (beta <= alpha) {
+                    printf("move: %d %d\n", best_move->i, best_move->j);
+                    free(next_best_move);
+                    return alpha;
+                }
             }
         }
         for (i=0; i<unimplemented_moves_length; i++) {
@@ -148,11 +150,13 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 // update the best move accordingly
                 best_move->i = node->children->tail->node->current_move->i;
                 best_move->j = node->children->tail->node->current_move->j;
-            }
-            // alpha-beta pruning
-            if (beta <= alpha) {
-                free(next_best_move);
-                return alpha;
+
+                // alpha-beta pruning
+                if (beta <= alpha) {
+                    printf("move: %d %d\n", best_move->i, best_move->j);
+                    free(next_best_move);
+                    return alpha;
+                }
             }
         }
         free(next_best_move);
@@ -169,12 +173,15 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 // update the best move accordingly
                 best_move->i = node->current_move->i;
                 best_move->j = node->current_move->j;
+                
+                // alpha-beta pruning
+                if (beta <= alpha) {
+                    printf("move: %d %d\n", best_move->i, best_move->j);
+                    free(next_best_move);
+                    return beta;
+                }
             }
-            // alpha-beta pruning
-            if (beta <= alpha) {
-                free(next_best_move);
-                return beta;
-            }
+            
         }
         for (i=0; i<unimplemented_moves_length; i++) {
             copied_board = copy_board(board);
@@ -191,11 +198,13 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 // update the best move accordingly
                 best_move->i = node->children->tail->node->current_move->i;
                 best_move->j = node->children->tail->node->current_move->j;
-            }
-            // alpha-beta pruning
-            if (beta <= alpha) {
-                free(next_best_move);
-                return beta;
+
+                // alpha-beta pruning
+                if (beta <= alpha) {
+                    printf("move: %d %d\n", best_move->i, best_move->j);
+                    free(next_best_move);
+                    return beta;
+                }
             }
         }
         free(next_best_move);
@@ -275,10 +284,15 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
             }
         }
     }
+    // if (result_index == 0) {
+    //     free(result);
+    //     return NULL;
+    // }
 
     if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
         printf("Error: can't allocate result in get_unimplemented_moves.\n");
-        return NULL;
+        printf("result index: %d\n", result_index);
+        exit(1);
     }
     *new_length = result_index;
     return result;
