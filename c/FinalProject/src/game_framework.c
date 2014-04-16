@@ -8,7 +8,7 @@ Move *get_best_move(Game *game) {
 		return NULL;
 	}
 	depth = game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth;
-	max = game->current_player;
+	max = game->current_player == FIRST_PL_TURN;
 	minmax_with_extend(game->tree->root, depth, -EXTREME_VALUE, EXTREME_VALUE, 
 					   max, game->board, best_move,
 					   game->is_valid_move, game->make_move, game->get_score);
