@@ -47,8 +47,8 @@ void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth) {
     if (current_root->children != NULL) {
         iterator = current_root->children->head;
         while ((iterator != NULL) &&
-               (!(iterator->node->current_move->j == col) &&
-                 (iterator->node->current_move->i == row) )) {
+               (!((iterator->node->current_move->j == col) &&
+                  (iterator->node->current_move->i == row) ))) {
             iterator = iterator->next;
         }
         if (iterator != NULL) {
