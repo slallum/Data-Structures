@@ -82,14 +82,14 @@ int connect4_make_move(Board* board, Move* new_move, int value) {
 		(new_move->i)++;
 	}
     // if j IS 0 - it means that the column is full and we'll return -1
-    // otherwise - we'll change the value in the cells and return the right row
-	if (new_move->i != 0) {
-		board->cells[new_move->i - 1][new_move->j] = value;
+	if (new_move->i == 0) {
 		new_move->i = old_i;
-		return 0;
+		return -1;
 	}
+    // otherwise - we'll change the value in the cells and return the right row
 	(new_move->i)--;
-	return new_move->i;
+	board->cells[new_move->i][new_move->j] = value;
+	return 0;
 }
 
 /*

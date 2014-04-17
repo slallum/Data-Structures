@@ -47,8 +47,8 @@ void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth) {
     if (current_root->children != NULL) {
         iterator = current_root->children->head;
         while ((iterator != NULL) &&
-               (iterator->node->current_move->j != col) &&
-               (iterator->node->current_move->i != row)) {
+               (!(iterator->node->current_move->j == col) &&
+                 (iterator->node->current_move->i == row) )) {
             iterator = iterator->next;
         }
         if (iterator != NULL) {
@@ -114,6 +114,10 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
                                                         is_valid_move);
+    if (unimplemented_moves_length == 0) {
+        printf("0 moves!\n");
+        exit(1);
+    }
     // runs max
     if (max) {
         while (iterator != NULL) {
@@ -259,7 +263,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
                               int (*is_valid_move)(Board* board, Move* new_move, int value)) {
     int i, j;
     Move *result;
-    Move current_move = {.i = 0, .j = 0};
+    Move move = {.i = 0, .j = 0};
     int result_index = 0;
     if ((result = (Move*)calloc(board->n*board->m, sizeof(Move))) == NULL) {
         printf("Error: unable to init moves list in get_unimplemented_moves.\n");
@@ -268,26 +272,26 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
 
     for (i=0; i < (board->n); i++) {
         for (j=0; j < board->m; j++) {
-            current_move.i = i;
-            current_move.j = j;
+            move.i = i;
+            move.j = j;
             // if this move doesn't exist in the linked list - add it to result
-            if (!move_in_linked_list(current_move, nodes_list)) {
+            if (!move_in_linked_list(move, nodes_list)) {
                 // check that it is a valid move.
                 // `is_valid_move` function can CHANGE the move coordinates,
                 // and we only want moves that don't change their coordinates
-                if (is_valid_move(board, &current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN) &&
-                    ((current_move.i == i) && (current_move.j == j)) ){
+                if (is_valid_move(board, &move, max ? FIRST_PL_TURN:SECOND_PL_TURN) &&
+                    ((move.i == i) && (move.j == j)) ){
                     // add the move to the result
-                    result[result_index] = (Move){.i=current_move.i, .j=current_move.j};
+                    result[result_index] = (Move){.i=move.i, .j=move.j};
                     result_index++;
                 }
             }
         }
     }
-    // if (result_index == 0) {
-    //     free(result);
-    //     return NULL;
-    // }
+    if (result_index == 0) {
+        free(result);
+        return NULL;
+    }
 
     if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
         printf("Error: can't allocate result in get_unimplemented_moves.\n");
