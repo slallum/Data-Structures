@@ -114,10 +114,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
                                                         is_valid_move);
-    if (unimplemented_moves_length == 0) {
-        printf("0 moves!\n");
-        exit(1);
-    }
     // runs max
     if (max) {
         while (iterator != NULL) {
@@ -138,6 +134,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                     return alpha;
                 }
             }
+            iterator = iterator->next;
         }
         for (i=0; i<unimplemented_moves_length; i++) {
             copied_board = copy_board(board);
@@ -185,7 +182,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                     return beta;
                 }
             }
-            
+            iterator = iterator->next;
         }
         for (i=0; i<unimplemented_moves_length; i++) {
             copied_board = copy_board(board);

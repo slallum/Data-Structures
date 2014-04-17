@@ -22,3 +22,16 @@ int current_player_is_ai(Game *game) {
 		return game->second_player_ai;
 	}
 }
+
+int restart_game(Game *game) {
+	free_board(game->board);
+	game->board = new_board(game->board->n, game->board->m);
+	game->current_player = FIRST_PL_TURN;
+	game->init_board(game->board);
+
+	remove_tree(game->tree->root);
+	free(game->tree);
+	game->tree = create_tree(game->board, game->get_score);
+	game->game_over = 0;
+	return 1;
+}

@@ -44,4 +44,6 @@ int current_player_is_ai(Game *game);
 
 Game *init_game();
 
+int restart_game(Game *game);
+
 #endif /* GAME_FRAMEWORK_H_ */

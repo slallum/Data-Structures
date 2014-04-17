@@ -95,11 +95,7 @@ int on_select_tile(Control* btn_tile) {
 }
 
 int on_select_restart(Control* btn) {
-
-	game->board = new_board(game->board->n, game->board->m);
-	game->current_player = FIRST_PL_TURN;
-	game->init_board(game->board);
-	game->game_over = 0;
+	restart_game(game);
 	return !show_game_arena(get_root(btn), game, on_select_tile,
 			game_menu_handles, on_select_difficulty);
 }
