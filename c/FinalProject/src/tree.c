@@ -90,10 +90,10 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     Board *copied_board;
     Move *next_best_move;
 
-
-    if (depth == 0) {
-        best_move->i = node->current_move->i;
-        best_move->j = node->current_move->j;
+    // we stop if we got to a winning move or the requested depth
+    if ((depth == 0) || (node->score == EXTREME_VALUE) || (node->score == -EXTREME_VALUE)) {
+        // best_move->i = node->current_move->i;
+        // best_move->j = node->current_move->j;
         return node->score;
     }
     // if we don't have a linked list, but the depth isn't 0, we'll create an empty linked list
