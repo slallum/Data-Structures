@@ -285,6 +285,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
             }
         }
     }
+    *new_length = result_index;
     if (result_index == 0) {
         free(result);
         return NULL;
@@ -292,10 +293,8 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
 
     if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
         printf("Error: can't allocate result in get_unimplemented_moves.\n");
-        printf("result index: %d\n", result_index);
         exit(1);
     }
-    *new_length = result_index;
     return result;
 }
 
