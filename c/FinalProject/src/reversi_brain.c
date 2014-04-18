@@ -60,9 +60,34 @@ void reversi_init_board(Board* board) {
 	}
 }
 
-// TODO (ofer) - implement
-int reversi_is_valid_move(Board *board, Move *move, int value) {
-	return -1;
+
+int reversi_is_valid_move(Board *board, Move *new_move, int value) {
+	int oppAdjacent = 0;
+	int i, j;
+	int directions[3] = {-1, 0, 1};
+	Move* current_dir = (Move*) malloc(sizeof(Move));
+
+	// Requested cell is taken
+	if (board->cells[new_move->i][new_move->j] != 0) {
+		return 0;
+	}
+	for (i = 0; i < 3; i++) {
+		for (j = 0; j < 3; j++) {
+			// Check all except no move in no direction
+			if ((i != 1) || (j != 1)) {
+				current_dir->i = directions[i];
+				current_dir->j = directions[j];
+				// DON'T CHANGE THE BOARD
+				oppAdjacent = consider_move(board, new_move, current_dir, value, 0) || oppAdjacent;
+			}
+		}
+	}
+	free(current_dir);
+	// Move without adjacent opponent tiles is not legal
+	if (!oppAdjacent) {
+		return 0;
+	}
+	return 1;
 }
 
 
@@ -85,7 +110,7 @@ int reversi_make_move(Board* board, Move* new_move, int value) {
 			if ((i != 1) || (j != 1)) {
 				current_dir->i = directions[i];
 				current_dir->j = directions[j];
-				oppAdjacent = consider_move(board, new_move, current_dir, value) || oppAdjacent;
+				oppAdjacent = consider_move(board, new_move, current_dir, value, 1) || oppAdjacent;
 			}
 		}
 	}
@@ -99,12 +124,13 @@ int reversi_make_move(Board* board, Move* new_move, int value) {
 
 /**
  *
- * @param board		Current board of the game, for checking
- * @param position	Current position for checking
- * @param direction	To move for checking validity - can have the values 1, -1, 0
- * 					as it's i / j, to indicate up, down, left, right
+ * @param board			Current board of the game, for checking
+ * @param position	    Current position for checking
+ * @param direction	    To move for checking validity - can have the values 1, -1, 0
+ * 						as it's i / j, to indicate up, down, left, right
+ * @param change_board	wheater to change the board's values or not
  */
-int consider_move(Board* board, Move* position, Move* direction, int value) {
+int consider_move(Board* board, Move* position, Move* direction, int value, int change_board) {
 
 	int i = position->i + direction->i;
 	int j = position->j + direction->j;
@@ -126,7 +152,10 @@ int consider_move(Board* board, Move* position, Move* direction, int value) {
 			while ((i != position->i) || (j != position->j)) {
 				i -= direction->i;
 				j -= direction->j;
-				board->cells[i][j] = value;
+				// change the cell in the board only if we asked to
+				if (change_board) {
+					board->cells[i][j] = value;
+				}
 			}
 			return 1;
 		}

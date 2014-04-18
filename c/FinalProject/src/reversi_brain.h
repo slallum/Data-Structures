@@ -42,7 +42,7 @@ void reversi_init_board(Board* board);
  *
  * Also, performs the move by flipping all oponent's tiles, if found legal.
  */
-int consider_move(Board* board, Move* position, Move* direction, int value);
+int consider_move(Board* board, Move* position, Move* direction, int value, int change_board);
 
 /*
  * checks if the board has a winning streak (the player who won doesn't matter)
