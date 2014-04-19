@@ -38,8 +38,7 @@
 
 // Game arena menu
 #define SAVE_GAME_IMG	"SaveGame.bmp"
-#define DIFF1_IMG		"Difficulty1.bmp"
-#define DIFF2_IMG		"Difficulty2.bmp"
+#define RESUME_GAME_IMG	"Resume.bmp"
 #define RESTART_GAME_IMG "RestartGame.bmp"
 #define MAIN_MENU_IMG	"MainMenu.bmp"
 #define NUM_GAMES		3

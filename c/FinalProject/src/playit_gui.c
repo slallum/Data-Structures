@@ -20,7 +20,7 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 		total_height += heights[i];
 	}
 	spacing = ((height - current * 2 - total_height) / num) / 2;
-	// Linkning all buttons with constant spacing
+	// Linking all buttons with constant spacing
 	for (i = 0; i < num - 1; i++) {
 		buttons_next->value = create_button((width - widths[i] - 10) / 2,
 				current + spacing, i, 0, widths[i], heights[i], pics[i],
@@ -52,7 +52,10 @@ int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 					handles, widths, heights));
 	window->children_head->value->parent = window;
 	window->children_head->next = NULL;
-	return draw(window);
+	if (draw(window)) {
+		return flip(window);
+	}
+	return 0;
 }
 
 int show_main_menu(Control* window, int (*handles[])(Control*)) {
@@ -90,7 +93,7 @@ int show_player_select(Control* window, int (*empty)(Control*),
 }
 
 int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
-		int (*menu_handles[])(Control*), int (*handle_difficulty)(Control*)) {
+		int (*menu_handles[])(Control*), int (*handle_difficulty)(Control*), int button_num) {
 
 	Link *buttons_next;
 	clear_window(window);
@@ -103,7 +106,7 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
 	buttons_next->value = create_game_panel(window->height,
-			window->width - (BOARD_PANEL_W), menu_handles);
+			window->width - (BOARD_PANEL_W), menu_handles, button_num);
 	buttons_next->value->parent = window;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
@@ -112,18 +115,21 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	buttons_next->value->parent = window;
 	buttons_next->next = NULL;
 
-	return draw(window);
+	if (draw(window)) {
+		return flip(window);
+	}
+	return 0;
 }
 
 Control* create_game_panel(int height, int width,
-		int (*menu_handles[])(Control*)) {
-	char* pics[4] = { RESTART_GAME_IMG, SAVE_GAME_IMG, MAIN_MENU_IMG, QUIT_IMG };
-	int widths[4] = { BUT_W, BUT_W, BUT_W, BUT_W };
-	int heights[4] = { BUT_H, BUT_H, BUT_H, BUT_H };
+		int (*menu_handles[])(Control*), int button_num) {
+	char* pics[5] = { RESTART_GAME_IMG, SAVE_GAME_IMG,
+			MAIN_MENU_IMG, QUIT_IMG, RESUME_GAME_IMG };
+	int widths[5] = { BUT_W, BUT_W, BUT_W, BUT_W, BUT_W };
+	int heights[5] = { BUT_H, BUT_H, BUT_H, BUT_H, BUT_H };
 	return create_panel(WIN_W - width, WIN_H - height, 0, 1, width, height,
-			BG_IMG,
-			create_button_menu(height, width, 4, pics, menu_handles, widths,
-					heights));
+			BG_IMG, create_button_menu(height, width, button_num, pics, menu_handles,
+			widths,	heights));
 }
 
 Control* create_board_panel(int width, int height, Game* game,
@@ -169,28 +175,28 @@ Control* create_info_panel(int width, int height, Game* game,
 	char* images[4];
 
 	fill_parameters(game, images);
-	buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W,
-			BUT_H, images[0]);
+	buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W, BUT_H,
+			images[0]);
 	curr_x += BUT_W + INFO_PANEL_X;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W,
-			TILE_H, images[1], handle);
+	buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W, TILE_H,
+			images[2], handle);
 
 	// Adding second player
 	curr_x = INFO_PANEL_X;
 	curr_y += BUT_H + INFO_PANEL_Y;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TILE_W,
-		TILE_H, images[2]);
+	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TILE_W, TILE_H,
+			images[1]);
 
 	// Adding difficulty link if needed, according to type of player
 	curr_x += INFO_PANEL_X + BUT_W;
 	buttons_next->next = (Link*) calloc(1, sizeof(Link));
 	buttons_next = buttons_next->next;
-	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W,
-			TILE_H, images[3], handle);
+	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W, TILE_H,
+			images[3], handle);
 	buttons_next->next = NULL;
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
 }

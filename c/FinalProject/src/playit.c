@@ -30,9 +30,9 @@ int start_game_console() {
 	}
 	while (!quit) {
 
-		if (!flip(window)) {
-			return 1;
-		}
+//		if (!flip(window)) {
+//			return 1;
+//		}
 		quit = poll_event(window);
 	}
 	free_UI_tree(window);
