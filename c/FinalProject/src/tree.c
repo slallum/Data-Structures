@@ -143,7 +143,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 
                 // alpha-beta pruning
                 if (beta <= alpha) {
-                    printf("move: %d %d\n", best_move->i, best_move->j);
                     free(next_best_move);
                     return alpha;
                 }
@@ -168,7 +167,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
                 // alpha-beta pruning
                 if (beta <= alpha) {
-                    printf("move: %d %d\n", best_move->i, best_move->j);
                     free(next_best_move);
                     return alpha;
                 }
@@ -191,7 +189,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 
                 // alpha-beta pruning
                 if (beta <= alpha) {
-                    printf("move: %d %d\n", best_move->i, best_move->j);
                     free(next_best_move);
                     return beta;
                 }
@@ -216,7 +213,6 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
                 // alpha-beta pruning
                 if (beta <= alpha) {
-                    printf("move: %d %d\n", best_move->i, best_move->j);
                     free(next_best_move);
                     return beta;
                 }
