@@ -23,7 +23,10 @@ minmax_tree* create_tree(Board* board, int (*get_score)(Board* board)) {
     }
 
     current_root->score = get_score(board);
-    current_root->current_move = (Move*) malloc(sizeof(Move));
+    if ((current_root->current_move = (Move*) malloc(sizeof(Move))) == NULL) {
+        printf("Error: standard function malloc has failed");
+        return NULL;
+    }
     current_root->current_move->i = -1;
     current_root->current_move->j = -1;
     current_root->value = 1;
@@ -41,7 +44,7 @@ minmax_tree* create_tree(Board* board, int (*get_score)(Board* board)) {
  * @param   row - last chosen row
  * @param   depth - max depth chosen
  */
-void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth) {
+void update_tree(minmax_tree *tree, int col, int row, int depth) {
     element* iterator;
     vertex* current_root = tree->root;
     if (current_root->children != NULL) {
@@ -74,10 +77,19 @@ void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth) {
  }
 
 /**
- * runs minmax and extend at the same time
+ * runs minmax algorithm, extends the tree at the same time.
+ * decides what is the best move to perform according to the minmax algorithm (with alphabeta pruning)
  * 
+ * @param node - the current root of the minmax tree
+ * @param alpha - the current maximum we got (for alphabeta pruning)
+ * @param beta - the current minimum we got (for alphabeta pruning)
  * @param depth - the depth of the tree
  * @param max - do max or min?
+ * @param board - the current board
+ * @param best_move - pointer that will contain the best move to make, AFTER the function finishes.
+ * @param is_valid_move - function that decides if a move is valid
+ * @param make_move - function that makes the move on the board
+ * @param get_score - the scoring function for the current game
  */
 int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                        Board *board, Move *best_move,
@@ -92,14 +104,12 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
     // we stop if we got to a winning move or the requested depth
     if ((depth == 0) || (node->score == EXTREME_VALUE) || (node->score == -EXTREME_VALUE)) {
-        // best_move->i = node->current_move->i;
-        // best_move->j = node->current_move->j;
         return node->score;
     }
     // if we don't have a linked list, but the depth isn't 0, we'll create an empty linked list
     if (node->children == NULL) {
-        if ((node->children = (linked_list*)calloc(1, sizeof(linked_list))) == NULL) {
-            printf("Error: standard function calloc has failed");
+        if ((node->children = (linked_list*)malloc(sizeof(linked_list))) == NULL) {
+            printf("Error: standard function malloc has failed");
             exit(1);
         }
         node->children->head = NULL;
@@ -122,8 +132,9 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         if (unimplemented_moves_length > 0) {
             best_move->i = unimplemented_moves[0].i;
             best_move->j = unimplemented_moves[0].j;
-        // NO MOVES AT ALL!
+        // NO MOVES AT ALL - we don't care about the best move, just return the current score.
         } else {
+            free(next_best_move);
             return node->score;
         }
     }
@@ -135,6 +146,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
+            // get the maximum of alpha and current score
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -159,6 +171,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
+            // get the maximum of alpha and current score
             if (current_score > alpha) {
                 alpha = current_score;
                 // update the best move accordingly
@@ -181,6 +194,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
+            // get the minimum of beta and current score
             if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
@@ -205,6 +219,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             // now for the minmax part
             current_score = minmax_with_extend(node->children->tail->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
+            // get the minimum of beta and current score
             if (current_score < beta) {
                 beta = current_score;
                 // update the best move accordingly
@@ -301,6 +316,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
         return NULL;
     }
 
+    // we now know how manu unimplemented moves we have - so we rellocate te memory to fit it.
     if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
         printf("Error: can't allocate result in get_unimplemented_moves.\n");
         exit(1);
@@ -324,7 +340,6 @@ int move_in_linked_list(Move move, linked_list *nodes_list) {
 
 /**
  * Frees all vertexts, elements, lists under node, recursively
- *
  */
 void remove_tree(vertex* current_node) {
 
