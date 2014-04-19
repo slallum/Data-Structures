@@ -54,6 +54,11 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 	return head;
 }
 
+/**
+ * Creates button menu as only panel in window -
+ * removes current window content, adds the buttons menu
+ * in full-screen and draws the window.
+ */
 int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 		int widths[], int heights[], Control* window) {
 	Link* new_child = (Link*) calloc(1, sizeof(Link));
@@ -84,6 +89,10 @@ int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 	return 0;
 }
 
+/**
+ * Builds the start menu screen, including 3 buttons for selection:
+ * Start Game, Load Game, Quit
+ */
 int show_main_menu(Control* window, int (*handles[])(Control*)) {
 	char* pics[4] = { PLAYIT_IMG, NEW_GAME_IMG, LOAD_GAME_IMG, QUIT_IMG };
 	int widths[4] = { LOGO_DIM, BUT_W, BUT_W, BUT_W };
@@ -91,6 +100,9 @@ int show_main_menu(Control* window, int (*handles[])(Control*)) {
 	return create_button_menu_window(4, pics, handles, widths, heights, window);
 }
 
+/**
+ * Build game menu, according to definition of containing games
+ */
 int show_game_menu(Control* window, int (*handles[])(Control*)) {
 	char* pics[NUM_GAMES + 2] = { SELECT_G_IMG, TIC_TAC_TOE_IMG, CONNECT4_IMG,
 			REVERSI_IMG, CANCEL_IMG };
@@ -100,6 +112,9 @@ int show_game_menu(Control* window, int (*handles[])(Control*)) {
 			heights, window);
 }
 
+/**
+ * Build list of possible players options
+ */
 int show_player_select(Control* window, int (*empty)(Control*),
 		int (*player)(Control*), int (*cancel)(Control*)) {
 	int i;
@@ -118,6 +133,10 @@ int show_player_select(Control* window, int (*empty)(Control*),
 			heights, window);
 }
 
+/**
+ * Shows the screen with the selected game, according to request.
+ * Includes game board, game options and general menu
+ */
 int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 		int (*menu_handles[])(Control*), int (*handle_difficulty)(Control*), int button_num) {
 
@@ -170,6 +189,9 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	return 0;
 }
 
+/**
+ * Build the side menu for the game window.
+ */
 Control* create_game_panel(int height, int width,
 		int (*menu_handles[])(Control*), int button_num) {
 	char* pics[5] = { RESTART_GAME_IMG, SAVE_GAME_IMG,
@@ -181,6 +203,9 @@ Control* create_game_panel(int height, int width,
 			widths,	heights));
 }
 
+/**
+ * Build the board view for the current game.
+ */
 Control* create_board_panel(int width, int height, Game* game,
 		int (*handle)(Control*)) {
 
@@ -223,6 +248,9 @@ Control* create_board_panel(int width, int height, Game* game,
 	return create_panel(0, 0, 0, 0, width, height, BG_IMG, head);
 }
 
+/**
+ * Builds panel showing current players and turn
+ */
 Control* create_info_panel(int width, int height, Game* game,
 		int (*handle)(Control*)) {
 
@@ -236,6 +264,7 @@ Control* create_info_panel(int width, int height, Game* game,
 		return NULL;
 	}
 	fill_parameters(game, images);
+	// Create content
 	buttons[0][0] = create_label(curr_x, curr_y, 0, 0, BUT_W, BUT_H,
 			images[0]);
 	curr_x += BUT_W + INFO_PANEL_X;
@@ -248,7 +277,7 @@ Control* create_info_panel(int width, int height, Game* game,
 	curr_x += INFO_PANEL_X + BUT_W;
 	buttons[1][1] = create_button(curr_x, curr_y, 1, 1, TILE_W, TILE_H,
 			images[3], handle);
-
+	// Connect them one to another and to window
 	for (i = 0; i < 2; i++) {
 		for (j = 0; j < 2; j++) {
 			if (buttons[i][j] == NULL) {
@@ -306,6 +335,10 @@ void fill_parameters(Game* game, char** images) {
 	}
 }
 
+/**
+ * Make first player the current (highlighted)
+ * Also, if game is over, crown him
+ */
 void first_crown(char** images, Game* game) {
 	images[0] = PLAYER1_H_IMG;
 	images[1] = PLAYER2_IMG;
@@ -314,6 +347,10 @@ void first_crown(char** images, Game* game) {
 	}
 }
 
+/**
+ * Make second player the current (highlighted)
+ * Also, if game is over, crown him
+ */
 void second_crown(char** images, Game* game) {
 	images[0] = PLAYER1_IMG;
 	images[1] = PLAYER2_H_IMG;
@@ -322,6 +359,10 @@ void second_crown(char** images, Game* game) {
 	}
 }
 
+/**
+ * Make both players the current (highlighted)
+ * and crown them
+ */
 void both_crown(char** images) {
 	images[0] = PLAYER1_H_IMG;
 	images[1] = PLAYER2_H_IMG;
@@ -329,6 +370,12 @@ void both_crown(char** images) {
 	images[3] = TROPHY_IMG;
 }
 
+/**
+ * Tries adding the difficulty chooser to the panel.
+ * Should be called if player is AI.
+ * If a problem occurs while creating the element,
+ * the option will not be available
+ */
 void add_difficulty(char** images, int cell, int depth) {
 	images[cell] = (char*) malloc(sizeof(char) * 2);
 	if ((images[cell] == NULL) || (sprintf(images[cell], "%d", depth) <= 0)) {
@@ -336,6 +383,10 @@ void add_difficulty(char** images, int cell, int depth) {
 	}
 }
 
+/**
+ * Show screen allowing user to select a game file
+ * for loading \ saving, depending on request
+ */
 int show_files_menu(Control* window, int (*empty)(Control*),
 		int (*file_han)(Control*), int (*cancel)(Control*), int* exist) {
 
@@ -350,11 +401,9 @@ int show_files_menu(Control* window, int (*empty)(Control*),
 	// will create it on the fly using text
 	for (i = 1; i <= FILES_NUM; i++) {
 		if (exist[i - 1]) {
-			pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 4 + 1);
-			sprintf(pics[i], "\"%s %d\"", FILE_NAME, i);
+			generate_file_name(i, pics, "\"%s %d\"");
 		} else {
-			pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 2 + 1);
-			sprintf(pics[i], "%s %d", FILE_NAME, i);
+			generate_file_name(i, pics, "%s %d");
 		}
 		widths[i] = TEXT_W;
 		heights[i] = TEXT_H;
@@ -368,9 +417,23 @@ int show_files_menu(Control* window, int (*empty)(Control*),
 			heights, window);
 }
 
+/**
+ * Concats the file name with the given number i,
+ * and given format (differs between existing and non-existing files)
+ */
+void generate_file_name(int i, char** pics, char* format) {
+	pics[i] = (char*) malloc(strlen(FILE_NAME) + sizeof(char) * 4 + 1);
+	if ((pics[i] == NULL) || (sprintf(pics[i], format, FILE_NAME, i) <= 0)) {
+		pics[i] = FILE_NAME;
+	}
+}
+
+/**
+ * Clears current window - frees tree that window is its root
+ */
 void clear_window(Control* window) {
 	if (window->children_head != NULL ) {
-		free_UI_tree(window->children_head->value);
+		free_UI_children(window->children_head);
 		free(window->children_head);
 	}
 }

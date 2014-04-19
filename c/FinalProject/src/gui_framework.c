@@ -89,7 +89,6 @@ Control* create_panel(int x, int y, int i, int j, int width, int height,
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
-	img = SDL_DisplayFormat(img);
 	panel = create_control(x, y, i, j, width, height, children_head, img,
 			empty_select, draw_node);
 	if (panel == NULL) {
@@ -123,7 +122,6 @@ Control* create_label(int x, int y, int i, int j, int width, int height, char* l
 			return 0;
 		}
 	}
-	img = SDL_DisplayFormat(img);
 	return create_control(x, y, i, j, width, height, NULL, img, empty_select,
 			draw_leaf);
 }
@@ -146,7 +144,6 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
 			return 0;
 		}
 	}
-	img = SDL_DisplayFormat(img);
 	return create_control(x, y, i, j, width, height, NULL, img, on_select, draw_leaf);
 }
 
@@ -187,6 +184,8 @@ SDL_Surface* create_text(char* title, int width, int height) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
 	}
+	SDL_free(text_font);
+	SDL_FreeSurface(text_image);
 	return img;
 }
 
@@ -341,7 +340,7 @@ int draw(Control* window) {
  * Then loads the image, using sdl
  */
 SDL_Surface *load_image(char* file_name) {
-	SDL_Surface *img;
+	SDL_Surface *img, *final_img;
 	char* path = (char*) malloc(strlen(IMGS_PATH) + strlen(file_name) + 1);
 	if (path == NULL) {
 		printf("Error: Failed to create path for %s", file_name);
@@ -351,6 +350,8 @@ SDL_Surface *load_image(char* file_name) {
 	strcat(path, file_name);
 	img = SDL_LoadBMP(path);
 	free(path);
-	return img;
+	final_img = SDL_DisplayFormat(img);
+	SDL_FreeSurface(img);
+	return final_img;
 }
 

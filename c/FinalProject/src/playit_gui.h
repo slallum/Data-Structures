@@ -81,13 +81,14 @@ void fill_parameters(Game* game, char** images);
 void first_crown(char** images, Game* game);
 
 /**
- *
+ * Make second player the current (highlighted)
+ * Also, if game is over, crown him
  */
 void second_crown(char** images, Game* game);
 
 /**
- * Make second player the current (highlighted)
- * Also, if game is over, crown him
+ * Make both players the current (highlighted)
+ * and crown them
  */
 void both_crown(char** images);
 
@@ -105,6 +106,12 @@ void add_difficulty(char** images, int cell, int depth);
  */
 int show_files_menu(Control* window, int (*empty)(Control*),
 		int (*file_han)(Control*), int (*cancel)(Control*), int* exist);
+
+/**
+ * Concats the file name with the given number i,
+ * and given format (differs between existing and non-existing files)
+ */
+void generate_file_name(int i, char** pics, char* format);
 
 /**
  * Clears current window - frees tree that window is its root
