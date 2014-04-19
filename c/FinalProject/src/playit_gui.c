@@ -434,6 +434,5 @@ void generate_file_name(int i, char** pics, char* format) {
 void clear_window(Control* window) {
 	if (window->children_head != NULL ) {
 		free_UI_children(window->children_head);
-		free(window->children_head);
 	}
 }
