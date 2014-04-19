@@ -79,7 +79,6 @@ int ttt_make_move(Board* board, Move* new_move, int value) {
  * If there are 3 of same symbol in a row - player won
  */
 int ttt_won_game(Game* game) {
-
 	if (ttt_won_board(game->board)) {
 		game->game_over = 1;
 		return 1;
@@ -98,6 +97,9 @@ int ttt_won_board(Board* board) {
 				strike = check_vertical(i, board, players[j]);
 			}
 			j++;
+		}
+		if (strike) {
+			return players[j - 1];
 		}
 		j = 0;
 		i++;
@@ -190,7 +192,6 @@ int check_sec_diag(Board* board, int value) {
  * Therefore, need to indicate only winning board
  */
 int ttt_get_score(Board* board) {
-
 	int who_won = ttt_won_board(board) == FIRST_PL_TURN;
 	if (who_won == FIRST_PL_TURN) {
 		return EXTREME_VALUE;
