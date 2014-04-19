@@ -127,6 +127,11 @@ void next_level(int* curr, int range[]);
 Control* get_root(Control* control);
 
 /**
+ * Frees all memory allocated for the game object
+ */
+void free_game(Game* game);
+
+/**
  * Opens game screen for beginning of the game.
  * If first player is AI, opens it paused,
  * with a 'Resume' button.

@@ -19,6 +19,16 @@
  */
 Game *reversi_new_game();
 
+/**
+ * Adds to the board 4 middle tiles that open the game
+ */
+void reversi_init_board(Board* board);
+
+/**
+ * Checks if given move is valid for given player,
+ * denoted by value.
+ * Doesn't change the board, just checks
+ */
 int reversi_is_valid_move(Board *board, Move *move, int value);
 
 /*
@@ -29,11 +39,6 @@ int reversi_is_valid_move(Board *board, Move *move, int value);
  * Also, flips all oppoent's tiles in adjacent streaks
  */
 int reversi_make_move(Board* board, Move* new_move, int value);
-
-/**
- * Adds to the board 4 middle tiles that open the game
- */
-void reversi_init_board(Board* board);
 
 /**
  * Checks for the given direction, if it makes the given position a legal move.
@@ -50,6 +55,12 @@ int consider_move(Board* board, Move* position, Move* direction, int value, int 
 int reversi_won_game(Game* game);
 
 /**
+ * Checks for each cell on the board, if it is a possible
+ * move for player 1 or for player 2 and updates the counts accordingly
+ */
+int* count_avail_moves(Board* board);
+
+/**
  * Returns difference between
  * Number of Player 1 and number of Player 2
  * disks on given board
@@ -57,7 +68,8 @@ int reversi_won_game(Game* game);
 int count_disk_parity(Board* board);
 
 /**
- *
+ * Heuristic calculation follows:
+ * weighted disk parity + 2 * available moves parity + 5 * stability parity
  */
 int reversi_get_score(Board* board);
 
@@ -98,12 +110,6 @@ int count_reg_4(Board* board);
 int count_reg_5(Board* board);
 
 /**
- * Checks for each cell on the board, if it is a possible
- * move for player 1 or for player 2 and updates the counts accordingly
- */
-int* count_avail_moves(Board* board);
-
-/**
  * Counts the difference in the stability between first and second players,
  * where stability is the number of stable pieces.
  * A stable piece is one that can never be flipped again in the game.
@@ -114,7 +120,8 @@ int* count_avail_moves(Board* board);
 int count_stability_parity(Board* board);
 
 /**
- *
+ * Checks if tiles are stable from the forner (i_start, j_start)
+ * towards the corner (i_end, j_end) according to (i_dir, j_dir)
  */
 int count_stability_section(Board* board, int i_start, int j_start,
 		int i_end, int j_end, int i_dir, int j_dir);
