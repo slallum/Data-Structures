@@ -8,6 +8,10 @@
 #include "playit_gui.h"
 #include "game_framework.h"
 
+/**
+ * Generically creates a vertical buttons menu.
+ * Calculates the spaces between the buttons according to their number, widths and heights.
+ */
 Link* create_button_menu(int height, int width, int num, char* pics[],
 		int (*handles[])(Control*), int widths[], int heights[]) {
 
@@ -15,7 +19,10 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 	int spacing, current = MARGIN_H;
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link *buttons_next = head;
-
+	if (head == NULL) {
+		printf("Error: Failed to create button menu\n");
+		return NULL;
+	}
 	for (i = 0; i < num; i++) {
 		total_height += heights[i];
 	}
@@ -25,19 +32,23 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 		buttons_next->value = create_button((width - widths[i] - 10) / 2,
 				current + spacing, i, 0, widths[i], heights[i], pics[i],
 				handles[i]);
-		if (buttons_next->value == NULL ) {
-			return 0;
-		}
 		current += heights[i] + spacing;
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
+		if ((buttons_next->next == NULL) || (buttons_next->value == NULL)) {
+			printf("Error: Failed to create button in button menu\n");
+			free_UI_children(head);
+			return NULL;
+		}
 		buttons_next = buttons_next->next;
 	}
 	// Adding last link in list
 	buttons_next->value = create_button((width - widths[i] - 10) / 2,
 			current + spacing, i, 0, widths[i], heights[i], pics[i],
 			handles[i]);
-	if (buttons_next->value == NULL ) {
-		return 0;
+	if (buttons_next->value == NULL) {
+		printf("Error: Failed to create button in button menu\n");
+		free_UI_children(head);
+		return NULL;
 	}
 	buttons_next->next = NULL;
 	return head;
@@ -45,16 +56,31 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 
 int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 		int widths[], int heights[], Control* window) {
-	clear_window(window);
-	window->children_head = (Link*) calloc(1, sizeof(Link));
-	window->children_head->value = create_fs_panel(BG_IMG,
+	Link* new_child = (Link*) calloc(1, sizeof(Link));
+	if (new_child == NULL) {
+		printf("Error: Failed to create new window\n");
+		return 1;
+	}
+	new_child->value = create_fs_panel(BG_IMG,
 			create_button_menu(window->height, window->width, num, pics,
 					handles, widths, heights));
-	window->children_head->value->parent = window;
-	window->children_head->next = NULL;
+	if (new_child->value == NULL) {
+		free(new_child);
+		printf("Error: Failed to create new button menu\n");
+		return 1;
+	}
+	new_child->value->parent = window;
+	new_child->next = NULL;
+
+	// All went well with building new window
+	clear_window(window);
+	window->children_head = new_child;
 	if (draw(window)) {
 		return flip(window);
 	}
+	// Already destroyed old window but could not draw new
+	// Cannot continue as the UI tree elements are needed
+	// UI tree is freed at exit
 	return 0;
 }
 
@@ -95,26 +121,49 @@ int show_player_select(Control* window, int (*empty)(Control*),
 int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 		int (*menu_handles[])(Control*), int (*handle_difficulty)(Control*), int button_num) {
 
-	Link *buttons_next;
-	clear_window(window);
-	window->children_head = (Link*) calloc(1, sizeof(Link));
-	buttons_next = window->children_head;
-
-	buttons_next->value = create_board_panel(BOARD_PANEL_W, BOARD_PANEL_H, game,
+	Control* panels[3];
+	int i = 0, valid = 1;
+	Link* children_head = (Link*) calloc(1, sizeof(Link));
+	Link* buttons_next = children_head;
+	if (children_head == NULL) {
+		printf("Error: Failed to create game arena\n");
+		return 1;
+	}
+	panels[0] = create_board_panel(BOARD_PANEL_W, BOARD_PANEL_H, game,
 			handle);
-	buttons_next->value->parent = window;
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_game_panel(window->height,
+	panels[1] = create_game_panel(window->height,
 			window->width - (BOARD_PANEL_W), menu_handles, button_num);
-	buttons_next->value->parent = window;
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_info_panel((BOARD_PANEL_W),
+	panels[2] = create_info_panel((BOARD_PANEL_W),
 			window->height - (BOARD_PANEL_H), game, handle_difficulty);
-	buttons_next->value->parent = window;
-	buttons_next->next = NULL;
-
+	for (i = 0; i < 3; i++) {
+		if (panels[i] == NULL) {
+			valid = 0;
+		} else if (!valid) {
+			free_UI_tree(panels[i]);
+		} else {
+			buttons_next->value = panels[i];
+			buttons_next->value->parent = window;
+			if ((i < 2) && (panels[i + 1] != NULL)) {
+				buttons_next->next = (Link*) calloc(1, sizeof(Link));
+				if (buttons_next->next == NULL) {
+					valid = 0;
+				} else {
+					buttons_next = buttons_next->next;
+				}
+			} else {
+				buttons_next->next = NULL;
+			}
+		}
+	}
+	// Problem creating game arena
+	if (!valid) {
+		free_UI_children(children_head);
+		printf("Error: Failed to create game arena\n");
+		return 1;
+	}
+	// All went well in building new window
+	clear_window(window);
+	window->children_head = children_head;
 	if (draw(window)) {
 		return flip(window);
 	}
@@ -138,6 +187,10 @@ Control* create_board_panel(int width, int height, Game* game,
 	int i, j, current_x, current_y, initial_x;
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link *buttons_next = head;
+	if (head == NULL) {
+		printf("Error: Failed to create game board\n");
+		return NULL;
+	}
 
 	// Calculating start spacing according to size
 	// Available height\width - all tiles height\width - all tile spacings
@@ -156,6 +209,11 @@ Control* create_board_panel(int width, int height, Game* game,
 				buttons_next->next = NULL;
 			} else {
 				buttons_next->next = (Link*) calloc(1, sizeof(Link));
+				if (buttons_next->next == NULL) {
+					printf("Error: Failed to create game board\n");
+					free_UI_children(head);
+					return NULL;
+				}
 				buttons_next = buttons_next->next;
 			}
 		}
@@ -168,36 +226,56 @@ Control* create_board_panel(int width, int height, Game* game,
 Control* create_info_panel(int width, int height, Game* game,
 		int (*handle)(Control*)) {
 
+	int curr_x = INFO_PANEL_X, curr_y = INFO_PANEL_Y;
+	int i, j, valid = 1;
+	char* images[4];
+	Control* buttons[2][2];
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link* buttons_next = head;
-	int curr_x = INFO_PANEL_X;
-	int curr_y = INFO_PANEL_Y;
-	char* images[4];
-
+	if (buttons_next == NULL) {
+		return NULL;
+	}
 	fill_parameters(game, images);
-	buttons_next->value = create_label(curr_x, curr_y, 0, 0, BUT_W, BUT_H,
+	buttons[0][0] = create_label(curr_x, curr_y, 0, 0, BUT_W, BUT_H,
 			images[0]);
 	curr_x += BUT_W + INFO_PANEL_X;
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_button(curr_x, curr_y, 0, 1, TILE_W, TILE_H,
+	buttons[0][1] = create_button(curr_x, curr_y, 0, 1, TILE_W, TILE_H,
 			images[2], handle);
-
-	// Adding second player
 	curr_x = INFO_PANEL_X;
 	curr_y += BUT_H + INFO_PANEL_Y;
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_label(curr_x, curr_y, 1, 0, TILE_W, TILE_H,
+	buttons[1][0] = create_label(curr_x, curr_y, 1, 0, TILE_W, TILE_H,
 			images[1]);
-
-	// Adding difficulty link if needed, according to type of player
 	curr_x += INFO_PANEL_X + BUT_W;
-	buttons_next->next = (Link*) calloc(1, sizeof(Link));
-	buttons_next = buttons_next->next;
-	buttons_next->value = create_button(curr_x, curr_y, 1, 1, TILE_W, TILE_H,
+	buttons[1][1] = create_button(curr_x, curr_y, 1, 1, TILE_W, TILE_H,
 			images[3], handle);
-	buttons_next->next = NULL;
+
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 2; j++) {
+			if (buttons[i][j] == NULL) {
+				valid = 0;
+			} else if (!valid) {
+				free_UI_tree(buttons[i][j]);
+			} else {
+				buttons_next->value = buttons[i][j];
+				if ((i != 1) || (j != 1)) {
+					buttons_next->next = (Link*) calloc(1, sizeof(Link));
+					if (buttons_next->next == NULL) {
+						valid = 0;
+					} else {
+						buttons_next = buttons_next->next;
+					}
+				} else {
+					buttons_next->next = NULL;
+				}
+			}
+		}
+	}
+	// Cannot build panel due to problem with buttons
+	if (!valid) {
+		free_UI_children(head);
+		return NULL;
+	}
+	// All went well with children buttons
 	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
 }
 

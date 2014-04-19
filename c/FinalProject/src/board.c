@@ -15,7 +15,7 @@ Board *new_board(int n, int m) {
     }
     for (i=0; i<n; i++) {
         if ((board->cells[i] = (int*)calloc(m, sizeof(int))) == NULL) {
-        printf("Board cannot be initialized");
+        	printf("Board cannot be initialized");
             return NULL;
         }
     }

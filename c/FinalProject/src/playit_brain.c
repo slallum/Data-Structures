@@ -36,7 +36,10 @@ int no_moves(Game* game, int player) {
 	int avail_move = -1;
 	Move* curr_move = (Move*) malloc(sizeof(Move));
 	Board* temp_board = new_board(game->board->n, game->board->m);
-
+	if ((curr_move == NULL) || (temp_board == NULL)) {
+		printf("Error: Could not check for legal moves");
+		return 1;
+	}
 	while ((avail_move == -1) && i < game->board->n) {
 		while ((avail_move == -1) && j < game->board->m) {
 			curr_move->i = i;
@@ -57,11 +60,10 @@ int no_moves(Game* game, int player) {
 		i++;
 	}
 	free(curr_move);
-	free(temp_board);
+	free_board(temp_board);
 	return avail_move;
 }
 
-// TODO
 /**
  * Handles all logic around making a move in the game.
  * Updates the tree for all players and get
@@ -93,9 +95,6 @@ int handle_move(Game* game, int i, int j) {
 		free(new_move);
 		return -1;
 	}
-//	if (game->won_game(game)) {
-//		return 0;
-//	}
 	// update the tree according to the new move
 	update_tree(game->tree, game->board, new_move->j, new_move->i, game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth);
 
@@ -117,27 +116,28 @@ int save_game(int file_num, Game* game) {
 	int i, j, valid = 1;
 
 	if (file_num <= FILES_NUM) {
-		sprintf(path_to_save, FILE_PATH, file_num);
-		write_file = fopen(path_to_save, "w");
-		if (write_file == NULL ) {
-			printf("Error: Could not open saved game %s\n", path_to_save);
-			return 0;
-		}
-		if (check_validity(fprintf(write_file, "%s", game->save_game_name)) &&
-			check_validity(fprintf(write_file, "\n%d\n", game->current_player))) {
+		if (check_validity(sprintf(path_to_save, FILE_PATH, file_num))) {
+			write_file = fopen(path_to_save, "w");
+			if (write_file == NULL ) {
+				printf("Error: Could not open saved game %s\n", path_to_save);
+				return 0;
+			}
+			if (check_validity(fprintf(write_file, "%s", game->save_game_name)) &&
+				check_validity(fprintf(write_file, "\n%d\n", game->current_player))) {
 
-			for (i = 0; i < game->board->n && valid; i++) {
-				for (j = 0; j < (game->board->m - 1) && valid; j++) {
-					valid = check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+				for (i = 0; i < game->board->n && valid; i++) {
+					for (j = 0; j < (game->board->m - 1) && valid; j++) {
+						valid = check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+					}
+					valid = check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
 				}
-				valid = check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
+				if (valid) {
+					fclose(write_file);
+					return 1;
+				}
 			}
-			if (valid) {
-				fclose(write_file);
-				return 1;
-			}
+			fclose(write_file);
 		}
-		fclose(write_file);
 	}
 	return 0;
 }
@@ -157,34 +157,35 @@ Game* load_game(int file_num) {
 	char game_name[MAX_STR_LEN];
 	Game* loaded_game;
 
-	sprintf(path_to_read, FILE_PATH, file_num);
-	read_file = fopen(path_to_read, "r");
-	if (read_file == NULL ) {
-		printf("Error: Could not open saved game %s\n", path_to_read);
-		return NULL;
-	}
-	if (check_validity(fscanf(read_file, "%s\n", game_name))) {
-		// Create game according to name
-		loaded_game = check_game(game_name);
-		// Reading which player's turn
-		if (check_validity(fscanf(read_file, "%d\n", &(loaded_game->current_player)))) {
-			if ((loaded_game->current_player == FIRST_PL_TURN) || (loaded_game->current_player == SECOND_PL_TURN)) {
-				// Reading board cells, according to size determined by game creation
-				for (i = 0; i < loaded_game->board->n && valid; i++) {
-					for (j = 0; j < (loaded_game->board->m - 1) && valid; j++) {
-						valid = check_validity(fscanf(read_file, "%d ", &(loaded_game->board->cells[i][j])));
+	if (check_validity(sprintf(path_to_read, FILE_PATH, file_num))) {
+		read_file = fopen(path_to_read, "r");
+		if (read_file == NULL ) {
+			printf("Error: Could not open saved game %s\n", path_to_read);
+			return NULL;
+		}
+		if (check_validity(fscanf(read_file, "%s\n", game_name))) {
+			// Create game according to name
+			loaded_game = check_game(game_name);
+			// Reading which player's turn
+			if (check_validity(fscanf(read_file, "%d\n", &(loaded_game->current_player)))) {
+				if ((loaded_game->current_player == FIRST_PL_TURN) || (loaded_game->current_player == SECOND_PL_TURN)) {
+					// Reading board cells, according to size determined by game creation
+					for (i = 0; i < loaded_game->board->n && valid; i++) {
+						for (j = 0; j < (loaded_game->board->m - 1) && valid; j++) {
+							valid = check_validity(fscanf(read_file, "%d ", &(loaded_game->board->cells[i][j])));
+						}
+						// Last one will have line break
+						valid = check_validity(fscanf(read_file, "%d\n", &(loaded_game->board->cells[i][j])));
 					}
-					// Last one will have line break
-					valid = check_validity(fscanf(read_file, "%d\n", &(loaded_game->board->cells[i][j])));
-				}
-				if (valid) {
-					fclose(read_file);
-					return loaded_game;
+					if (valid) {
+						fclose(read_file);
+						return loaded_game;
+					}
 				}
 			}
 		}
+		fclose(read_file);
 	}
-	fclose(read_file);
 	return NULL;
 }
 
@@ -217,15 +218,20 @@ int check_validity(int rc) {
 	return 1;
 }
 
+/**
+ * Returns whether the game file number file_num exists
+ */
 int file_exists(int file_num) {
 	char path_to_read[MAX_STR_LEN];
 	FILE *read_file;
 
-	sprintf(path_to_read, FILE_PATH, file_num);
-	read_file = fopen(path_to_read, "r");
-	if (read_file == NULL ) {
-		return 0;
+	if (check_validity(sprintf(path_to_read, FILE_PATH, file_num))) {
+		read_file = fopen(path_to_read, "r");
+		if (read_file == NULL ) {
+			return 0;
+		}
+		fclose(read_file);
+		return 1;
 	}
-	fclose(read_file);
-	return 1;
+	return 0;
 }

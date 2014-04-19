@@ -7,15 +7,15 @@
  */
 Game *connect4_new_game() {
 
-	Game *game = (Game*)malloc(sizeof(Game));
+	Game *game = (Game*) malloc(sizeof(Game));
 	if (game == NULL) {
 		printf("ERROR: game could not be initialized.");
 		return NULL;
 	}
 	game->save_game_name = CONNECT4_NAME;
 	game->board = new_board(C4_BOARD_N, C4_BOARD_M);
-	game->current_player = 1;
 
+	game->current_player = 1;
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
 	game->depth_range[0] = 1;
@@ -29,8 +29,8 @@ Game *connect4_new_game() {
 	game->make_move = connect4_make_move;
 	game->won_game = connect4_won_game;
 	game->init_board = connect4_init_board;
-
 	game->get_score = connect4_get_score;
+
 	game->tree = create_tree(game->board, connect4_get_score);
 
 	game->tiles[0] = C4N_IMG;
@@ -38,9 +38,11 @@ Game *connect4_new_game() {
 	game->tiles[3] = C4P2_IMG;
 	game->tiles[2] = TROPHY_TILE_IMG;
 
+	if ((game->tree == NULL) || (game->board == NULL)) {
+		return NULL;
+	}
 	return game;
 }
-
 
 /**
  * Nothing special to do

@@ -31,6 +31,10 @@ Control* create_control(int x, int y, int i, int j, int width, int height,
 		int (*on_select)(struct Control*),
 		int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
+	if (new_control == NULL) {
+		printf("ERROR: Failed to create new gui control");
+		return NULL;
+	}
 	new_control->x = x;
 	new_control->y = y;
 	new_control->i = i;
@@ -75,14 +79,23 @@ Control* create_window(Link* children_head) {
  */
 Control* create_panel(int x, int y, int i, int j, int width, int height,
 		char* bg_path, Link* children_head) {
-	SDL_Surface *img = load_image(bg_path);
+	Control* panel;
+	SDL_Surface *img;
+	if (children_head == NULL) {
+		return NULL;
+	}
+	img = load_image(bg_path);
 	if (img == NULL ) {
 		printf("Error: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	img = SDL_DisplayFormat(img);
-	return create_control(x, y, i, j, width, height, children_head, img,
+	panel = create_control(x, y, i, j, width, height, children_head, img,
 			empty_select, draw_node);
+	if (panel == NULL) {
+		free_UI_children(children_head);
+	}
+	return panel;
 }
 
 /**
@@ -92,6 +105,7 @@ Control* create_panel(int x, int y, int i, int j, int width, int height,
  * @param R, G, B	Background colour numbers (RGB) for the parts of the panel shown
  */
 Control* create_fs_panel(char* bg_path, Link* children_head) {
+
 	return create_panel(0, 0, 0, 0, WIN_W, WIN_H, bg_path, children_head);
 }
 
@@ -152,11 +166,14 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	text_color.g = 0xbc;
 	text_color.b = 0xe0;
 	text_image = TTF_RenderText_Solid(text_font, title, text_color);
+	if (text_image == NULL) {
+		printf("Error: Failed to create text image for %s", title);
+		return NULL;
+	}
+	// Determine whether text is a tile or a button
 	if (strlen(title) == 1) {
-		// Setting tile image
 		img = load_image(TEXT_CHAR_BG);
 	} else {
-		// Setting button image
 		img = load_image(TEXT_BG);
 	}
 	if (img == NULL ) {
@@ -165,7 +182,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	SDL_Rect rect = { (width - (strlen(title) * 17)) / 2 , 8, strlen(title) * 17, height - 16 };
 	// Text titles come from dynamic allocation and must be freed, once used
-	// free(title);
+	free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
@@ -229,18 +246,27 @@ int draw_leaf(Control* leaf, Control* parent) {
  * bottom up
  */
 void free_UI_tree(Control* root) {
+
+	if (root != NULL) {
+		free_UI_children(root->children_head);
+		SDL_FreeSurface(root->view);
+		root->parent = NULL;
+		free(root);
+	}
+}
+
+/**
+ * Frees all elements in linked list of children
+ */
+void free_UI_children(Link* head) {
 	Link *prev;
-	Link *current = root->children_head;
-	while ((current != NULL) && (current->value != NULL)) {
-		free_UI_tree(current->value);
-		prev = current;
-		current = prev->next;
+	while ((head != NULL) && (head->value != NULL)) {
+		prev = head;
+		head = prev->next;
 		prev->next = NULL;
+		free_UI_tree(prev->value);
 		free(prev);
 	}
-	SDL_FreeSurface(root->view);
-	root->parent = NULL;
-	free(root);
 }
 
 /**
@@ -317,6 +343,10 @@ int draw(Control* window) {
 SDL_Surface *load_image(char* file_name) {
 	SDL_Surface *img;
 	char* path = (char*) malloc(strlen(IMGS_PATH) + strlen(file_name) + 1);
+	if (path == NULL) {
+		printf("Error: Failed to create path for %s", file_name);
+		return NULL;
+	}
 	strcpy(path, IMGS_PATH);
 	strcat(path, file_name);
 	img = SDL_LoadBMP(path);

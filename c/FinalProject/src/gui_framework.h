@@ -143,6 +143,11 @@ int draw_leaf(Control* leaf, Control* parent);
 void free_UI_tree(Control* root);
 
 /**
+ * Frees all elements in linked list of children
+ */
+void free_UI_children(Link* head);
+
+/**
  * Event handler
  */
 int poll_event(Control* ui_tree);
