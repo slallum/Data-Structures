@@ -78,7 +78,7 @@ int reversi_is_valid_move(Board *board, Move *new_move, int value) {
 	int directions[3] = {-1, 0, 1};
 	Move* current_dir = (Move*) malloc(sizeof(Move));
 	if (current_dir == NULL) {
-		printf("Error: Could not validate move\n");
+		printf("Error: error in function malloc in reversi_is_valid_move.\n");
 		return 0;
 	}
 	// Requested cell is taken
@@ -118,7 +118,7 @@ int reversi_make_move(Board* board, Move* new_move, int value) {
 	int directions[3] = {-1, 0, 1};
 	Move* current_dir = (Move*) malloc(sizeof(Move));
 	if (current_dir == NULL) {
-		printf("Error: Could not validate move\n");
+		printf("Error: error in function malloc in reversi_is_valid_move.\n");
 		return -1;
 	}
 

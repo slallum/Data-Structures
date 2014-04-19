@@ -7,9 +7,9 @@
 
 // Linked list element
 typedef struct element_s {
-    struct vertex_s     *node;
-    struct element_s    *next;
-    struct element_s    *prev;
+    struct vertex_s *node;
+    struct element_s *next;
+    struct element_s *prev;
 } element;
 
 // Linked list
@@ -20,11 +20,11 @@ typedef struct linked_list_s {
 
 // Tree vertex holding data
 typedef struct vertex_s {
-    int             score;
+    int score;
     // The move that leads to this node
-    Move*           current_move;
-    int				value;
-    linked_list     *children;
+    Move* current_move;
+    int value;
+    linked_list *children;
 } vertex;
 
 // Tree represented by root
@@ -42,7 +42,7 @@ minmax_tree* create_tree(Board* board, int (*get_score)(Board* board));
 /**
  * Adds levels to tree until reaching requested depth
  */
-void update_tree(minmax_tree *tree, Board* board, int col, int row, int depth);
+void update_tree(minmax_tree *tree, int col, int row, int depth);
 
 
 /**
