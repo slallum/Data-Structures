@@ -192,7 +192,7 @@ int check_sec_diag(Board* board, int value) {
  * Therefore, need to indicate only winning board
  */
 int ttt_get_score(Board* board) {
-	int who_won = ttt_won_board(board) == FIRST_PL_TURN;
+	int who_won = ttt_won_board(board);
 	if (who_won == FIRST_PL_TURN) {
 		return EXTREME_VALUE;
 	}
