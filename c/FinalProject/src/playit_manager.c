@@ -8,9 +8,8 @@
 #include "playit_manager.h"
 
 Game* game = NULL;
-int (*game_menu_handles[4])(
-		Control*) = {on_select_restart, on_select_save, on_cancel, on_select_quit
-		};
+int (*game_menu_handles[5])(Control*) = { on_select_restart, on_select_save,
+		on_cancel, on_select_quit, on_select_resume };
 
 int on_new_game(Control* btn_new_game) {
 	int (*handles[NUM_GAMES + 2])(Control*) =
@@ -64,40 +63,44 @@ int on_cancel(Control* btn) {
 
 int on_select_player(Control* btn_pl_type) {
 
-	if ((btn_pl_type->i == 3) || (btn_pl_type->i == 4)) {
-		game->first_player_ai = AI_PLAYING;
-	} else {
-		game->first_player_ai = PL_PLAYING;
-	}
 	if ((btn_pl_type->i == 2) || (btn_pl_type->i == 4)) {
 		game->second_player_ai = AI_PLAYING;
 	} else {
 		game->second_player_ai = PL_PLAYING;
 	}
-	return !show_game_arena(get_root(btn_pl_type), game, on_select_tile,
-			game_menu_handles, on_select_difficulty);
+	if ((btn_pl_type->i == 3) || (btn_pl_type->i == 4)) {
+		game->first_player_ai = AI_PLAYING;
+	} else {
+		game->first_player_ai = PL_PLAYING;
+	}
+	return show_arena(get_root(btn_pl_type));
+}
+
+int on_select_resume(Control* btn_tile) {
+	return on_select_tile(get_root(btn_tile));
 }
 
 int on_select_tile(Control* btn_tile) {
-	//TODO check first if AI or regular
-	// Or should make move do it all?
+	Control* current;
 	int rc = handle_move(game, btn_tile->i, btn_tile->j);
 	if (game->won_game(game)) {
 		return !show_game_arena(get_root(btn_tile), game, empty_select,
-				game_menu_handles, on_select_difficulty);
+				game_menu_handles, on_select_difficulty, 4);
 	}
 	if ((rc == 0) && switch_player(game)) {
-		// TODO if both AI need to show GUI in between
-		return on_select_tile(btn_tile);
+		current = get_root(btn_tile);
+		if (show_game_arena(current, game, empty_select,
+				game_menu_handles, on_select_difficulty, 4)) {
+			return on_select_tile(current);
+		}
 	}
 	return !show_game_arena(get_root(btn_tile), game, on_select_tile,
-			game_menu_handles, on_select_difficulty);
+			game_menu_handles, on_select_difficulty, 4);
 }
 
 int on_select_restart(Control* btn) {
 	restart_game(game);
-	return !show_game_arena(get_root(btn), game, on_select_tile,
-			game_menu_handles, on_select_difficulty);
+	return show_arena(get_root(btn));
 }
 
 int on_select_save(Control* btn) {
@@ -106,8 +109,8 @@ int on_select_save(Control* btn) {
 	for (i = 1; i <= FILES_NUM; i++) {
 		exist[i - 1] = file_exists(i);
 	}
-	return !show_files_menu(get_root(btn), empty_select, on_select_save_file,
-			on_select_save_file, exist);
+	return show_files_menu(get_root(btn),
+			empty_select, on_select_save_file, on_cancel, exist);
 }
 
 int on_select_save_file(Control* file_btn) {
@@ -115,7 +118,7 @@ int on_select_save_file(Control* file_btn) {
 		// TODO error dialog?
 	}
 	return !show_game_arena(get_root(file_btn), game, on_select_tile,
-			game_menu_handles, on_select_difficulty);
+			game_menu_handles, on_select_difficulty, 4);
 }
 
 int on_select_load_file(Control* file_btn) {
@@ -135,8 +138,7 @@ int on_select_difficulty(Control* btn) {
 	if (btn->i == 1) {
 		next_level(&(game->second_player_depth), game->depth_range);
 	}
-	return !show_game_arena(get_root(btn), game, on_select_tile,
-			game_menu_handles, on_select_difficulty);
+	return show_arena(get_root(btn));
 }
 
 /* --- Inner methods --- */
@@ -149,13 +151,24 @@ void next_level(int* curr, int range[]) {
 }
 
 Control* get_root(Control* control) {
-	while (control->parent != NULL ) {
-		control = control->parent;
+	Control* current = control;
+	while (current->parent != NULL ) {
+		current = current->parent;
 	}
-	return control;
+	return current;
 }
 
 void free_game(Game* game) {
 	free_board(game->board);
 	remove_tree(game->tree->root);
+}
+
+int show_arena(Control* window) {
+	if (game->first_player_ai == AI_PLAYING) {
+		return !show_game_arena(window, game, empty_select,
+				game_menu_handles, on_select_difficulty, 5);
+	} else {
+		return !show_game_arena(window, game, on_select_tile,
+				game_menu_handles, on_select_difficulty, 4);
+	}
 }

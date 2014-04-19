@@ -68,6 +68,14 @@ int on_cancel(Control* btn_game);
 int on_select_player(Control* btn_pl_type);
 
 /**
+ * When first player is AI, game arena starts paused
+ * (first move is not made)
+ * until clicking 'Resume'.
+ * This is in order to allow setting difficulty
+ */
+int on_select_resume(Control* btn_tile);
+
+/**
  * Handles selection of a tile on the board.
  * Performs corresponding move according to stated by
  * current game rules.
@@ -117,5 +125,14 @@ void next_level(int* curr, int range[]);
  * Climb to the root of the tree
  */
 Control* get_root(Control* control);
+
+/**
+ * Opens game screen for beginning of the game.
+ * If first player is AI, opens it paused,
+ * with a 'Resume' button.
+ * This is in order to give the opportunity to change difficulty
+ */
+int show_arena(Control* window);
+
 
 #endif /* PLAYIT_MANAGER_H_ */

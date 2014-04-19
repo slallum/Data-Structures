@@ -352,7 +352,7 @@ int count_stability_section(Board* board, int i_start, int j_start,
 		j_end = j;
 		j = j_start;
 		i += i_dir;
-		if (board->cells[i][j] == board->cells[i - i_dir][j]) {
+		if ((i != i_end) && (board->cells[i][j] == board->cells[i - i_dir][j])) {
 			stability_parity += board->cells[i][j];
 			j += j_dir;
 		}

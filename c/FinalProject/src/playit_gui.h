@@ -49,13 +49,13 @@ int show_player_select(Control* window, int (*empty)(Control*),
  * Includes game board, game options and general menu
  */
 int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
-		int (*menu_handles[])(Control*), int (*difficulty_handle)(Control*));
+		int (*menu_handles[])(Control*), int (*difficulty_handle)(Control*), int button_num);
 
 /**
  * Build the side menu for the game window.
  */
 Control* create_game_panel(int height, int width,
-		int (*menu_handles[])(Control*));
+		int (*menu_handles[])(Control*), int button_num);
 
 /**
  * Build the board view for the current game.
