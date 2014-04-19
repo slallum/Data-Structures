@@ -4,7 +4,7 @@ Move *get_best_move(Game *game) {
 	int depth, max;
 	Move *best_move;
 	if ((best_move = malloc(sizeof(Move))) == NULL) {
-		printf("Error: can't allocate memory for best move in get_best_move.\n");
+		printf("ERROR: can't allocate memory for best move in get_best_move.\n");
 		return NULL;
 	}
 	depth = game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth;

@@ -78,7 +78,7 @@ int reversi_is_valid_move(Board *board, Move *new_move, int value) {
 	int directions[3] = {-1, 0, 1};
 	Move* current_dir = (Move*) malloc(sizeof(Move));
 	if (current_dir == NULL) {
-		printf("Error: error in function malloc in reversi_is_valid_move.\n");
+		printf("ERROR: error in function malloc in reversi_is_valid_move.\n");
 		return 0;
 	}
 	// Requested cell is taken
@@ -118,7 +118,7 @@ int reversi_make_move(Board* board, Move* new_move, int value) {
 	int directions[3] = {-1, 0, 1};
 	Move* current_dir = (Move*) malloc(sizeof(Move));
 	if (current_dir == NULL) {
-		printf("Error: error in function malloc in reversi_is_valid_move.\n");
+		printf("ERROR: error in function malloc in reversi_is_valid_move.\n");
 		return -1;
 	}
 
@@ -230,7 +230,7 @@ int* count_avail_moves(Board* board) {
 	Move* curr_move = (Move*) malloc(sizeof(Move));
 	Board* temp_board = new_board(board->n, board->m);
 	if ((curr_move == NULL) || (temp_board == NULL)) {
-		printf("Error: Failed to count available moves\n");
+		printf("ERROR: Failed to count available moves\n");
 		return moves_count;
 	}
 	for (i = 0; i < board->n; i++) {

@@ -20,7 +20,7 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link *buttons_next = head;
 	if (head == NULL) {
-		printf("Error: Failed to create button menu\n");
+		printf("ERROR: Failed to create button menu\n");
 		return NULL;
 	}
 	for (i = 0; i < num; i++) {
@@ -35,7 +35,7 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 		current += heights[i] + spacing;
 		buttons_next->next = (Link*) calloc(1, sizeof(Link));
 		if ((buttons_next->next == NULL) || (buttons_next->value == NULL)) {
-			printf("Error: Failed to create button in button menu\n");
+			printf("ERROR: Failed to create button in button menu\n");
 			free_UI_children(head);
 			return NULL;
 		}
@@ -46,7 +46,7 @@ Link* create_button_menu(int height, int width, int num, char* pics[],
 			current + spacing, i, 0, widths[i], heights[i], pics[i],
 			handles[i]);
 	if (buttons_next->value == NULL) {
-		printf("Error: Failed to create button in button menu\n");
+		printf("ERROR: Failed to create button in button menu\n");
 		free_UI_children(head);
 		return NULL;
 	}
@@ -63,7 +63,7 @@ int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 		int widths[], int heights[], Control* window) {
 	Link* new_child = (Link*) calloc(1, sizeof(Link));
 	if (new_child == NULL) {
-		printf("Error: Failed to create new window\n");
+		printf("ERROR: Failed to create new window\n");
 		return 1;
 	}
 	new_child->value = create_fs_panel(BG_IMG,
@@ -71,7 +71,7 @@ int create_button_menu_window(int num, char* pics[], int (*handles[])(Control*),
 					handles, widths, heights));
 	if (new_child->value == NULL) {
 		free(new_child);
-		printf("Error: Failed to create new button menu\n");
+		printf("ERROR: Failed to create new button menu\n");
 		return 1;
 	}
 	new_child->value->parent = window;
@@ -145,7 +145,7 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	Link* children_head = (Link*) calloc(1, sizeof(Link));
 	Link* buttons_next = children_head;
 	if (children_head == NULL) {
-		printf("Error: Failed to create game arena\n");
+		printf("ERROR: Failed to create game arena\n");
 		return 1;
 	}
 	panels[0] = create_board_panel(BOARD_PANEL_W, BOARD_PANEL_H, game,
@@ -177,7 +177,7 @@ int show_game_arena(Control* window, Game *game, int (*handle)(Control*),
 	// Problem creating game arena
 	if (!valid) {
 		free_UI_children(children_head);
-		printf("Error: Failed to create game arena\n");
+		printf("ERROR: Failed to create game arena\n");
 		return 1;
 	}
 	// All went well in building new window
@@ -213,7 +213,7 @@ Control* create_board_panel(int width, int height, Game* game,
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link *buttons_next = head;
 	if (head == NULL) {
-		printf("Error: Failed to create game board\n");
+		printf("ERROR: Failed to create game board\n");
 		return NULL;
 	}
 
@@ -235,7 +235,7 @@ Control* create_board_panel(int width, int height, Game* game,
 			} else {
 				buttons_next->next = (Link*) calloc(1, sizeof(Link));
 				if (buttons_next->next == NULL) {
-					printf("Error: Failed to create game board\n");
+					printf("ERROR: Failed to create game board\n");
 					free_UI_children(head);
 					return NULL;
 				}

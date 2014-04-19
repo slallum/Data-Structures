@@ -14,7 +14,7 @@
 int init_fw() {
 	// Initialize SDL and make sure it quits
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		printf("Error: Unable to init SDL: %s\n", SDL_GetError());
+		printf("ERROR: Unable to init SDL: %s\n", SDL_GetError());
 		return 0;
 	}
 	atexit(SDL_Quit);
@@ -32,7 +32,7 @@ Control* create_control(int x, int y, int i, int j, int width, int height,
 		int (*draw)(struct Control*, struct Control*)) {
 	Control* new_control = (Control*) malloc(sizeof(Control));
 	if (new_control == NULL) {
-		printf("ERROR: Failed to create new gui control");
+		printf("ERROR: Failed to create new gui control\n");
 		return NULL;
 	}
 	new_control->x = x;
@@ -63,7 +63,7 @@ Control* create_window(Link* children_head) {
 	SDL_Surface* view = SDL_SetVideoMode(WIN_W, WIN_H, 0,
 			SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (view == NULL ) {
-		printf("Error: Failed to set video mode: %s\n", SDL_GetError());
+		printf("ERROR: Failed to set video mode: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	return create_control(0, 0, 0, 0, WIN_W, WIN_H, children_head, view,
@@ -86,7 +86,7 @@ Control* create_panel(int x, int y, int i, int j, int width, int height,
 	}
 	img = load_image(bg_path);
 	if (img == NULL ) {
-		printf("Error: failed to load image: %s\n", SDL_GetError());
+		printf("ERROR: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	panel = create_control(x, y, i, j, width, height, children_head, img,
@@ -156,7 +156,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	SDL_Color text_color;
 	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, TEXT_SIZE);
 	if (text_font == NULL) {
-		printf("Error: failed to load font: %s\n", TEXT_FONT);
+		printf("ERROR: failed to load font: %s\n", TEXT_FONT);
 		return NULL;
 	}
 	text_color.r = 0xe0;
@@ -164,7 +164,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	text_color.b = 0xe0;
 	text_image = TTF_RenderText_Solid(text_font, title, text_color);
 	if (text_image == NULL) {
-		printf("Error: Failed to create text image for %s", title);
+		printf("ERROR: Failed to create text image for %s\n", title);
 		return NULL;
 	}
 	// Determine whether text is a tile or a button
@@ -174,14 +174,14 @@ SDL_Surface* create_text(char* title, int width, int height) {
 		img = load_image(TEXT_BG);
 	}
 	if (img == NULL ) {
-		printf("Error: failed to load image: %s\n", SDL_GetError());
+		printf("ERROR: failed to load image: %s\n", SDL_GetError());
 		return NULL ;
 	}
 	SDL_Rect rect = { (width - (strlen(title) * 17)) / 2 , 8, strlen(title) * 17, height - 16 };
 	// Text titles come from dynamic allocation and must be freed, once used
 	free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
-		printf("Error: Failed blit text to bg: %s\n", SDL_GetError());
+		printf("ERROR: Failed blit text to bg: %s\n", SDL_GetError());
 		return NULL;
 	}
 	SDL_free(text_font);
@@ -233,7 +233,7 @@ int draw_children(Control* node, Control* parent) {
 int draw_leaf(Control* leaf, Control* parent) {
 	SDL_Rect to_place = { leaf->x, leaf->y, leaf->width, leaf->height };
 	if (SDL_BlitSurface(leaf->view, 0, parent->view, &to_place) != 0) {
-		printf("Error: Failed to blit image: %s\n", SDL_GetError());
+		printf("ERROR: Failed to blit image: %s\n", SDL_GetError());
 		return 0;
 	}
 	return 1;
@@ -317,7 +317,7 @@ int clickElement(Control* ui_tree, int x, int y) {
  */
 int flip(Control* window) {
 	if (SDL_Flip(window->view) != 0) {
-		printf("Error: Failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: Failed to flip buffer: %s\n", SDL_GetError());
 		return 0;
 	}
 	return 1;
@@ -328,7 +328,7 @@ int flip(Control* window) {
  */
 int draw(Control* window) {
 	if (!window->draw(window, NULL )) {
-		printf("Error: Failed to screen\n");
+		printf("ERROR: Failed to screen\n");
 		return 0;
 	}
 	return 1;
@@ -343,7 +343,7 @@ SDL_Surface *load_image(char* file_name) {
 	SDL_Surface *img, *final_img;
 	char* path = (char*) malloc(strlen(IMGS_PATH) + strlen(file_name) + 1);
 	if (path == NULL) {
-		printf("Error: Failed to create path for %s", file_name);
+		printf("ERROR: Failed to create path for %s", file_name);
 		return NULL;
 	}
 	strcpy(path, IMGS_PATH);

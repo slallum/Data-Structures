@@ -37,7 +37,7 @@ int no_moves(Game* game, int player) {
 	Move* curr_move = (Move*) malloc(sizeof(Move));
 	Board* temp_board = new_board(game->board->n, game->board->m);
 	if ((curr_move == NULL) || (temp_board == NULL)) {
-		printf("Error: Could not check for legal moves");
+		printf("ERROR: Could not check for legal moves\n");
 		return 1;
 	}
 	while ((avail_move == -1) && i < game->board->n) {
@@ -76,7 +76,7 @@ int no_moves(Game* game, int player) {
 int handle_move(Game* game, int i, int j) {
 	Move* new_move;
 	if ((new_move = (Move*) malloc(sizeof(Move))) == NULL) {
-		printf("Error in allocating memory for new move in handle_move.\n");
+		printf("ERROR: Allocating memory for new move in handle_move.\n");
 		return 0;
 	}
 
@@ -119,7 +119,7 @@ int save_game(int file_num, Game* game) {
 		if (check_validity(sprintf(path_to_save, FILE_PATH, file_num))) {
 			write_file = fopen(path_to_save, "w");
 			if (write_file == NULL ) {
-				printf("Error: Could not open saved game %s\n", path_to_save);
+				printf("ERROR: Could not open saved game %s\n", path_to_save);
 				return 0;
 			}
 			if (check_validity(fprintf(write_file, "%s", game->save_game_name)) &&
@@ -168,7 +168,7 @@ Game* load_game(int file_num) {
 	if (check_validity(sprintf(path_to_read, FILE_PATH, file_num))) {
 		read_file = fopen(path_to_read, "r");
 		if (read_file == NULL ) {
-			printf("Error: Could not open saved game %s\n", path_to_read);
+			printf("ERROR: Could not open saved game %s\n", path_to_read);
 			return NULL;
 		}
 		if (check_validity(fscanf(read_file, "%s\n", game_name))) {
@@ -221,7 +221,7 @@ Game* check_game(char game_name[MAX_STR_LEN]) {
  */
 int check_validity(int rc) {
 	if (rc <= 0) {
-		printf("Error: Game file not in expected format\n");
+		printf("ERROR: Game file not in expected format\n");
 		return 0;
 	}
 	return 1;

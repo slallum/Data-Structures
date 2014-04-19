@@ -13,18 +13,18 @@ minmax_tree* create_tree(Board* board, int (*get_score)(Board* board)) {
     vertex* current_root;
 
     if ((tree = (minmax_tree*) calloc(1, sizeof(minmax_tree))) == NULL) {
-        printf("Error: standard function malloc has failed");
+        printf("ERROR: standard function malloc has failed\n");
         return NULL;
     }
 
     if ((current_root = (vertex*)calloc(1, sizeof(vertex))) == NULL) {
-        printf("Error: standard function malloc has failed");
+        printf("ERROR: standard function malloc has failed\n");
         return NULL;
     }
 
     current_root->score = get_score(board);
     if ((current_root->current_move = (Move*) malloc(sizeof(Move))) == NULL) {
-        printf("Error: standard function malloc has failed");
+        printf("ERROR: standard function malloc has failed\n");
         return NULL;
     }
     current_root->current_move->i = -1;
@@ -109,7 +109,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     // if we don't have a linked list, but the depth isn't 0, we'll create an empty linked list
     if (node->children == NULL) {
         if ((node->children = (linked_list*)malloc(sizeof(linked_list))) == NULL) {
-            printf("Error: standard function malloc has failed");
+            printf("ERROR: standard function malloc has failed\n");
             exit(1);
         }
         node->children->head = NULL;
@@ -117,7 +117,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     }
 
     if ((next_best_move = (Move*)malloc(sizeof(Move))) == NULL) {
-        printf("Error: malloc has failed in minmaxtree.\n");
+        printf("ERROR: malloc has failed in minmaxtree\n");
         exit(1);
     }
 
@@ -245,16 +245,16 @@ int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value)
     element *new_element;
 
     if ((new_element = (element*)calloc(1, sizeof(element))) == NULL) {
-        printf("Error: standard function calloc has failed");
+        printf("ERROR: standard function calloc has failed\n");
         return 0;
     }
 
     if ((new_element->node = (vertex*)calloc(1, sizeof(vertex))) == NULL) {
-        printf("Error: standard function calloc has failed");
+        printf("ERROR: standard function calloc has failed\n");
         return 0;
     }
     if ((new_element->node->current_move = (Move*)malloc(sizeof(Move))) == NULL) {
-        printf("Error: standard function malloc has failed");
+        printf("ERROR: standard function malloc has failed\n");
         return 0;
     }
     new_element->node->current_move->i = move.i;
@@ -288,7 +288,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
     Move move = {.i = 0, .j = 0};
     int result_index = 0;
     if ((result = (Move*)calloc(board->n*board->m, sizeof(Move))) == NULL) {
-        printf("Error: unable to init moves list in get_unimplemented_moves.\n");
+        printf("ERROR: unable to init moves list in get_unimplemented_moves.\n");
         return NULL;
     }
 
@@ -318,7 +318,7 @@ Move *get_unimplemented_moves(linked_list *nodes_list, Board *board, int *new_le
 
     // we now know how manu unimplemented moves we have - so we rellocate te memory to fit it.
     if ((result = (Move*)(realloc(result, sizeof(Move)*result_index))) == NULL) {
-        printf("Error: can't allocate result in get_unimplemented_moves.\n");
+        printf("ERROR: can't allocate result in get_unimplemented_moves.\n");
         exit(1);
     }
     return result;
