@@ -114,6 +114,20 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     element *iterator = node->children->head;
     Move *unimplemented_moves = get_unimplemented_moves(node->children, board, &unimplemented_moves_length, max,
                                                         is_valid_move);
+    // we'll initialize best_move to SOME move, just in case EVERY move is a losing move.
+    if (iterator != NULL) {
+        best_move->i = iterator->node->current_move->i;
+        best_move->j = iterator->node->current_move->j;
+    } else {
+        if (unimplemented_moves_length > 0) {
+            best_move->i = unimplemented_moves[0].i;
+            best_move->j = unimplemented_moves[0].j;
+        // NO MOVES AT ALL!
+        } else {
+            return node->score;
+        }
+    }
+
     // runs max
     if (max) {
         while (iterator != NULL) {
