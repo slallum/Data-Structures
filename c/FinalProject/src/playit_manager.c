@@ -109,7 +109,7 @@ int on_select_save(Control* btn) {
 	for (i = 1; i <= FILES_NUM; i++) {
 		exist[i - 1] = file_exists(i);
 	}
-	return show_files_menu(get_root(btn),
+	return !show_files_menu(get_root(btn),
 			empty_select, on_select_save_file, on_cancel, exist);
 }
 
@@ -164,9 +164,12 @@ void free_game(Game* game) {
 }
 
 int show_arena(Control* window) {
-	if (game->first_player_ai == AI_PLAYING) {
+	if (!game->game_over && game->first_player_ai == AI_PLAYING) {
 		return !show_game_arena(window, game, empty_select,
 				game_menu_handles, on_select_difficulty, 5);
+	} else if (game->game_over) {
+		return !show_game_arena(window, game, empty_select,
+				game_menu_handles, on_select_difficulty, 4);
 	} else {
 		return !show_game_arena(window, game, on_select_tile,
 				game_menu_handles, on_select_difficulty, 4);

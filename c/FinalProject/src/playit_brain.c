@@ -127,9 +127,17 @@ int save_game(int file_num, Game* game) {
 
 				for (i = 0; i < game->board->n && valid; i++) {
 					for (j = 0; j < (game->board->m - 1) && valid; j++) {
-						valid = check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+						if (game->board->cells[i][j] == WINNING_TURN) {
+							valid = check_validity(fprintf(write_file, "%d ", game->current_player));
+						} else {
+							valid = check_validity(fprintf(write_file, "%d ", game->board->cells[i][j]));
+						}
 					}
-					valid = check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
+					if (game->board->cells[i][j] == WINNING_TURN) {
+						valid = check_validity(fprintf(write_file, "%d\n", game->current_player));
+					} else {
+						valid = check_validity(fprintf(write_file, "%d\n", game->board->cells[i][j]));
+					}
 				}
 				if (valid) {
 					fclose(write_file);
@@ -179,6 +187,7 @@ Game* load_game(int file_num) {
 					}
 					if (valid) {
 						fclose(read_file);
+						loaded_game->won_game(loaded_game);
 						return loaded_game;
 					}
 				}
