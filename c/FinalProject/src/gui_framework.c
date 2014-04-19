@@ -18,8 +18,8 @@ int init_fw() {
 		return 0;
 	}
 	atexit(SDL_Quit);
-	atexit(TTF_Quit);
 	TTF_Init();
+	atexit(TTF_Quit);
 	return 1;
 }
 
@@ -350,6 +350,9 @@ SDL_Surface *load_image(char* file_name) {
 	strcat(path, file_name);
 	img = SDL_LoadBMP(path);
 	free(path);
+	if (img == NULL) {
+		return NULL;
+	}
 	final_img = SDL_DisplayFormat(img);
 	SDL_FreeSurface(img);
 	return final_img;
