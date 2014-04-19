@@ -289,33 +289,50 @@ void fill_parameters(Game* game, char** images) {
 	images[2] = NO_IMG;
 	images[3] = NO_IMG;
 	if (game->current_player == 0 && game->game_over) {
-		images[0] = PLAYER1_H_IMG;
-		images[1] = PLAYER2_H_IMG;
-		images[2] = TROPHY_IMG;
-		images[3] = TROPHY_IMG;
+		both_crown(images);
 	}
 	if (game->current_player == FIRST_PL_TURN) {
-		images[0] = PLAYER1_H_IMG;
-		images[1] = PLAYER2_IMG;
-		if (game->game_over) {
-			images[2] = TROPHY_IMG;
-		}
+		first_crown(images, game);
 	} else {
-		images[0] = PLAYER1_IMG;
-		images[1] = PLAYER2_H_IMG;
-		if (game->game_over) {
-			images[3] = TROPHY_IMG;
-		}
+		second_crown(images, game);
 	}
 	if (!game->game_over) {
 		if (game->first_player_ai == AI_PLAYING) {
-			images[2] = (char*) malloc(sizeof(char) * 2);
-			sprintf(images[2], "%d", game->first_player_depth);
+			add_difficulty(images, 2, game->first_player_depth);
 		}
 		if (game->second_player_ai == AI_PLAYING) {
-			images[3] = (char*) malloc(sizeof(char) * 2);
-			sprintf(images[3], "%d", game->second_player_depth);
+			add_difficulty(images, 3, game->second_player_depth);
 		}
+	}
+}
+
+void first_crown(char** images, Game* game) {
+	images[0] = PLAYER1_H_IMG;
+	images[1] = PLAYER2_IMG;
+	if (game->game_over) {
+		images[2] = TROPHY_IMG;
+	}
+}
+
+void second_crown(char** images, Game* game) {
+	images[0] = PLAYER1_IMG;
+	images[1] = PLAYER2_H_IMG;
+	if (game->game_over) {
+		images[3] = TROPHY_IMG;
+	}
+}
+
+void both_crown(char** images) {
+	images[0] = PLAYER1_H_IMG;
+	images[1] = PLAYER2_H_IMG;
+	images[2] = TROPHY_IMG;
+	images[3] = TROPHY_IMG;
+}
+
+void add_difficulty(char** images, int cell, int depth) {
+	images[cell] = (char*) malloc(sizeof(char) * 2);
+	if ((images[cell] == NULL) || (sprintf(images[cell], "%d", depth) <= 0)) {
+		images[cell] = NO_IMG;
 	}
 }
 

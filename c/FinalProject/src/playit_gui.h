@@ -75,6 +75,31 @@ Control* create_info_panel(int width, int height, Game* game, int (*handle)(Cont
 void fill_parameters(Game* game, char** images);
 
 /**
+ * Make first player the current (highlighted)
+ * Also, if game is over, crown him
+ */
+void first_crown(char** images, Game* game);
+
+/**
+ *
+ */
+void second_crown(char** images, Game* game);
+
+/**
+ * Make second player the current (highlighted)
+ * Also, if game is over, crown him
+ */
+void both_crown(char** images);
+
+/**
+ * Tries adding the difficulty chooser to the panel.
+ * Should be called if player is AI.
+ * If a problem occurs while creating the element,
+ * the option will not be available
+ */
+void add_difficulty(char** images, int cell, int depth);
+
+/**
  * Show screen allowing user to select a game file
  * for loading \ saving, depending on request
  */
