@@ -99,11 +99,16 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     int i;
     int unimplemented_moves_length;
     int current_score;
-    Board *copied_board;
     Move *next_best_move;
+    Board *copied_board = new_board(board->n, board->m);
+    if (copied_board == NULL) {
+        printf("ERROR: can't initiazlie copied board.\n");
+        exit(1);
+    }
 
     // we stop if we got to a winning move or the requested depth
     if ((depth == 0) || (node->score == EXTREME_VALUE) || (node->score == -EXTREME_VALUE)) {
+        free(copied_board);
         return node->score;
     }
     // if we don't have a linked list, but the depth isn't 0, we'll create an empty linked list
@@ -134,6 +139,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             best_move->j = unimplemented_moves[0].j;
         // NO MOVES AT ALL - we don't care about the best move, just return the current score.
         } else {
+            free_board(copied_board);
             free(next_best_move);
             return node->score;
         }
@@ -142,7 +148,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
     // runs max
     if (max) {
         while (iterator != NULL) {
-            copied_board = copy_board(board);
+            copy_board(board, copied_board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
@@ -155,6 +161,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 
                 // alpha-beta pruning
                 if (beta <= alpha) {
+                    free_board(copied_board);
                     free(next_best_move);
                     return alpha;
                 }
@@ -162,7 +169,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             iterator = iterator->next;
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            copied_board = copy_board(board);
+            copy_board(board, copied_board);
             add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
@@ -180,17 +187,19 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
                 // alpha-beta pruning
                 if (beta <= alpha) {
+                    free_board(copied_board);
                     free(next_best_move);
                     return alpha;
                 }
             }
         }
+        free_board(copied_board);
         free(next_best_move);
         return alpha;
     // runs min
     } else {
         while (iterator != NULL) {
-            copied_board = copy_board(board);
+            copy_board(board, copied_board);
             make_move(copied_board, iterator->node->current_move, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             current_score = minmax_with_extend(iterator->node, depth-1, alpha, beta, !max, copied_board, next_best_move,
                                                is_valid_move, make_move, get_score);
@@ -203,6 +212,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 
                 // alpha-beta pruning
                 if (beta <= alpha) {
+                    free_board(copied_board);
                     free(next_best_move);
                     return beta;
                 }
@@ -210,7 +220,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
             iterator = iterator->next;
         }
         for (i=0; i<unimplemented_moves_length; i++) {
-            copied_board = copy_board(board);
+            copy_board(board, copied_board);
             add_node_to_end(node->children, unimplemented_moves[i], copied_board, max ? FIRST_PL_TURN:SECOND_PL_TURN);
             // still need to update the score of the node. so we'll make the move and then update the score.
             make_move(copied_board, node->children->tail->node->current_move, node->children->tail->node->value);
@@ -228,11 +238,13 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
                 // alpha-beta pruning
                 if (beta <= alpha) {
+                    free_board(copied_board);
                     free(next_best_move);
                     return beta;
                 }
             }
         }
+        free_board(copied_board);
         free(next_best_move);
         return beta;
     }

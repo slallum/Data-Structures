@@ -18,7 +18,7 @@ int board_is_full(Board board, int m);
 
 Board *new_board(int n, int m);
 
-Board *copy_board(Board *board);
+void copy_board(Board *source_board, Board *destination_board);
 
 /**
  * If at least one cell in the board has no value in it,

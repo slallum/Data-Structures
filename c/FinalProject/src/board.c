@@ -24,16 +24,19 @@ Board *new_board(int n, int m) {
     return board;
 }
 
-Board *copy_board(Board *board) {
+
+/* 
+ * gets an source board and an initialized destination board
+ * copies the source board to the destinatiojn board
+ */
+void copy_board(Board *source_board, Board *destination_board) {
     int i, j;
-    Board *copied_board;
-    copied_board = new_board(board->n, board->m);
-    for (i=0; i<board->n; i++) {
-        for (j=0; j<board->m; j++) {
-            copied_board->cells[i][j] = board->cells[i][j];
+    destination_board = new_board(source_board->n, source_board->m);
+    for (i=0; i<source_board->n; i++) {
+        for (j=0; j<source_board->m; j++) {
+            destination_board->cells[i][j] = source_board->cells[i][j];
         }
     }
-    return copied_board;
 }
 
 int board_full(Board* board) {
