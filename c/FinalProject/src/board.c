@@ -31,7 +31,6 @@ Board *new_board(int n, int m) {
  */
 void copy_board(Board *source_board, Board *destination_board) {
     int i, j;
-    destination_board = new_board(source_board->n, source_board->m);
     for (i=0; i<source_board->n; i++) {
         for (j=0; j<source_board->m; j++) {
             destination_board->cells[i][j] = source_board->cells[i][j];
