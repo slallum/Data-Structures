@@ -9,7 +9,7 @@
 #define GUI_FRAMEWORK_H_
 
 #include <stdio.h>
-#include "SDL_ttf-2.0.9/SDL_ttf.h"
+#include "SDL_ttf/SDL_ttf.h"
 #include <SDL.h>
 #include <SDL_video.h>
 #include "playit_conf.h"

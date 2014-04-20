@@ -120,7 +120,7 @@ AWK = mawk
 BINARY_AGE = 9
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -I/usr/local/include/freetype2 -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -DHAVE_OPENGL
+CFLAGS = -g -O2 -I../freetype/include -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -DHAVE_OPENGL
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++

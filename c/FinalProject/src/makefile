@@ -1,9 +1,7 @@
-C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm -lSDL_ttf
+C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm -L../lib/ -lSDL_ttf
 O_FILES = playit.o gui_framework.o playit_gui.o playit_manager.o playit_brain.o connect4_brain.o game_framework.o board.o tree.o reversi_brain.o ttt_brain.o
-O_TEST = test_reversi_score.o playit_brain.o game_framework.o connect4_brain.o ttt_brain.o reversi_brain.o board.o 
 
 all: PlayIt
-test: test_reversi_score
 clean:
 	-rm $(O_FILES) PlayIt
 
@@ -43,8 +41,3 @@ reversi_brain.o:   	reversi_brain.c reversi_brain.h game_framework.h board.h tre
 playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h connect4_brain.h ttt_brain.h reversi_brain.h
 	gcc $(C_FLAGS) -c playit_brain.c `sdl-config --cflags`
 
-test_reversi_score: 	$(O_TEST)
-	gcc -o test_reversi_score $(O_TEST) $(C_FLAGS) `sdl-config --libs`
-
-test_reversi_score.o:	test_reversi_score.c playit_brain.h game_framework.h
-	gcc $(C_FLAGS) -c test_reversi_score.c -o test_reversi_score.o `sdl-config --cflags`	 
