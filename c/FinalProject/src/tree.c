@@ -112,7 +112,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         exit(1);
     }
 
-    // we stop if we got to a winning move or the requested depth
+    // we stop if we got to a winning move or if we reached the requested depth
     if ((depth == 0) || (node->score == EXTREME_VALUE) || (node->score == -EXTREME_VALUE)) {
         free_board(copied_board);
         return node->score;
