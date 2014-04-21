@@ -175,6 +175,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	if (img == NULL ) {
 		printf("ERROR: failed to load image: %s\n", SDL_GetError());
+		SDL_FreeSurface(text_image);
 		return NULL ;
 	}
 	SDL_Rect rect = { (width - (strlen(title) * 17)) / 2 , 8, strlen(title) * 17, height - 16 };
@@ -182,6 +183,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("ERROR: Failed blit text to bg: %s\n", SDL_GetError());
+		SDL_FreeSurface(text_image);
 		return NULL;
 	}
 	SDL_free(text_font);

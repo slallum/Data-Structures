@@ -228,27 +228,27 @@ int* count_avail_moves(Board* board) {
 	moves_count[0] = 0;
 	moves_count[1] = 0;
 	Move* curr_move = (Move*) malloc(sizeof(Move));
-	Board* temp_board = new_board(board->n, board->m);
-	if ((curr_move == NULL) || (temp_board == NULL)) {
+//	Board* temp_board = new_board(board->n, board->m);
+	if (curr_move == NULL) {
 		printf("ERROR: Failed to count available moves\n");
 		return moves_count;
 	}
 	for (i = 0; i < board->n; i++) {
 		for (j = 0; j < board->m; j++) {
-			reversi_copy_board(board, temp_board);
+//			reversi_copy_board(board, temp_board);
 			curr_move->i = i;
 			curr_move->j = j;
-			if (reversi_make_move(temp_board, curr_move, FIRST_PL_TURN) == 0) {
+			if (reversi_is_valid_move(board, curr_move, FIRST_PL_TURN) == 0) {
 				moves_count[0]++;
 			}
-			reversi_copy_board(board, temp_board);
-			if (reversi_make_move(temp_board, curr_move, SECOND_PL_TURN) == 0) {
+//			reversi_copy_board(board, temp_board);
+			if (reversi_is_valid_move(board, curr_move, SECOND_PL_TURN) == 0) {
 				moves_count[1]++;
 			}
 		}
 	}
 	free(curr_move);
-	free(temp_board);
+//	free_board(temp_board);
 	return moves_count;
 }
 
@@ -292,6 +292,7 @@ int reversi_get_score(Board* board) {
 		free(avail_moves);
 	}
 	return moves_parity * 2 + count_stability_parity(board) * 5 + disk_parity;
+//	return weighted_disk_parity(board);
 }
 
 /**
