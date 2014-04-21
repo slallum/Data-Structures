@@ -47,6 +47,7 @@ int on_load_game(Control* btn_load_game) {
 int on_select_quit(Control* btn_quit) {
 	if (game != NULL) {
 		free_game(game);
+		game = NULL;
 	}
 	return 1;
 }
@@ -89,6 +90,7 @@ int on_cancel(Control* btn) {
 		empty_select, on_new_game, on_load_game, on_select_quit };
 	if (game != NULL) {
 		free_game(game);
+		game = NULL;
 	}
 	return !show_main_menu(get_root(btn), handles);
 }
@@ -241,6 +243,7 @@ Control* get_root(Control* control) {
 void free_game(Game* game) {
 	free_board(game->board);
 	remove_tree(game->tree->root);
+	free(game);
 }
 
 /**

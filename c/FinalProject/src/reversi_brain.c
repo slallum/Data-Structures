@@ -239,11 +239,11 @@ int* count_avail_moves(Board* board) {
 //			reversi_copy_board(board, temp_board);
 			curr_move->i = i;
 			curr_move->j = j;
-			if (reversi_is_valid_move(board, curr_move, FIRST_PL_TURN) == 0) {
+			if (reversi_is_valid_move(board, curr_move, FIRST_PL_TURN) == 1) {
 				moves_count[0]++;
 			}
 //			reversi_copy_board(board, temp_board);
-			if (reversi_is_valid_move(board, curr_move, SECOND_PL_TURN) == 0) {
+			if (reversi_is_valid_move(board, curr_move, SECOND_PL_TURN) == 1) {
 				moves_count[1]++;
 			}
 		}

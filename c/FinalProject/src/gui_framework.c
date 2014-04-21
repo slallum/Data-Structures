@@ -153,17 +153,15 @@ Control* create_button(int x, int y, int i, int j, int width, int height, char* 
  */
 SDL_Surface* create_text(char* title, int width, int height) {
 	SDL_Surface *text_image, *img;
-	SDL_Color text_color;
+	SDL_Color text_color = { 0xe0, 0xbc, 0xe0 };
 	TTF_Font *text_font =  TTF_OpenFont(TEXT_FONT, TEXT_SIZE);
 	if (text_font == NULL) {
 		printf("ERROR: failed to load font: %s\n", TEXT_FONT);
 		return NULL;
 	}
-	text_color.r = 0xe0;
-	text_color.g = 0xbc;
-	text_color.b = 0xe0;
 	text_image = TTF_RenderText_Solid(text_font, title, text_color);
 	if (text_image == NULL) {
+		free(text_font);
 		printf("ERROR: Failed to create text image for %s\n", title);
 		return NULL;
 	}
@@ -175,6 +173,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	if (img == NULL ) {
 		printf("ERROR: failed to load image: %s\n", SDL_GetError());
+		free(text_font);
 		SDL_FreeSurface(text_image);
 		return NULL ;
 	}
@@ -183,10 +182,11 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("ERROR: Failed blit text to bg: %s\n", SDL_GetError());
+		free(text_font);
 		SDL_FreeSurface(text_image);
 		return NULL;
 	}
-	SDL_free(text_font);
+	free(text_font);
 	SDL_FreeSurface(text_image);
 	return img;
 }
