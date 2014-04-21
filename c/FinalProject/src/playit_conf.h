@@ -107,7 +107,7 @@
 #define FILE_NAME		"Game"
 #define FILES_NUM		5
 #define FILE_SELECT		"SelectFile.bmp"
-#define FILE_PATH		"../files/game_file_%d.txt"
+#define FILE_PATH		"./files/game_file_%d.txt"
 #define TTT_NAME		"Tic-tac-toe"
 #define	CONNECT4_NAME	"Connect4"
 #define REVERSI_NAME	"Reversi"
