@@ -27,7 +27,7 @@ Game *reversi_new_game() {
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
 	game->depth_range[0] = 1;
-	game->depth_range[1] = 4;
+	game->depth_range[1] = 7;
 	game->first_player_depth = game->depth_range[0];
 	game->second_player_depth = game->depth_range[0];
 
@@ -200,6 +200,9 @@ int reversi_won_game(Game* game) {
 			disk_difference = count_disk_parity(game->board);
 			if (disk_difference == 0) {
 				game->current_player = 0;
+				game->game_over = 1;
+				free(avail_moves);
+				return 1;
 			}
 			if (disk_difference > 0) {
 				game->current_player = FIRST_PL_TURN;
