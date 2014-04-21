@@ -83,6 +83,7 @@ int reversi_is_valid_move(Board *board, Move *new_move, int value) {
 	}
 	// Requested cell is taken
 	if (board->cells[new_move->i][new_move->j] != 0) {
+		free(current_dir);
 		return 0;
 	}
 	for (i = 0; i < 3; i++) {
