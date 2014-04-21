@@ -241,6 +241,7 @@ Control* get_root(Control* control) {
 void free_game(Game* game) {
 	free_board(game->board);
 	remove_tree(game->tree->root);
+	free(game->tree);
 }
 
 /**

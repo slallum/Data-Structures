@@ -19,12 +19,15 @@ minmax_tree* create_tree(Board* board, int (*get_score)(Board* board)) {
 
     if ((current_root = (vertex*)calloc(1, sizeof(vertex))) == NULL) {
         printf("ERROR: standard function malloc has failed\n");
+        free(tree);
         return NULL;
     }
 
     current_root->score = get_score(board);
     if ((current_root->current_move = (Move*) malloc(sizeof(Move))) == NULL) {
         printf("ERROR: standard function malloc has failed\n");
+        free(tree);
+        free(current_root);
         return NULL;
     }
     current_root->current_move->i = -1;
@@ -55,7 +58,10 @@ void update_tree(minmax_tree *tree, int col, int row, int depth) {
             iterator = iterator->next;
         }
         if (iterator != NULL) {
+            // change to the new root
             tree->root = iterator->node;
+            // remove the rest of the tree:
+            // connect the previous and next childs together and then remove the last root
             if (iterator->prev != NULL) {
                 iterator->prev->next = iterator->next;
             } else {
@@ -67,11 +73,12 @@ void update_tree(minmax_tree *tree, int col, int row, int depth) {
                 current_root->children->tail = iterator->prev;
             }
             remove_tree(current_root);
+            free(iterator);
         }
     // no children - just change the root
     } else {
-        tree->root->current_move->j = col;
         tree->root->current_move->i = row;
+        tree->root->current_move->j = col;
         tree->root->value = (-1) * (tree->root->value);
     }
  }
@@ -270,10 +277,13 @@ int add_node_to_end(linked_list *nodes_list, Move move, Board *board, int value)
 
     if ((new_element->node = (vertex*)calloc(1, sizeof(vertex))) == NULL) {
         printf("ERROR: standard function calloc has failed\n");
+        free(new_element);
         return 0;
     }
     if ((new_element->node->current_move = (Move*)malloc(sizeof(Move))) == NULL) {
         printf("ERROR: standard function malloc has failed\n");
+        free(new_element->node);
+        free(new_element);
         return 0;
     }
     new_element->node->current_move->i = move.i;
