@@ -108,7 +108,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
 
     // we stop if we got to a winning move or the requested depth
     if ((depth == 0) || (node->score == EXTREME_VALUE) || (node->score == -EXTREME_VALUE)) {
-        free(copied_board);
+        free_board(copied_board);
         return node->score;
     }
     // if we don't have a linked list, but the depth isn't 0, we'll create an empty linked list
@@ -141,6 +141,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
         } else {
             free_board(copied_board);
             free(next_best_move);
+            free(unimplemented_moves);
             return node->score;
         }
     }
@@ -163,6 +164,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 if (beta <= alpha) {
                     free_board(copied_board);
                     free(next_best_move);
+                    free(unimplemented_moves);
                     return alpha;
                 }
             }
@@ -189,12 +191,14 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 if (beta <= alpha) {
                     free_board(copied_board);
                     free(next_best_move);
+                    free(unimplemented_moves);
                     return alpha;
                 }
             }
         }
         free_board(copied_board);
         free(next_best_move);
+        free(unimplemented_moves);
         return alpha;
     // runs min
     } else {
@@ -214,6 +218,7 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 if (beta <= alpha) {
                     free_board(copied_board);
                     free(next_best_move);
+                    free(unimplemented_moves);
                     return beta;
                 }
             }
@@ -240,12 +245,14 @@ int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                 if (beta <= alpha) {
                     free_board(copied_board);
                     free(next_best_move);
+                    free(unimplemented_moves);
                     return beta;
                 }
             }
         }
         free_board(copied_board);
         free(next_best_move);
+        free(unimplemented_moves);
         return beta;
     }
 }
