@@ -39,15 +39,15 @@ void copy_board(Board *source_board, Board *destination_board) {
 }
 
 int board_full(Board* board) {
-	int i, j, full = 1;
+	int i, j;
 	for (i = 0; i < board->n; i++) {
 		for (j = 0; j < board->m; j++) {
 			if (board->cells[i][j] == 0) {
-				full = 0;
+				return 0;
 			}
 		}
 	}
-	return full;
+	return 1;
 }
 
 void free_board(Board* board) {

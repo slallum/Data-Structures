@@ -132,6 +132,9 @@ int on_select_resume(Control* btn_tile) {
  * current game rules.
  */
 int on_select_tile(Control* btn_tile) {
+	if (game->game_over) {
+		return 0;
+	}
 	Control* current;
 	int rc = handle_move(game, btn_tile->i, btn_tile->j);
 	if (game->won_game(game)) {

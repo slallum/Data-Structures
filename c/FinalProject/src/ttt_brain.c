@@ -79,12 +79,18 @@ int ttt_make_move(Board* board, Move* new_move, int value) {
  * If there are 3 of same symbol in a row - player won
  */
 int ttt_won_game(Game* game) {
+	if (board_full(game->board) && !ttt_won_board(game->board)) {
+		game->game_over = 1;
+		game->current_player = 0;
+		return 0;
+	}
 	if (ttt_won_board(game->board)) {
 		game->game_over = 1;
 		return 1;
 	}
 	return 0;
 }
+
 
 int ttt_won_board(Board* board) {
 	int i = 0, j = 0, strike = 0;
