@@ -241,16 +241,6 @@ Control* get_root(Control* control) {
 }
 
 /**
- * Frees all memory allocated for the game object
- */
-void free_game(Game* game) {
-	free_board(game->board);
-	remove_tree(game->tree->root);
-	free(game->tree);
-	free(game);
-}
-
-/**
  * Opens game screen for beginning of the game.
  * If first player is AI, opens it paused,
  * with a 'Resume' button.

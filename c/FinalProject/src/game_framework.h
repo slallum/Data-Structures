@@ -28,10 +28,6 @@ typedef struct game_s {
     char* tiles[4];
 } Game;
 
-/**
- * Removes all dynamic memory allocated for the game
- */
-void free_game(Game *game);
 
 // get the best move for the current game state, by the minmax algorithm with the current depth
 // gets best_move pointer - that is already initialized
@@ -40,8 +36,12 @@ void get_best_move(Game *game, Move *best_move);
 // return if the current player is AI or not
 int current_player_is_ai(Game *game);
 
-Game *init_game();
 
 int restart_game(Game *game);
+
+/**
+ * Removes all dynamic memory allocated for the game
+ */
+void free_game(Game *game);
 
 #endif /* GAME_FRAMEWORK_H_ */

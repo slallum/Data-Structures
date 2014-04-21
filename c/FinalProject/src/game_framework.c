@@ -29,3 +29,14 @@ int restart_game(Game *game) {
 	game->game_over = 0;
 	return 1;
 }
+
+
+/**
+ * Frees all memory allocated for the game object
+ */
+void free_game(Game* game) {
+	free_board(game->board);
+	remove_tree(game->tree->root);
+	free(game->tree);
+	free(game);
+}
