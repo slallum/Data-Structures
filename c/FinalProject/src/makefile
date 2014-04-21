@@ -1,4 +1,4 @@
-C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm -L../lib/ -lSDL_ttf
+C_FLAGS = -std=c99 -Wall -g -pedantic-errors -lm -L./lib/ -lSDL_ttf
 O_FILES = playit.o gui_framework.o playit_gui.o playit_manager.o playit_brain.o connect4_brain.o game_framework.o board.o tree.o reversi_brain.o ttt_brain.o
 
 all: PlayIt

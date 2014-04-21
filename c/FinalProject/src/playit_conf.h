@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define IMGS_PATH		"../resources/"
+#define IMGS_PATH		"./resources/"
 
 // Main menu
 #define PLAYIT_IMG		"PlayIt.bmp"
