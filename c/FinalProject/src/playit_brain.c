@@ -83,7 +83,7 @@ int handle_move(Game* game, int i, int j) {
 	// get the new move
 	// if we know that the current player is AI, we'll get the best move for it with minmax
 	if (current_player_is_ai(game)) {
-		new_move = get_best_move(game);
+		get_best_move(game, new_move);
 	// if it's a human player's turn - then i, j are the real move.
 	} else {
 		new_move->i = i;
