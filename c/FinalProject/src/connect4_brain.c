@@ -51,7 +51,9 @@ void connect4_init_board(Board* board) {
 
 }
 
-// TODO (ofer) - make_move should use is_valid_move
+/*
+ * returns if the given move with the given value is valid on the given board
+ */
 int connect4_is_valid_move(Board *board, Move *new_move, int value) {
 	new_move->i = 0;
 	// check when we reach a non empty cell

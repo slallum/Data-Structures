@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include "board.h"
 
+/*
+ * retuns an initialized board ith n rows and m columns
+ */ 
 Board *new_board(int n, int m) {
     Board *board = (Board*)malloc(sizeof(Board));
     if (board == NULL) {
@@ -38,6 +41,10 @@ void copy_board(Board *source_board, Board *destination_board) {
     }
 }
 
+/**
+ * If at least one cell in the board has no value in it,
+ * return true - means there are more moves
+ */
 int board_full(Board* board) {
 	int i, j;
 	for (i = 0; i < board->n; i++) {
@@ -50,6 +57,9 @@ int board_full(Board* board) {
 	return 1;
 }
 
+/**
+ * Frees each and every dynamic memory allocated for the board
+ */
 void free_board(Board* board) {
 	int i;
 	for (i = 0; i < board->n; i++) {

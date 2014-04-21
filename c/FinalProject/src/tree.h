@@ -34,22 +34,35 @@ typedef struct minmax_tree_s {
 
 
 /**
- * Initializes a new tree and builds it until requested depth.
- * User is always first so root will be his turn.
+ * Initializes a new tree with one node.
  */
 minmax_tree* create_tree(Board* board, int (*get_score)(Board* board));
 
 /**
- * Adds levels to tree until reaching requested depth
+ * Updates root of tree according to col played
+ *
+ * @param   board - after performing move
+ * @param   col - last chosen column
+ * @param   row - last chosen row
+ * @param   depth - max depth chosen
  */
 void update_tree(minmax_tree *tree, int col, int row, int depth);
 
 
 /**
- * runs minmax and extend at the same time
+ * runs minmax algorithm, extends the tree at the same time.
+ * decides what is the best move to perform according to the minmax algorithm (with alphabeta pruning)
  * 
+ * @param node - the current root of the minmax tree
+ * @param alpha - the current maximum we got (for alphabeta pruning)
+ * @param beta - the current minimum we got (for alphabeta pruning)
  * @param depth - the depth of the tree
  * @param max - do max or min?
+ * @param board - the current board
+ * @param best_move - pointer that will contain the best move to make, AFTER the function finishes.
+ * @param is_valid_move - function that decides if a move is valid
+ * @param make_move - function that makes the move on the board
+ * @param get_score - the scoring function for the current game
  */
 int minmax_with_extend(vertex *node, int depth, int alpha, int beta, int max,
                        Board *board, Move *best_move,

@@ -7,6 +7,10 @@
 
 #include "ttt_brain.h"
 
+/**
+ * Creates a new game specific for tic-tac-toe,
+ * with all needed parameters
+ */
 Game *ttt_new_game() {
 	Game *game = (Game*)malloc(sizeof(Game));
 	if (game == NULL) {

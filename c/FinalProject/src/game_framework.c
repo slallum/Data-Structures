@@ -1,5 +1,7 @@
 #include "game_framework.h"
 
+// get the best move for the current game state, by the minmax algorithm with the current depth
+// gets best_move pointer - that is already initialized
 void get_best_move(Game *game, Move *best_move) {
 	int depth, max;
 	depth = game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth;
@@ -9,6 +11,7 @@ void get_best_move(Game *game, Move *best_move) {
 					   game->is_valid_move, game->make_move, game->get_score);
 }
 
+// return if the current player is AI or not
 int current_player_is_ai(Game *game) {
 	if (game->current_player == FIRST_PL_TURN) {
 		return game->first_player_ai;
@@ -17,6 +20,7 @@ int current_player_is_ai(Game *game) {
 	}
 }
 
+// restarts the game from the beginning (the game stays of the same type)
 int restart_game(Game *game) {
 	free_board(game->board);
 	game->board = new_board(game->board->n, game->board->m);

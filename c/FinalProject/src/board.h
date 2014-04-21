@@ -14,8 +14,15 @@ typedef struct move_s {
 	int j;
 } Move;
 
+/*
+ * retuns an initialized board ith n rows and m columns
+ */ 
 Board *new_board(int n, int m);
 
+/* 
+ * gets an source board and an initialized destination board
+ * copies the source board to the destinatiojn board
+ */
 void copy_board(Board *source_board, Board *destination_board);
 
 /**
