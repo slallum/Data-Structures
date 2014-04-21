@@ -375,7 +375,6 @@ void remove_tree(vertex* current_node) {
     element* previous;
     element* nextush;
     if ((current_node != NULL) && (current_node->children != NULL)) {
-    	free(current_node->current_move);
         previous = current_node->children->head;
         while (previous != NULL) {
             remove_tree(previous->node);
@@ -385,5 +384,6 @@ void remove_tree(vertex* current_node) {
         }
         free(current_node->children);
     }
+    free(current_node->current_move);
     free(current_node);
 }
