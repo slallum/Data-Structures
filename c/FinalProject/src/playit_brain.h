@@ -8,6 +8,7 @@
 #ifndef PLAYIT_BRAIN_H_
 #define PLAYIT_BRAIN_H_
 
+#include "game_framework.h"
 #include "connect4_brain.h"
 #include "ttt_brain.h"
 #include "reversi_brain.h"

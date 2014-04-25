@@ -38,6 +38,6 @@ ttt_brain.o:   		ttt_brain.c ttt_brain.h game_framework.h board.h tree.h playit_
 reversi_brain.o:   	reversi_brain.c reversi_brain.h game_framework.h board.h tree.h playit_conf.h 
 	gcc $(C_FLAGS) -c reversi_brain.c `sdl-config --cflags`
 
-playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h connect4_brain.h ttt_brain.h reversi_brain.h
+playit_brain.o:		playit_brain.c playit_brain.h playit_conf.h game_framework.h connect4_brain.h ttt_brain.h reversi_brain.h
 	gcc $(C_FLAGS) -c playit_brain.c `sdl-config --cflags`
 
