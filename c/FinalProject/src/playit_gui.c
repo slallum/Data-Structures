@@ -257,7 +257,7 @@ Control* create_info_panel(int width, int height, Game* game,
 	int curr_x = INFO_PANEL_X, curr_y = INFO_PANEL_Y;
 	int i, j, valid = 1;
 	char* images[4];
-	Control* buttons[2][2];
+	Control* panel, *buttons[2][2];
 	Link *head = (Link*) calloc(1, sizeof(Link));
 	Link* buttons_next = head;
 	if (buttons_next == NULL) {
@@ -305,7 +305,13 @@ Control* create_info_panel(int width, int height, Game* game,
 		return NULL;
 	}
 	// All went well with children buttons
-	return create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
+	panel = create_panel(0, BOARD_PANEL_H, 1, 0, width, height, BG_IMG, head);
+	for ( i = 2; i < 4; i ++) {
+		if (strlen(images[i]) == 1) {
+			free(images[i]);
+		}
+	}
+	return panel;
 }
 
 /**
@@ -390,7 +396,7 @@ void add_difficulty(char** images, int cell, int depth) {
 int show_files_menu(Control* window, int (*empty)(Control*),
 		int (*file_han)(Control*), int (*cancel)(Control*), int* exist) {
 
-	int i;
+	int i, rc;
 	char* pics[FILES_NUM + 2] = { FILE_SELECT };
 	int widths[FILES_NUM + 2] = { TITLE_W };
 	int heights[FILES_NUM + 2] = { TITLE_H };
@@ -401,20 +407,24 @@ int show_files_menu(Control* window, int (*empty)(Control*),
 	// will create it on the fly using text
 	for (i = 1; i <= FILES_NUM; i++) {
 		if (exist[i - 1]) {
-			generate_file_name(i, pics, "\"%s %d\"");
+			generate_file_name(i, pics, "%s %d (f)");
 		} else {
 			generate_file_name(i, pics, "%s %d");
 		}
-		widths[i] = TEXT_W;
-		heights[i] = TEXT_H;
+		widths[i] = BUT_W;
+		heights[i] = BUT_H;
 		handles[i] = file_han;
 	}
 	pics[i] = CANCEL_IMG;
 	widths[i] = BUT_W;
 	heights[i] = BUT_H;
 	handles[i] = cancel;
-	return create_button_menu_window(FILES_NUM + 2, pics, handles, widths,
+	rc = create_button_menu_window(FILES_NUM + 2, pics, handles, widths,
 			heights, window);
+	for (i = 1; i <= FILES_NUM; i++) {
+		free(pics[i]);
+	}
+	return rc;
 }
 
 /**

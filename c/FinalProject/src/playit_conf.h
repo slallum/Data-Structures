@@ -15,18 +15,18 @@
 
 // Main menu
 #define PLAYIT_IMG		"PlayIt.bmp"
-#define NEW_GAME_IMG	"NewGame.bmp"
-#define LOAD_GAME_IMG	"LoadGame.bmp"
-#define QUIT_IMG		"Quit.bmp"
+#define NEW_GAME_IMG	"New Game"
+#define LOAD_GAME_IMG	"Load Game"
+#define QUIT_IMG		"Quit"
 #define BG_IMG			"Background.bmp"
 #define CANCEL_IMG		"Cancel.bmp"
 #define CANCEL_HAN		on_cancel
 
 // Player selection menu
-#define P_VS_P_IMG		"PLvsPL.bmp"
-#define P_VS_A_IMG		"PLvsAI.bmp"
-#define A_VS_A_IMG		"AIvsAI.bmp"
-#define A_VS_P_IMG		"AIvsPL.bmp"
+#define P_VS_P_IMG		"Pl vs. Pl"
+#define P_VS_A_IMG		"Pl vs. AI"
+#define A_VS_A_IMG		"AI vs. AI"
+#define A_VS_P_IMG		"AI vs. Pl"
 #define AI_PLAYING		1
 #define PL_PLAYING		0
 #define NO_PLAYER		-1
@@ -37,10 +37,10 @@
 #define NUM_PLAY_TYPES	4
 
 // Game arena menu
-#define SAVE_GAME_IMG	"SaveGame.bmp"
-#define RESUME_GAME_IMG	"Resume.bmp"
-#define RESTART_GAME_IMG "RestartGame.bmp"
-#define MAIN_MENU_IMG	"MainMenu.bmp"
+#define SAVE_GAME_IMG	"Save Game"
+#define RESUME_GAME_IMG	"Resume"
+#define RESTART_GAME_IMG "Restart Game"
+#define MAIN_MENU_IMG	"Main Menu"
 #define NUM_GAMES		3
 
 // Game arena info
@@ -54,11 +54,11 @@
 
 // Game selection
 #define SELECT_G_IMG	"SelectGame.bmp"
-#define REVERSI_IMG		"Reversi.bmp"
+#define REVERSI_IMG		"Reversi"
 #define REVERSI_HAN		on_select_reversi
-#define TIC_TAC_TOE_IMG	"TicTacToe.bmp"
+#define TIC_TAC_TOE_IMG	"Tic-Tac-Toe"
 #define TIC_TAC_TOE_HAN	on_select_tictactoe
-#define CONNECT4_IMG	"Connect4.bmp"
+#define CONNECT4_IMG	"Connect 4"
 #define CONNECT4_HAN	on_select_connect4
 
 // Reversi
@@ -92,8 +92,6 @@
 #define TITLE_W			300
 #define BUT_H			50
 #define	BUT_W			200
-#define TEXT_W			160
-#define TEXT_H			40
 #define TILE_W			50
 #define TILE_H			50
 #define TILE_SPACE		10

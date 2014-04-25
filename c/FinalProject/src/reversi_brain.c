@@ -27,7 +27,7 @@ Game *reversi_new_game() {
 	game->first_player_ai = NO_PLAYER;
 	game->second_player_ai = NO_PLAYER;
 	game->depth_range[0] = 1;
-	game->depth_range[1] = 6;
+	game->depth_range[1] = 4;
 	game->first_player_depth = game->depth_range[0];
 	game->second_player_depth = game->depth_range[0];
 

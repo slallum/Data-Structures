@@ -161,7 +161,7 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	text_image = TTF_RenderText_Solid(text_font, title, text_color);
 	if (text_image == NULL) {
-		free(text_font);
+		TTF_CloseFont(text_font);
 		printf("ERROR: Failed to create text image for %s\n", title);
 		return NULL;
 	}
@@ -173,20 +173,19 @@ SDL_Surface* create_text(char* title, int width, int height) {
 	}
 	if (img == NULL ) {
 		printf("ERROR: failed to load image: %s\n", SDL_GetError());
-		free(text_font);
+		TTF_CloseFont(text_font);
 		SDL_FreeSurface(text_image);
 		return NULL ;
 	}
 	SDL_Rect rect = { (width - (strlen(title) * 17)) / 2 , 8, strlen(title) * 17, height - 16 };
 	// Text titles come from dynamic allocation and must be freed, once used
-	free(title);
 	if (SDL_BlitSurface(text_image, 0, img, &rect) != 0) {
 		printf("ERROR: Failed blit text to bg: %s\n", SDL_GetError());
-		free(text_font);
+		TTF_CloseFont(text_font);
 		SDL_FreeSurface(text_image);
 		return NULL;
 	}
-	free(text_font);
+	TTF_CloseFont(text_font);
 	SDL_FreeSurface(text_image);
 	return img;
 }
