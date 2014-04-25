@@ -65,44 +65,6 @@ int no_moves(Game* game, int player) {
 }
 
 /**
- * Handles all logic around making a move in the game.
- * Updates the tree for all players and get
- *
- * @return	 0 - All went well, move was made and turn should pass on
- * 			-1 - Move was not made and turn should not pass (was illegal for player)
- * 			 1 - Move was made but current player is AI, so no waiting for user
- *
- */
-int handle_move(Game* game, int i, int j) {
-	Move* new_move;
-	if ((new_move = (Move*) malloc(sizeof(Move))) == NULL) {
-		printf("ERROR: Allocating memory for new move in handle_move.\n");
-		return 0;
-	}
-
-	// get the new move
-	// if we know that the current player is AI, we'll get the best move for it with minmax
-	if (current_player_is_ai(game)) {
-		get_best_move(game, new_move);
-	// if it's a human player's turn - then i, j are the real move.
-	} else {
-		new_move->i = i;
-		new_move->j = j;
-	}
-
-	// Now new_move should be updated
-	if (game->make_move(game->board, new_move, game->current_player) == -1) {
-		free(new_move);
-		return -1;
-	}
-	// update the tree according to the new move
-	update_tree(game->tree, new_move->j, new_move->i, game->current_player == FIRST_PL_TURN ? game->first_player_depth : game->second_player_depth);
-
-	free(new_move);
-	return 0;
-}
-
-/**
  * Saves required parameters of the game in required format
  * to a file, in order to allow retrieving.
  *

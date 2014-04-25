@@ -14,30 +14,7 @@
 #include "playit_conf.h"
 #include <string.h>
 
-/**
- * Switches players from current to other (flips marks)
- * If currently playing is an AI player, returns 1,
- * indicating to continue fictive clicking, without waiting for user.
- */
-int switch_player(Game* game);
 
-/**
- * Tries all moves on the board for given player,
- * until meeting one that is possible.
- * Erases each move been made.
- */
-int no_moves(Game* game, int player);
-
-/**
- * Handles all logic around making a move in the game.
- * Updates the tree for all players and get
- *
- * @return	 0 - All went well, move was made and turn should pass on
- * 			-1 - Move was not made and turn should not pass (was illegal for player)
- * 			 1 - Move was made but current player is AI, so no waiting for user
- *
- */
-int handle_move(Game* game, int i, int j);
 
 /**
  * Saves required parameters of the game in required format
