@@ -265,6 +265,7 @@ void free_UI_children(Link* head) {
 		head = prev->next;
 		prev->next = NULL;
 		free_UI_tree(prev->value);
+		prev->value = NULL;
 		free(prev);
 	}
 }
